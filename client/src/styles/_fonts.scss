@@ -1,0 +1,44 @@
+/* calligraffitti-regular - latin */
+@font-face {
+  font-family: "Calligraffitti";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../assets/fonts/calligraffitti/calligraffitti-v19-latin-regular.eot"); /* IE9 Compat Modes */
+  src: local(""),
+    url("../assets/fonts/calligraffitti/calligraffitti-v19-latin-regular.eot?#iefix") format("embedded-opentype"),
+    /* IE6-IE8 */ url("../assets/fonts/calligraffitti/calligraffitti-v19-latin-regular.woff2") format("woff2"),
+    /* Super Modern Browsers */ url("../assets/fonts/calligraffitti/calligraffitti-v19-latin-regular.woff")
+      format("woff"),
+    /* Modern Browsers */ url("../assets/fonts/calligraffitti/calligraffitti-v19-latin-regular.ttf") format("truetype"),
+    /* Safari, Android, iOS */ url("../assets/fonts/calligraffitti/calligraffitti-v19-latin-regular.svg#Calligraffitti")
+      format("svg"); /* Legacy iOS */
+}
+
+/* modern-antiqua-regular - latin */
+@font-face {
+  font-family: "Modern Antiqua";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../assets/fonts/modern-antiqua/modern-antiqua-v22-latin-regular.eot"); /* IE9 Compat Modes */
+  src: local(""),
+    url("../assets/fonts/modern-antiqua/modern-antiqua-v22-latin-regular.eot?#iefix") format("embedded-opentype"),
+    /* IE6-IE8 */ url("../assets/fonts/modern-antiqua/modern-antiqua-v22-latin-regular.woff2") format("woff2"),
+    /* Super Modern Browsers */ url("../assets/fonts/modern-antiqua/modern-antiqua-v22-latin-regular.woff")
+      format("woff"),
+    /* Modern Browsers */ url("../assets/fonts/modern-antiqua/modern-antiqua-v22-latin-regular.ttf") format("truetype"),
+    /* Safari, Android, iOS */ url("../assets/fonts/modern-antiqua/modern-antiqua-v22-latin-regular.svg#ModernAntiqua")
+      format("svg"); /* Legacy iOS */
+}
+
+/* open-sans-regular - latin */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../assets/fonts/open-sans/open-sans-v34-latin-regular.eot"); /* IE9 Compat Modes */
+  src: local(""), url("../assets/fonts/open-sans/open-sans-v34-latin-regular.eot?#iefix") format("embedded-opentype"),
+    /* IE6-IE8 */ url("../assets/fonts/open-sans/open-sans-v34-latin-regular.woff2") format("woff2"),
+    /* Super Modern Browsers */ url("../assets/fonts/open-sans/open-sans-v34-latin-regular.woff") format("woff"),
+    /* Modern Browsers */ url("../assets/fonts/open-sans/open-sans-v34-latin-regular.ttf") format("truetype"),
+    /* Safari, Android, iOS */ url("../assets/fonts/open-sans/open-sans-v34-latin-regular.svg#OpenSans") format("svg"); /* Legacy iOS */
+}

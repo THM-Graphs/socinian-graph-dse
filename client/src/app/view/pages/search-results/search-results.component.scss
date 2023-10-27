@@ -1,0 +1,116 @@
+@import "../../../../styles/theme";
+
+.register-loading .d-flex {
+  margin: 100px;
+}
+
+.search-box {
+  margin: 100px 0 0 0;
+}
+
+:host ::ng-deep .search-box {
+  .input-group {
+    padding-bottom: 10px;
+    border-bottom: 2px solid map_get(map_get($root, accent), 50);
+  }
+
+  input,
+  i {
+    vertical-align: middle;
+    font-size: 14pt;
+  }
+}
+
+.nav {
+  .nav-link {
+    color: map_get(map_get($root, accent), 90);
+    font-size: 14pt;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    margin-right: 30px;
+    padding: 5px 0;
+
+    &.active {
+      background: none;
+      color: map_get(map_get($root, accent), 50);
+
+      &:before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        min-height: 2px;
+
+        bottom: -5px;
+        left: -50%;
+        transform: translate(50%, 0);
+
+        border-bottom: 2px map_get(map_get($root, accent), 50) solid;
+      }
+    }
+
+    &:hover {
+      color: map_get(map_get($root, accent), 50);
+      transition: all 0.3s ease-in-out;
+    }
+
+    &:not(.active) {
+      &:before {
+        content: "";
+        position: absolute;
+        width: 0;
+        min-height: 2px;
+
+        left: 50%;
+        transform: translate(-50%, 0);
+        bottom: -5px;
+        transition: width 0.2s ease-in-out;
+
+        border-bottom: 2px map_get(map_get($root, accent), 50) solid;
+      }
+
+      &:hover {
+        &:before {
+          content: "";
+          position: absolute;
+          width: 100%;
+          min-height: 2px;
+
+          bottom: -5px;
+          left: 50%;
+          transform: translate(-50%, 0);
+          transition: width 0.25s ease-in-out;
+
+          border-bottom: 2px map_get(map_get($root, accent), 50) solid;
+        }
+      }
+    }
+  }
+}
+
+.card {
+  border-left: 2px solid map_get(map_get($root, accent), 50);
+
+  &:hover {
+    border-left: 4px solid map_get(map_get($root, accent), 50);
+  }
+
+  &:active {
+    border-left: 6px solid map_get(map_get($root, accent), 50);
+  }
+
+  &.active {
+    border: 2px solid map_get(map_get($root, accent), 50);
+
+    &:hover {
+      border-left: 4px solid map_get(map_get($root, accent), 50);
+    }
+
+    &:active {
+      border-left: 6px solid map_get(map_get($root, accent), 50);
+    }
+  }
+}
+
+.long {
+  height: 100%;
+}

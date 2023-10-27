@@ -1,0 +1,75 @@
+<main>
+  <section class="hero py-5">
+    <div class="px-4 py-5 text-center">
+      <div class="row justify-content-center mt-2 hero-top">
+        <div class="col-10 col-md-7 hero-top">
+          <span class="font-calli display-3 text-beige d-block bold">{{ lang.get("HOME_HERO_TITLE") }}</span>
+        </div>
+      </div>
+      <div class="row justify-content-center hero-search">
+        <div class="col-10 col-md-6">
+          <app-search (onSearch)="onSearchEventHandler($event)" [isSuggestionEnabled]="true"></app-search>
+        </div>
+      </div>
+      <div class="row justify-content-center hero-bottom">
+        <span class="text-white text-uppercase d-block pb-4">{{ lang.get("HOME_HERO_SUBTITLE") }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="about">
+    <div class="container-fluid container-lg">
+      <div class="row gx-5 my-3">
+        <div class="col-12 col-md-7">
+          <div class="row">
+            <div class="col-12 card">
+              <app-markdown-text [rawMarkdown]="introductionMarkdown"></app-markdown-text>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-5 mt-3 mt-md-0">
+          <div class="row">
+            <div class="col-12 col-lg-6 px-1 mb-2">
+              <a
+                href="https://www.europeana.eu/de/search?page=1&view=grid&query=edm_datasetName%3A992_%2A"
+                target="_blank"
+              >
+                <app-image-box
+                  src="assets/images/socinian/about-euro.png"
+                  text="HOME_ABOUT_IMAGE_EURO"
+                  [isLink]="true"
+                ></app-image-box>
+              </a>
+            </div>
+            <div class="col-12 col-lg-6 mt-4 mt-lg-0 mb-2 px-1">
+              <a
+                href="https://correspsearch.net/de/suche.html?c=https://gitlab.rlp.net/adwmainz/digicademy/sbw/csv-data-dump/-/raw/main/data/cmif/corresp.xml"
+                target="_blank"
+              >
+                <app-image-box
+                  src="assets/images/socinian/about-corresp.png"
+                  text="HOME_ABOUT_IMAGE_EUROPEANER"
+                  [isLink]="true"
+                ></app-image-box>
+              </a>
+            </div>
+            <div class="col-12 col-lg-6 px-1 mb-2">
+              <app-image-box
+                src="assets/images/socinian/about-collation.png"
+                text="HOME_ABOUT_IMAGE_COLLATION"
+                routerLink="/project/text-collations"
+                [isLink]="true"
+              ></app-image-box>
+            </div>
+            <div class="col-12 col-lg-6 mb-2 px-1">
+              <app-image-box src="assets/images/socinian/about-graph.png" text="HOME_ABOUT_IMAGE_GRAPH"></app-image-box>
+            </div>
+            <div class="col-12 mt-3 card">
+              <app-section-list [sectionId]="publishedItem"></app-section-list>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

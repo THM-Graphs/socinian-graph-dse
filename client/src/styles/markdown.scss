@@ -1,0 +1,39 @@
+h1.markdown-heading {
+  font-size: calc(1.4rem + 1.5vw);
+  padding-bottom: 10px;
+  font-weight: 350;
+}
+
+h2.markdown-heading {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: calc(1rem + 1vw);
+  font-weight: 400;
+}
+
+h3.markdown-heading {
+  margin-top: 30px;
+  font-size: calc(0.6rem + 1vw);
+  font-weight: 475;
+}
+
+@media (min-width: 1200px) {
+  h1.markdown-heading {
+    font-size: 2rem;
+  }
+
+  p.markdown-paragraph {
+    padding: 0px 15px;
+    text-align: justify;
+  }
+
+  h2.markdown-heading {
+    padding: 0px 15px;
+    font-size: 1.4rem;
+  }
+
+  h3.markdown-heading {
+    font-size: 1.1rem;
+    padding: 0px 15px;
+  }
+}

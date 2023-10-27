@@ -1,0 +1,41 @@
+<div class="rounded-pill p-1 bg-white mb-4 search-box">
+    <div class="input-group">
+        <div class="input-group-prepend border-0">
+            <button id="button-addon4" type="button" class="btn btn-link text-dark"
+                    (click)="handleOnSearch()"><i
+                    class="fa fa-search"></i></button>
+        </div>
+        <input type="search" [placeholder]="lang.get('HOME_SEARCH_PLACEHOLDER')"
+               (input)="handleOnInput($event)" (keydown.enter)="handleOnSearch()" [ngModel]="inputSearchString"
+               aria-describedby="button-addon4" class="form-control bg-none border-0 rounded-pill">
+    </div>
+    <div class="search-preview fade-in-fast"
+         *ngIf="isSuggestionEnabled && (searchResults.length > 0 || isSearchResultLoading)">
+        <div class="d-flex justify-content-center my-5" *ngIf="isSearchResultLoading">
+            <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <ul class="list-group text-start fade-in-fast" *ngIf="searchResults.length > 0">
+            <li class="list-group-item" *ngFor="let searchResult of searchResults"
+                [routerLink]="searchResult.href">
+                <div class="row">
+                    <div class="col-1 text-center my-auto">
+                        <i [class]="'fas ' + searchResult.icon"></i>
+                    </div>
+                    <div class="col-11 my-auto">
+                        <span class="d-block">{{searchResult.result}}</span>
+                        <small *ngIf="searchResult.details" [innerHTML]="searchResult.details"></small>
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item" *ngIf="availableSearchResults > 0">
+                <div class="row justify-content-center">
+                    <div class="col-6 text-center py-2" (click)="handleOnSearch()">
+                        <a>{{lang.get("SEARCH_ENGINE_MORE_RESULTS", availableSearchResults)}}</a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

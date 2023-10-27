@@ -1,0 +1,28 @@
+@import "../../../../styles/theme";
+
+h2,
+h4,
+h5 {
+  font-weight: 350;
+  margin-bottom: 15px;
+}
+
+.sticky-top {
+  top: 25px;
+}
+
+.bg-primary {
+  background: map_get(map_get($root, accent), 10) !important;
+}
+
+a {
+  cursor: pointer;
+  color: map_get(map_get($root, accent), 60);
+  background: none;
+  text-decoration: underline;
+  transition: all 0.3s ease-in-out;
+}
+
+.list-group-item {
+  padding: 10px 20px;
+}

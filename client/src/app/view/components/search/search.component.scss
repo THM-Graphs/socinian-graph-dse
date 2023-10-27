@@ -1,0 +1,76 @@
+@import "../../../../styles/theme";
+
+.search-box {
+  position: relative;
+}
+
+.search-preview {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding-top: 20px;
+  z-index: 1;
+  position: absolute;
+  top: 24px;
+  left: 0;
+
+  width: 100%;
+  background: white;
+
+  .list-group {
+    box-shadow: 0 5px 5px -5px map_get(map_get($root, accent), 0), 5px 0 5px -5px map_get(map_get($root, accent), 0),
+      -5px 0 5px -5px map_get(map_get($root, accent), 0);
+    border-bottom: 1px solid #000;
+
+    .list-group-item {
+      padding: 5px 15px;
+      border-left: 0;
+      border-right: 0;
+      border-radius: 0;
+      background: transparent;
+      transition: background 0.15s ease-in-out;
+
+      .row {
+        min-height: 45px;
+      }
+
+      small {
+        font-size: 9pt;
+      }
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &:hover {
+        background: rgba(236, 236, 236, 0.45);
+        transition: background 0.15s ease-in-out;
+      }
+    }
+  }
+}
+
+.input-group {
+  z-index: 10;
+  opacity: 0.5;
+  transition: opacity 0.2s ease-in-out;
+
+  &:hover,
+  &:focus-within {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  input {
+    cursor: pointer !important;
+
+    &:focus {
+      cursor: auto !important;
+    }
+  }
+}
+
+input {
+  &:focus {
+    box-shadow: none;
+  }
+}

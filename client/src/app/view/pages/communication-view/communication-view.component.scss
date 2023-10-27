@@ -1,0 +1,152 @@
+@import "../../../../styles/theme";
+
+.spinner-border {
+  color: map_get(map_get($root, accent), 50) !important;
+  width: 4rem !important;
+  height: 4rem !important;
+}
+
+.display-label {
+  font-weight: 400;
+}
+
+.container-md {
+  max-width: 960px;
+}
+
+.annotation-list {
+  top: 30px;
+  margin-right: -320px;
+}
+
+.text-container {
+  margin-top: 30px;
+  font-size: 14pt;
+}
+
+.abstract-text {
+  padding: 15px 15px 5px 15px;
+}
+
+.text-view {
+  padding: 30px 30px;
+  text-align: justify;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  &.card {
+    background: map_get(map_get($root, custom), 0);
+  }
+}
+
+.variant-data-bottom {
+  background: map_get(map_get($root, custom), 10);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-top: 0;
+}
+
+.variant-data-top {
+  background: map_get(map_get($root, custom), 10);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 0;
+}
+
+.card {
+  position: relative;
+
+  .card-label {
+    position: absolute;
+    top: -18px;
+    left: -12px;
+    padding: 2px 20px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    background: #fff;
+    border-radius: 20px;
+  }
+
+  .card-action-menu {
+    position: absolute;
+    z-index: 100;
+    top: -18px;
+    right: 10px;
+    padding: 2px 20px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    background: #fff;
+    border-radius: 20px;
+  }
+
+  .add-metadata-element {
+    padding: 10px 30px;
+
+    & h5 {
+      font-size: 12pt;
+      font-weight: 550;
+    }
+
+    font-size: 11pt;
+  }
+}
+
+.text-selection {
+  .variant-selection {
+    font-size: 11pt;
+
+    &.list-group {
+      margin: 0 50px;
+
+      .list-group-item {
+        margin: 0 10px;
+        opacity: 0.8 !important;
+
+        &.active {
+          opacity: 1 !important;
+        }
+      }
+    }
+  }
+
+  .list-group {
+    .list-group-item {
+      background: map_get(map_get($root, accent), 70);
+      color: map_get(map_get($root, tints), 100);
+      transition: all 0.2s ease-in-out;
+      border: 1px solid map_get(map_get($root, accent), 50);
+
+      &.active {
+        background: map_get(map_get($root, accent), 40);
+        border: 1px solid map_get(map_get($root, accent), 10);
+      }
+
+      &:hover {
+        background: map_get(map_get($root, accent), 40);
+        transition: all 0.2s ease-in-out;
+      }
+    }
+  }
+}
+
+.attachments {
+  padding: 25px 30px;
+
+  .list-group {
+    border: none;
+
+    .list-group-item {
+      padding: 20px 0;
+      margin: 5px 0;
+
+      background: transparent;
+      border: none;
+    }
+  }
+}
+
+.quote-info {
+  margin: 60px 0;
+  padding: 30px 30px 10px 30px;
+  font-size: 11pt;
+}
+
+.variant-label {
+  font-weight: 400;
+}

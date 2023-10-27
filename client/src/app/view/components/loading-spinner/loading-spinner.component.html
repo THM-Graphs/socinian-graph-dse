@@ -1,0 +1,9 @@
+<ng-container *ngIf="isLoading">
+  <section class="loading-spinner">
+    <div class="d-flex justify-content-center align-items-center spinner-inner" [style.min-height.px]="minHeight">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </section>
+</ng-container>

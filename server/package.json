@@ -1,0 +1,33 @@
+{
+  "name": "graphql-server",
+  "version": "1.0.0",
+  "description": "Backend graphql implementation for the publication environment.",
+  "main": "src/start.js",
+  "scripts": {
+    "start": "node ./src/start.js",
+    "develop": "concurrently \"nodemon node ./src/start.js\" \"npm run compile:watch\"",
+    "compile": "tsc -p ./",
+    "compile:watch": "tsc -p ./ --watch",
+    "prestart": "npm run compile",
+    "postinstall": "npm run compile"
+  },
+  "author": "Sebastian Enns",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.8.0",
+    "graphql-tools": "^8.3.12",
+    "neo4j-driver": "^5.2.0",
+    "remove-accents": "^0.4.2",
+    "typescript": "^4.9.3",
+    "xss": "^1.0.13"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.6",
+    "concurrently": "^7.5.0",
+    "nodemon": "^2.0.20"
+  }
+}

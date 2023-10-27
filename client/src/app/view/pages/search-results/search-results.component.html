@@ -1,0 +1,102 @@
+<header class="container mt-4 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-7 search-box">
+      <app-search (onInput)="onInputEventHandler($event)" [inputSearchString]="this.searchPhrase"></app-search>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="mt-4">
+    <div class="row align-items-end">
+      <div class="col-12">
+        <h1 class="display-7">
+          {{ lang.get("SEARCH_DETAILS_RESULT_TITLE", this.searchPhrase) }}
+        </h1>
+      </div>
+      <div class="col-12">
+        <p class="mt-1">{{ lang.get("SEARCH_DETAILS_RESULT_SUB_TITLE", searchResultAmount) }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="register-loading" *ngIf="isSearching">
+    <div class="d-flex justify-content-center align-items-center">
+      <div class="spinner-border" role="status" style="width: 100px; height: 100px">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="search-results mt-4 fade-in-fast" *ngIf="!isSearching">
+    <ul class="nav nav-pills">
+      <ng-container *ngFor="let menu of tabMenu | objectValue">
+        <li class="nav-item" *ngIf="menu.values.length > 0" (click)="currentSelectedTab = menu.key">
+          <a class="nav-link" [class.active]="menu.key === currentSelectedTab" *ngIf="menu.values.length === 1">
+            {{ lang.get(menu.singularTitle, menu.values.length) }}
+          </a>
+          <a class="nav-link" [class.active]="menu.key === currentSelectedTab" *ngIf="menu.values.length > 1">
+            {{ lang.get(menu.pluralTitle, menu.values.length) }}
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+
+    <div class="container">
+      <div class="row mt-4 mb-5">
+        <ng-container *ngIf="currentSelectedTab === tabs.letters">
+          <div class="col-12 mt-3 mb-2 pointer user-select-none" *ngFor="let letter of tabMenu.letters.values">
+            <div class="row justify-content-between">
+              <div
+                class="col-10 card card-body"
+                [class.active]="isInLetterStorage(letter)"
+                [routerLink]="'/id/' + letter.guid"
+              >
+                <div class="row">
+                  <div class="col-12 card-title h5">
+                    {{ letter.label }}
+                  </div>
+                  <div class="col-12">
+                    <p class="pt-2 pb-0" *ngFor="let occurrence of letter.occurrences">
+                      <span class="occurrence" [innerHTML]="occurrence"></span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-1 ps-1">
+                <button
+                  class="btn btn-primary long"
+                  (click)="rememberLetter(letter)"
+                  *ngIf="!isInLetterStorage(letter)"
+                >
+                  <i class="far fa-star"></i>
+                </button>
+                <button class="btn btn-primary long" (click)="removeLetter(letter)" *ngIf="isInLetterStorage(letter)">
+                  <i class="fas fa-star"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="currentSelectedTab === tabs.register">
+          <div class="col-12 mt-2 mb-2 pointer user-select-none" *ngFor="let register of tabMenu.register.values">
+            <div class="row justify-content-between">
+              <div class="col-12 card card-body" [routerLink]="register.href">
+                <div class="row">
+                  <div class="col-1 pe-1 m-auto text-center">
+                    <span class="d-block">
+                      <i class="fas {{ register.icon }}"></i>
+                    </span>
+                  </div>
+                  <div class="col-11 card-title h5 my-auto">
+                    {{ register.label }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+</main>

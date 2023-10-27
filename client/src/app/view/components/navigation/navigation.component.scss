@@ -1,0 +1,129 @@
+@import "../../../../styles/theme";
+@import "bootstrap/scss/_functions.scss";
+@import "bootstrap/scss/_variables.scss";
+@import "bootstrap/scss/mixins/_breakpoints.scss";
+
+.navbar {
+  font-size: 14pt;
+
+  @include media-breakpoint-up(lg) {
+    max-height: 70px;
+    font-size: 11pt;
+  }
+
+  .navbar-brand {
+    img {
+      max-height: 35px;
+    }
+  }
+
+  .settings {
+    @include media-breakpoint-up(lg) {
+      padding: 0 !important;
+      margin: 0 !important;
+      position: relative;
+    }
+
+    .language-menu {
+      @include media-breakpoint-up(lg) {
+        top: 53px;
+        right: 0;
+        position: absolute;
+        z-index: 100;
+      }
+
+      .list-group-item {
+        @include media-breakpoint-up(lg) {
+          min-width: 150px;
+          padding: 10px 15px;
+        }
+
+        padding: 10px 0;
+        color: map_get(map_get($root, tints), 100);
+        background: map_get(map_get($root, accent), 10);
+
+        &:hover {
+          background: map_get(map_get($root, accent), 20);
+        }
+
+        &.selected {
+          background: map_get(map_get($root, accent), 20);
+          box-shadow: none;
+          border: none;
+        }
+      }
+    }
+
+    a {
+      margin: 0;
+    }
+  }
+
+  .nav-item {
+    @include media-breakpoint-down(lg) {
+      text-align: center;
+      padding: 10px 0;
+      border-top: 1px rgba(255, 255, 255, 0.5) solid;
+
+      &:first-of-type {
+        border-top: none;
+      }
+    }
+
+    @include media-breakpoint-up(lg) {
+      text-transform: uppercase;
+      position: relative;
+      margin: 0 20px;
+      padding: 0 15px;
+
+      a {
+        &:not(.active) {
+          &:before {
+            content: "";
+            position: absolute;
+            width: 0;
+            min-height: 2px;
+
+            left: 50%;
+            transform: translate(-50%, 0);
+            bottom: -5px;
+            transition: width 0.2s ease-in-out;
+
+            border-bottom: 2px #fff solid;
+          }
+
+          &:hover {
+            &:before {
+              content: "";
+              position: absolute;
+              width: 100%;
+              min-height: 2px;
+
+              bottom: -5px;
+              left: 50%;
+              transform: translate(-50%, 0);
+              transition: width 0.25s ease-in-out;
+
+              border-bottom: 2px #fff solid;
+            }
+          }
+        }
+      }
+
+      .active {
+        &:before {
+          content: "";
+          position: absolute;
+          width: 100%;
+          min-height: 2px;
+
+          bottom: -5px;
+          left: -50%;
+          transform: translate(50%, 0);
+
+          border-bottom: 2px #fff solid;
+        }
+      }
+    }
+  }
+}

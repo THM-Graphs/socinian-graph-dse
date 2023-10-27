@@ -1,0 +1,22 @@
+<main class="container-fluid container-md py-5">
+  <h1 class="display-5 d-inline-block">
+    {{ lang.get("COLLECTION_PAGE_TITLE") }}
+  </h1>
+
+  <app-loading-spinner [isLoading]="isCollectionsLoading" minHeight="400"></app-loading-spinner>
+
+  <ng-container *ngIf="!isCollectionsLoading">
+    <div class="fade-in-medium">
+      <app-communications-filter
+        [communications]="communications"
+        (maxAmountEvent)="maxAmount = $event"
+        (filteredCommunicationsEvent)="filteredCommunications = $event"
+        [maxAmount]="maxAmount"
+      ></app-communications-filter>
+      <app-communications-list
+        [communications]="filteredCommunications"
+        [maxAmount]="maxAmount"
+      ></app-communications-list>
+    </div>
+  </ng-container>
+</main>

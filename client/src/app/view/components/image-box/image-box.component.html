@@ -1,0 +1,16 @@
+<div class="image-card">
+  <ng-container [ngSwitch]="isLink">
+    <ng-container *ngSwitchCase="false">
+      <img [src]="src" class="img-thumbnail" [alt]="alt" #image />
+      <div class="subtext" *ngIf="text">
+        <span>{{ lang.get(text) }}</span>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="true">
+      <img [src]="src" class="img-thumbnail" [alt]="alt" />
+      <div class="subtext" *ngIf="text">
+        <span>{{ lang.get(text) }} <i class="fa fa-external-link"></i></span>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>

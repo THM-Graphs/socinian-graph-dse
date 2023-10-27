@@ -1,0 +1,93 @@
+<main class="container-fluid container-md py-5">
+  <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
+  <div class="row" *ngIf="!isLoading">
+    <section class="col-12 col-md-5">
+      <div class="card sticky-top">
+        <div class="card-body">
+          <h2>{{ entity.label }}</h2>
+
+          <section class="additional-fields my-4" *ngIf="additionalFields.length > 0">
+            <ul class="list-group">
+              <ng-container *ngFor="let field of additionalFields">
+                <li class="list-group-item d-flex flex-row">
+                  <span class="w-50">{{ lang.get(field.label) }}:</span>
+                  <span>{{ field.value }}</span>
+                </li>
+              </ng-container>
+            </ul>
+          </section>
+
+          <section class="additional-labels my-4" *ngIf="entity.additionalLabels && entity.additionalLabels.length > 0">
+            <h5>{{ lang.get("ENTITY_PAGE_ADDITIONAL_LABELS") }}</h5>
+
+            <ul class="list-group">
+              <ng-container *ngFor="let label of entity.additionalLabels">
+                <li class="list-group-item list-group-item-action">
+                  <span *ngIf="label.forename" class="d-inline-block px-1">{{ label.forename }}</span>
+                  <span *ngIf="label.surname" class="d-inline-block px-1">{{ label.surname }}</span>
+                  <span *ngIf="label.label" class="d-inline-block px-1">{{ label.label }}</span>
+                </li>
+              </ng-container>
+            </ul>
+          </section>
+
+          <section class="normdata my-4" *ngIf="entity.normdata && entity.normdata.length > 0">
+            <h5>{{ lang.get("ENTITY_PAGE_NORMDATA") }}</h5>
+
+            <ul class="list-group pointer">
+              <ng-container *ngFor="let normdata of entity.normdata">
+                <li class="list-group-item list-group-item-action" (click)="onOpenNormdata(normdata)">
+                  <div class="d-flex w-100 justify-content-between align-items-center">
+                    <a>{{ normdata.label }}</a>
+                    <i class="fas fa-external-link-alt"></i>
+                  </div>
+                </li>
+              </ng-container>
+            </ul>
+          </section>
+
+          <section
+            class="comments my-4"
+            *ngIf="entity.additionalInformation && entity.additionalInformation.length > 0"
+          >
+            <h5>{{ lang.get("ENTITY_PAGE_COMMENTS") }}</h5>
+
+            <ul class="list-group pointer">
+              <ng-container *ngFor="let info of entity.additionalInformation">
+                <li class="list-group-item list-group-item-action" (click)="onOpenInfoWebsite(info)">
+                  <div class="d-flex w-100 justify-content-between align-items-center">
+                    <a class="text-wrap me-4">{{ parseInfoWebsite(info).url }}</a>
+                    <i class="fas fa-external-link-alt"></i>
+                  </div>
+                </li>
+              </ng-container>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </section>
+    <section class="col-12 col-md-7 mt-3 mt-md-0">
+      <div class="card">
+        <div class="card-body">
+          <h4>{{ lang.get("ENTITY_PAGE_MENTIONS") }}</h4>
+
+          <ul class="list-group">
+            <ng-container *ngFor="let occurrence of entity.occurrences">
+              <li
+                class="list-group-item list-group-item-action text-wrap d-flex justify-content-between align-items-center pointer"
+                routerLink="/id/{{ occurrence.guid }}"
+              >
+                <a class="d-inline-block me-3">{{ occurrence.label }}</a>
+                <!-- <span class="badge bg-primary rounded-pill">14</span> -->
+              </li>
+            </ng-container>
+          </ul>
+
+          <div class="no-entries" *ngIf="entity.occurrences.length === 0">
+            {{ lang.get("COLLECTION_TABLE_NO_ENTRIES") }}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>

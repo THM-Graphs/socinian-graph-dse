@@ -1,0 +1,152 @@
+<app-loading-spinner [isLoading]="isLoading" minHeight="600"></app-loading-spinner>
+
+<main class="container-fluid container-md py-5" *ngIf="selectedLetter">
+  <div class="annotation-list d-none d-md-block sticky-top">
+    <app-annotation-list></app-annotation-list>
+  </div>
+
+  <h1 class="display-7 d-inline-block mb-5">
+    {{ selectedLetter.label }}
+  </h1>
+
+  <section class="metadata card card-body mb-5 px-4 pb-3 rounded-0" *ngIf="metadata && !isMetadataEmpty()">
+    <div class="card-label">
+      {{ lang.get("TEXT_VIEW_PAGE_METADATA_TITLE") }}
+    </div>
+
+    <div class="card-action-menu user-select-none pointer" (click)="isMetadataOpen = !isMetadataOpen">
+      <i class="fas fa-angle-down" *ngIf="!isMetadataOpen"></i>
+      <i class="fas fa-angle-up" *ngIf="isMetadataOpen"></i>
+    </div>
+
+    <div class="row gx-5 fade-in-fast" *ngIf="isMetadataOpen">
+      <div class="col-12 col-md-6 col-lg-4 mt-3 mb-3" *ngFor="let item of metadata">
+        <h5 class="display-label">{{ lang.get(item.label) }}:</h5>
+        <a *ngIf="item.href" [routerLink]="item.href" target="_blank">{{ item.value }}</a>
+        <span *ngIf="!item.href">{{ lang.get(item.value) }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="abstract card card-body mb-4 rounded-0" *ngIf="selectedLetter.abstract">
+    <div class="card-label">
+      {{ lang.get("TEXT_VIEW_PAGE_ABSTRACT_TITLE") }}
+    </div>
+    <div class="card-action-menu user-select-none pointer" (click)="isAbstractOpen = !isAbstractOpen">
+      <i class="fas fa-angle-down" *ngIf="!isAbstractOpen"></i>
+      <i class="fas fa-angle-up" *ngIf="isAbstractOpen"></i>
+    </div>
+    <div class="abstract-text fade-in-fast" *ngIf="isAbstractOpen">
+      <app-text-view
+        [selectedText]="selectedLetter.abstract.text"
+        [standOffProperties]="selectedLetter.abstract.standoffProperties"
+      ></app-text-view>
+    </div>
+  </section>
+
+  <section class="text-selection mb-3" *ngIf="variants.length > 0">
+    <ul class="list-group list-group-horizontal-md pointer text-center user-select-none">
+      <li
+        class="list-group-item list-group-item-action rounded-0"
+        (click)="changeSelectedVariant(referenceText)"
+        [class.active]="selectedVariant.guid === referenceText.guid"
+      >
+        {{ lang.get("TEXT_VIEW_PAGE_LETTER_TITLE") }}
+      </li>
+      <li
+        class="list-group-item list-group-item-action rounded-0"
+        *ngFor="let variant of variants; index as i"
+        (click)="changeSelectedVariant(variant)"
+        [class.active]="selectedVariant.guid === variant.guid"
+      >
+        {{ lang.get("TEXT_VIEW_PAGE_VARIANT_TITLE", i + 1) }}
+      </li>
+      <li
+        class="list-group-item list-group-item-action rounded-0 w-15"
+        *ngIf="communication && communication.attachments.length > 0"
+        (click)="scrollToAttachments()"
+      >
+        <i class="fas fa-link"></i>
+      </li>
+    </ul>
+  </section>
+
+  <section class="card card-body variant-data-top rounded-0" *ngIf="selectedVariant.label">
+    <h5 class="variant-label">{{ selectedVariant.label }}</h5>
+  </section>
+  <section class="card card-body text-view rounded-0">
+    <app-text-view
+      [selectedText]="selectedVariant.text"
+      [standOffProperties]="selectedVariant.standoffProperties"
+    ></app-text-view>
+  </section>
+  <section class="card card-body variant-data-bottom mb-5 rounded-0">
+    <div class="row">
+      <div class="col-12 add-metadata-element" *ngIf="selectedVariant.metadataRemark">
+        <h5>{{ lang.get("TEXT_VIEW_PAGE_VARIANT_REMARK") }}:</h5>
+        <p class="mb-0">
+          <app-text-view
+            [selectedText]="selectedVariant.metadataRemark.text"
+            [standOffProperties]="selectedVariant.metadataRemark.standoffProperties"
+          ></app-text-view>
+        </p>
+      </div>
+      <ng-container *ngFor="let metadata of additionalMetaData">
+        <div class="col-12 col-md-6 col-lg-4 add-metadata-element" *ngIf="metadata.value">
+          <h5>{{ lang.get(metadata.label) }}:</h5>
+          <a [href]="metadata.href" *ngIf="metadata.href" target="_blank">{{ metadata.value }}</a>
+          <span *ngIf="!metadata.href">{{ lang.get(metadata.value) }}</span>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+
+  <section class="attachments card card-body rounded-0" *ngIf="communication && communication.attachments.length > 0">
+    <div class="card-label">
+      {{ lang.get("TEXT_VIEW_PAGE_ATTACHMENT_TITLE") }}
+    </div>
+
+    <div class="card-action-menu user-select-none pointer" (click)="isAttachmentsOpen = !isAttachmentsOpen">
+      <i class="fas fa-angle-down" *ngIf="!isAttachmentsOpen"></i>
+      <i class="fas fa-angle-up" *ngIf="isAttachmentsOpen"></i>
+    </div>
+
+    <ul class="list-group" *ngIf="isAttachmentsOpen">
+      <ng-container *ngFor="let attachment of communication.attachments">
+        <li class="list-group-item list-group-item-action rounded-0 py-2 pointer">
+          <i class="fas fa-link"></i>
+          <a class="d-block-inline ms-3" [href]="'/id/' + attachment.guid" target="_blank">{{ attachment.label }}</a>
+        </li>
+      </ng-container>
+    </ul>
+  </section>
+
+  <section class="quote-info card card-body rounded-0">
+    <div class="card-label">
+      {{ lang.get("TEXT_VIEW_PAGE_CITATION_TITLE") }}
+    </div>
+
+    <p class="general-copyright-notice">
+      {{
+        lang.get(
+          "TEXT_VIEW_PAGE_GENERAL_CITATION",
+          selectedLetter.editor ? selectedLetter.editor + ":" : "",
+          selectedLetter.label
+        )
+      }}
+    </p>
+
+    <p class="general-copyright-iri">
+      <span class="fw-bold">{{ lang.get("TEXT_VIEW_PAGE_CITATION_IRI") }}</span> <br />
+      <a (click)="copyURLtoClipboard()" class="d-inline-block">https://sozinianer.de/id/{{ selectedLetter.guid }}</a>
+      <span *ngIf="isCopiedToClipboard" class="d-inline-block ps-2 fade-in-fast">{{
+        lang.get("TEXT_VIEW_PAGE_CITATION_COPIED_TO_CLIPBOARD")
+      }}</span>
+    </p>
+
+    <p class="general-copyright-usage-note">
+      <span class="fw-bold d-block">{{ lang.get("TEXT_VIEW_PAGE_USAGE_NOTE_TITLE") }}</span>
+      <span [innerHTML]="lang.get('TEXT_VIEW_PAGE_USAGE_NOTE_DESCRIPTION')"></span>
+    </p>
+  </section>
+</main>

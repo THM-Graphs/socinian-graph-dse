@@ -1,0 +1,22 @@
+{
+  "/api": {
+    "target": {
+      "host": "localhost",
+      "protocol": "http:",
+      "port": 8443
+    },
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info"
+  },
+  "/graphql": {
+    "target": {
+      "host": "localhost",
+      "protocol": "http:",
+      "port": 8443
+    },
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info"
+  }
+}

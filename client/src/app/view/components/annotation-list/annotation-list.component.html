@@ -1,0 +1,44 @@
+<div class="list-container scrolling-styles">
+  <div class="text-end" *ngIf="annotationListService.annotationList.length > 0">
+    <a class="clear-list" (click)="annotationListService.clearList()">
+      {{ lang.get("ANNOTATION_LIST_CLEAR") }}
+    </a>
+  </div>
+
+  <div class="annotation-box card mb-3" *ngFor="let annotation of annotationListService.annotationList">
+    <div class="loading" *ngIf="annotation.isLoading">
+      <div class="d-flex justify-content-center mt-5 mb-5">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-header fade-in-medium" *ngIf="annotation.title">
+      <div class="d-flex justify-content-between">
+        <div class="py-2 pe-2" [innerHTML]="annotation.title | safeHtml"></div>
+        <div class="py-2 px-1">
+          <i
+            class="fas fa-close align-middle pointer"
+            (click)="annotationListService.closeAnnotation(annotation.id)"
+          ></i>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="!annotation.standoffProperties; then withoutStandoff; else withStandoff"></ng-container>
+    <ng-template #withoutStandoff>
+      <div
+        class="card-body fade-in-medium"
+        *ngIf="annotation.contents"
+        [innerHTML]="annotation.contents | safeHtml"
+      ></div>
+    </ng-template>
+    <ng-template #withStandoff>
+      <app-text-view
+        class="card-body fade-in-medium"
+        [standOffProperties]="annotation.standoffProperties ?? []"
+        [selectedText]="annotation.contents"
+      >
+      </app-text-view>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<h5 class="h5 mb-4">{{ lang.get("HOME_ABOUT_NEWS_TITLE") }}</h5>
+
+<app-loading-spinner [isLoading]="isSectionListLoading"></app-loading-spinner>
+
+<ng-container *ngIf="!isSectionListLoading">
+  <ul>
+    <li class="publication" *ngFor="let listing of sectionListing">
+      <a (click)="callback(listing)">{{ listing.name }}</a>
+    </li>
+  </ul>
+</ng-container>

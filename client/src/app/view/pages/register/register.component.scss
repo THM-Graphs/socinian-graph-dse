@@ -1,0 +1,65 @@
+@import "../../../../styles/theme";
+
+.register-search {
+  border-radius: 0 !important;
+  border-bottom: 2px solid map_get(map_get($root, accent), 0) !important;
+  padding: 0 0 0 10px;
+
+  input {
+    border-radius: 0 !important;
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  &:hover {
+    background: white;
+  }
+}
+
+.register-selection {
+  .btn {
+    border-radius: 5px !important;
+    padding: 8px 0;
+  }
+}
+
+.register-loading,
+.no-register-entries {
+  margin: 200px 0;
+
+  .spinner-border {
+    color: map_get(map_get($root, accent), 50) !important;
+    width: 4rem !important;
+    height: 4rem !important;
+  }
+}
+
+.register-letters {
+  min-height: 90px;
+
+  .alphabetical-filter {
+    .btn {
+      margin: 5px 5px;
+      min-width: 24px;
+    }
+  }
+}
+
+.register-entries {
+  .list-of-entries {
+    font-size: 14pt;
+
+    li {
+      margin: 5px 0;
+    }
+  }
+}
+
+.sticky-top {
+  top: 25px;
+}
+
+h4 {
+  font-weight: 350 !important;
+}

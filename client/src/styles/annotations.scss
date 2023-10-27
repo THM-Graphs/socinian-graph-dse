@@ -1,0 +1,133 @@
+@import "annotations-colors";
+@import "theme";
+
+.rendered-text-view {
+  position: relative;
+}
+
+.spo-headline {
+  font-weight: 400;
+  font-size: calc(1.175rem + 0.3vw);
+  line-height: 1.5;
+  margin: 15px 0;
+}
+
+.person {
+  border-bottom: 2px solid $person;
+  cursor: pointer;
+}
+
+.place {
+  border-bottom: 2px solid $place;
+  cursor: pointer;
+}
+
+.term,
+.comet {
+  border-bottom: 2px solid $term;
+  cursor: pointer;
+}
+
+.letter {
+  border-bottom: 2px solid $comet;
+  cursor: pointer;
+}
+
+.abbr {
+  background-color: $abbrHighlight !important;
+  cursor: help;
+  opacity: 0.9;
+  transition: opacity ease-in-out 0.3s;
+
+  &:hover {
+    opacity: 1;
+    transition: opacity ease-in-out 0.3s;
+  }
+}
+
+.tooltip {
+  &.show {
+    opacity: 1 !important;
+  }
+
+  & > .tooltip-inner {
+    padding: 7px 20px;
+    background-color: map_get(map_get($root, accent), 50) !important;
+    color: #fff;
+  }
+}
+
+.tooltip-arrow::before {
+  border-top-color: map_get(map_get($root, accent), 50) !important;
+}
+
+.add {
+  color: $addTextColor;
+}
+
+.commented,
+.register-entry.comment,
+.note {
+  background-color: $commentedHighlight;
+  opacity: 0.9;
+  transition: opacity ease-in-out 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+    transition: opacity ease-in-out 0.3s;
+  }
+}
+
+.date {
+  background-color: $dateHighlight;
+  opacity: 0.9;
+  transition: opacity ease-in-out 0.3s;
+  cursor: help;
+
+  &:hover {
+    opacity: 1;
+    transition: opacity ease-in-out 0.3s;
+  }
+}
+
+.del {
+  color: $delTextColor;
+  text-decoration: line-through;
+}
+
+.gap {
+  background-color: $otherHighlight;
+}
+
+.lock-pressure {
+  letter-spacing: 0.125em;
+}
+
+.small-caps {
+  font-variant: small-caps;
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+.font-italic {
+  font-style: italic;
+}
+
+.pb {
+  position: absolute;
+  left: -130px;
+
+  a {
+    font-size: 10pt;
+  }
+}
+
+.sic,
+.supplied,
+.substitute,
+.unclear {
+  background: $otherHighlight;
+}

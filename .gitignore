@@ -1,0 +1,18 @@
+### Webstorm & VSC ###
+.idea/
+*.code-workspace
+
+### JavaScript ###
+*.js
+*.map.js
+
+### Node ###
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test

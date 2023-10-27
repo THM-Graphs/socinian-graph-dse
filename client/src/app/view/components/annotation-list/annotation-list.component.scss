@@ -1,0 +1,48 @@
+@import "../../../../styles/theme";
+
+.list-container {
+  padding: 15px;
+  z-index: 1;
+  position: absolute;
+  max-width: 315px;
+  min-width: 315px;
+
+  max-height: 80vh;
+  overflow: auto;
+
+  right: 0;
+  top: 0;
+
+  .annotation-box {
+    margin: 15px 0;
+  }
+
+  .card-header {
+    background: map_get(map_get($root, accent), 50) !important;
+    color: map_get(map_get($root, tints), 100) !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+
+    a {
+      color: map_get(map_get($root, tints), 80);
+      background-image: linear-gradient(map_get(map_get($root, tints), 100), map_get(map_get($root, tints), 80));
+    }
+  }
+}
+
+.spinner-border {
+  color: map_get(map_get($root, accent), 50) !important;
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+.clear-list {
+  font-size: 11pt;
+  opacity: 0.75;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+  }
+}

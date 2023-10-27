@@ -1,0 +1,186 @@
+@import "theme";
+@import "fonts";
+@import "animations";
+@import "markdown";
+@import "annotations";
+
+.font-calli {
+  font-family: "Calligraffitti", cursive;
+}
+
+.font-antiqua {
+  font-family: "Modern Antiqua", cursive;
+}
+
+.font-opensans {
+  font-family: "Open Sans", sans-serif;
+}
+
+.w-15 {
+  width: 15% !important;
+}
+
+.w-20 {
+  width: 20% !important;
+}
+
+.display-7 {
+  font-size: calc(1.1rem + 1.5vw);
+  font-weight: 350;
+  line-height: 1.5;
+}
+
+@media (min-width: 1200px) {
+  .display-7 {
+    font-size: 1.5rem;
+  }
+}
+
+.display-8 {
+  font-size: calc(1.175rem + 1.5vw);
+  font-weight: 350;
+  line-height: 1.5;
+}
+
+@media (min-width: 1200px) {
+  .display-8 {
+    font-size: 1.4rem;
+  }
+}
+
+.bg-dark {
+  background-color: map_get(map_get($root, accent), 10) !important;
+}
+
+.btn-primary {
+  background: map_get(map_get($root, accent), 50) !important;
+  border: 1px solid map_get(map_get($root, accent), 0) !important;
+
+  &:hover {
+    background: map_get(map_get($root, accent), 60) !important;
+    border: 1px solid map_get(map_get($root, accent), 20) !important;
+  }
+
+  &:focus,
+  &:active {
+    box-shadow: none;
+  }
+
+  &.active {
+    background: map_get(map_get($root, accent), 60) !important;
+  }
+}
+
+.btn-secondary {
+  background: map_get(map_get($root, accent), 30) !important;
+  border: 1px solid map_get(map_get($root, accent), 50) !important;
+
+  &:hover {
+    background: map_get(map_get($root, accent), 60) !important;
+    border: 1px solid map_get(map_get($root, accent), 60) !important;
+  }
+
+  &:focus,
+  &:active {
+    box-shadow: none;
+  }
+
+  &.active {
+    background: map_get(map_get($root, accent), 70) !important;
+  }
+}
+
+.pointer {
+  cursor: pointer !important;
+}
+
+.filter-white {
+  filter: grayscale(1) invert(1);
+}
+
+.navbar {
+  border-bottom: 1px solid map_get(map_get($root, accent), 0) !important;
+  box-shadow: 0 1px 2px map_get(map_get($root, accent), 0);
+}
+
+.hero {
+  background-color: map_get(map_get($root, accent), 60) !important;
+  background: url("../assets/images/socinian/home-hero-search.jpg");
+  background-size: cover;
+  background-position: top;
+  min-height: 450px;
+  max-height: 450px;
+}
+
+.text-dark {
+  color: map_get(map_get($root, accent), 50) !important;
+}
+
+.text-beige {
+  color: map_get(map_get($root, accent), 100) !important;
+}
+
+a {
+  cursor: pointer;
+  color: map_get(map_get($root, accent), 60);
+  text-decoration: none;
+  background-image: linear-gradient(map_get(map_get($root, accent), 10), map_get(map_get($root, accent), 10));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    color: map_get(map_get($root, accent), 80);
+    background-size: 0 1px;
+    transition: all 0.3s ease-in-out;
+  }
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  margin-top: auto;
+}
+
+.scrolling-styles {
+  scrollbar-width: thin; // Firefox
+  scrollbar-color: map_get(map_get($root, accent), 50) map_get(map_get($root, accent), 50);
+
+  &::-webkit-scrollbar {
+    visibility: initial;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: map_get(map_get($root, accent), 90);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: map_get(map_get($root, accent), 50);
+    border-radius: 15px;
+  }
+}
+
+.list-group-item {
+  overflow: hidden;
+  white-space: nowrap;
+
+  &.active {
+    border: 1px solid map_get(map_get($root, accent), 20) !important;
+    background: map_get(map_get($root, accent), 50) !important;
+    color: map_get(map_get($root, tints), 100) !important;
+  }
+
+  .category-icon {
+    display: inline-block;
+    width: 30px;
+  }
+}
+
+main {
+  min-height: calc(100vh - 450px);
+}

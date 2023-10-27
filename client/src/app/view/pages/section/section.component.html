@@ -1,0 +1,78 @@
+<main class="container-fluid container-md py-3 py-md-5">
+  <app-loading-spinner [isLoading]="isSectionLoading" minHeight="400"></app-loading-spinner>
+
+  <div class="row gx-3 fade-in-medium" *ngIf="!isSectionLoading && selectedSection">
+    <section class="col-12 col-md-12 col-lg-4">
+      <ul class="list-group pointer sticky-top rounded-0">
+        <ng-container *ngFor="let section of sections">
+          <li
+            class="list-group-item list-group-item-action"
+            [class.active]="isSectionTreeSelected(section)"
+            (click)="renderSection(section.guid)"
+          >
+            <h6 class="m-0 py-3 px-2">
+              <span>{{ section.label }}</span>
+            </h6>
+
+            <ng-container *ngIf="isSectionTreeSelected(section)">
+              <ul class="list-group pointer rounded-0">
+                <ng-container *ngFor="let child of section.children">
+                  <li
+                    class="list-group-item list-group-item-action"
+                    [class.active]="child.guid === selectedSection.guid"
+                    (click)="renderSection(child.guid); $event.stopPropagation()"
+                  >
+                    <span class="small"> {{ child.label }}</span>
+                  </li>
+                </ng-container>
+              </ul>
+            </ng-container>
+          </li>
+        </ng-container>
+      </ul>
+    </section>
+    <section class="col-12 col-md-12 col-lg-8 mt-3 mt-lg-0">
+      <app-loading-spinner [isLoading]="isSectionInnerLoading" minHeight="250"></app-loading-spinner>
+      <ng-container *ngIf="!isSectionInnerLoading">
+        <div class="card rounded-0 fade-in-medium">
+          <div class="card-body">
+            <h1 class="display-6 mb-3">
+              {{ selectedSection.label }}
+            </h1>
+
+            <ng-container *ngIf="selectedSection.text">
+              <div [class.brief-text]="!isTextFullyOpened">
+                <app-text-view
+                  [selectedText]="selectedSection.text"
+                  [standOffProperties]="selectedSection.standoffProperties"
+                ></app-text-view>
+              </div>
+
+              <div class="text-center read-more py-2" *ngIf="!isTextFullyOpened" (click)="isTextFullyOpened = true">
+                <span class="h6 pointer">{{ lang.get("SECTION_CONTENT_READ_MORE") }}</span>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="!selectedSection.text">
+              {{ lang.get("SECTION_CONTENT_UNDER_CONSTRUCTION") }}
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <ng-container *ngIf="selectedSection.communications">
+            <app-communications-filter
+              [communications]="selectedSection.communications"
+              (filteredCommunicationsEvent)="filteredCommunications = $event"
+              [showMaxAmount]="false"
+            ></app-communications-filter>
+            <app-communications-list
+              [communications]="filteredCommunications"
+              [maxAmount]="15"
+            ></app-communications-list>
+          </ng-container>
+        </div>
+      </ng-container>
+    </section>
+  </div>
+</main>

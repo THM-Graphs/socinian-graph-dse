@@ -1,0 +1,140 @@
+<main class="container-fluid container-md py-5">
+  <section class="register-letters">
+    <div class="row mb-3">
+      <div class="col-12 text-center">
+        <ng-container *ngIf="!isRegisterLoading">
+          <div class="alphabetical-filter fade-in-slow">
+            <button
+              type="button"
+              class="btn btn-secondary text-uppercase"
+              *ngFor="let letter of availableLetters"
+              [class.active]="letter === activeLetter && searchPhrase === ''"
+              (click)="activeLetter = letter; searchPhrase = ''; onFilterEntriesByLetter(letter)"
+            >
+              {{ letter }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary text-uppercase"
+              [class.active]="searchPhrase !== ''"
+              *ngIf="searchPhrase"
+            >
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+
+  <div class="row gx-3">
+    <section class="col-12 col-md-5 col-lg-3">
+      <ul class="list-group pointer sticky-top rounded-0">
+        <li class="list-group-item list-group-item-action register-search py-3">
+          <div class="input-group">
+            <div class="input-group-prepend border-0">
+              <button id="button-addon4" type="button" class="btn btn-link text-dark">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+            <input
+              type="search"
+              [placeholder]="lang.get('REGISTER_SEARCH_PLACEHOLDER')"
+              (input)="onSearchInputEvent($event)"
+              class="form-control bg-none border-0 rounded-pill"
+            />
+          </div>
+        </li>
+
+        <ng-container *ngFor="let register of categories">
+          <li
+            class="list-group-item list-group-item-action"
+            [class.active]="activeRegister === register.name"
+            (click)="onRegisterSelected(register)"
+          >
+            <h6 class="m-0 py-3 px-2">
+              <i class="fas {{ register.icon }} category-icon"></i>
+              <span class="ps-md-3">{{ lang.get(register.name) }}</span>
+            </h6>
+          </li>
+        </ng-container>
+        <li
+          class="list-group-item list-group-item-action"
+          [class.active]="activeRegister === 'REGISTER_ALL_REGISTER'"
+          (click)="onRegisterSelected()"
+        >
+          <h6 class="m-0 py-3 px-2">
+            <i class="fas fa-folder-open category-icon"></i>
+            <span class="ps-md-3">{{ lang.get("REGISTER_ALL_REGISTER") }}</span>
+          </h6>
+        </li>
+      </ul>
+    </section>
+    <section class="col-12 col-md-7 col-lg-9 mt-3 mt-md-0">
+      <div class="card rounded-0">
+        <div class="card-body">
+          <h1 class="display-5">
+            {{ lang.get(activeRegister) }}
+          </h1>
+          <h4 class="text-uppercase my-4">
+            <ng-container *ngIf="searchPhrase === ''">
+              {{ lang.get("REGISTER_FILTER_TITLE") }}: {{ activeLetter }}
+            </ng-container>
+            <ng-container *ngIf="searchPhrase !== ''">
+              {{ lang.get("REGISTER_FILTER_TITLE") }}: {{ searchPhrase }}
+            </ng-container>
+          </h4>
+
+          <app-loading-spinner [isLoading]="isRegisterLoading"></app-loading-spinner>
+
+          <section class="no-register-entries" *ngIf="!isRegisterLoading && registerEntries.length === 0">
+            <div class="container">
+              <div class="row">
+                <div class="col-12 text-center">
+                  <span class="display-6">{{ lang.get("REGISTER_NO_ENTRIES_FOUND") }}</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="register-entries" *ngIf="!isRegisterLoading && registerEntries.length > 0">
+            <ul class="list-of-entries fade-in-fast">
+              <li *ngFor="let entry of filteredEntries" [attr.data-id]="entry.guid">
+                <a class="register-entry" [href]="'/entry/' + entry.guid" target="_blank">{{ entry.label }}</a>
+                <span class="small" *ngIf="entry.occurrences.length > 0"> ({{ entry.occurrences.length }})</span>
+              </li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="register-letters">
+    <div class="row mt-4">
+      <div class="col-12 text-center">
+        <ng-container *ngIf="!isRegisterLoading">
+          <div class="alphabetical-filter fade-in-slow">
+            <button
+              type="button"
+              class="btn btn-secondary text-uppercase"
+              *ngFor="let letter of availableLetters"
+              [class.active]="letter === activeLetter && searchPhrase === ''"
+              (click)="activeLetter = letter; searchPhrase = ''; onFilterEntriesByLetter(letter)"
+            >
+              {{ letter }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary text-uppercase"
+              [class.active]="searchPhrase !== ''"
+              *ngIf="searchPhrase"
+            >
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+</main>

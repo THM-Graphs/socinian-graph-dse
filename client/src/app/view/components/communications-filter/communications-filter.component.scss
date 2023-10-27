@@ -1,0 +1,64 @@
+@import "../../../../styles/theme";
+
+.collection-search {
+  border-radius: 0 !important;
+  border-bottom: 1px solid map_get(map_get($root, accent), 10) !important;
+  padding: 0 0 5px 0;
+
+  input {
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+.collection-filter {
+  .option-menu {
+    margin-right: 20px;
+    position: relative;
+
+    .remover {
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+
+    button {
+      border-radius: 0 !important;
+    }
+
+    .list-unstyled {
+      min-width: 100%;
+      display: none;
+      position: absolute;
+      white-space: nowrap;
+      z-index: 100;
+      background: map_get(map_get($root, accent), 20);
+      padding: 10px;
+
+      li {
+        color: map_get(map_get($root, tints), 100);
+        padding: 10px 20px;
+        cursor: pointer;
+
+        &:hover {
+          background: map_get(map_get($root, accent), 70);
+        }
+
+        &.active {
+          background: map_get(map_get($root, accent), 70);
+        }
+      }
+    }
+
+    &:hover {
+      .list-unstyled {
+        display: block;
+      }
+
+      button {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+@import "../../../../styles/theme";
+
+.sticky-top {
+  top: 25px;
+}
+
+.list-group-item {
+  .list-group-item {
+    background: map_get(map_get($root, accent), 30);
+    color: map_get(map_get($root, tints), 100);
+
+    &:hover {
+      background: map_get(map_get($root, accent), 20);
+    }
+
+    &.active {
+      background: map_get(map_get($root, accent), 20) !important;
+    }
+  }
+}
+
+.brief-text {
+  max-height: 350px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
