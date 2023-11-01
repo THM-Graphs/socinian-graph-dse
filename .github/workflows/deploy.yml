@@ -68,10 +68,7 @@ jobs:
         with:
           name: development-artifact
 
-      - name: unzip artifact for deployment
-        run: unzip development-deploy.zip
-
-      - name: Install SSH Key #Ist das nötig? Der hinterlegte SSH KEY ist ja schon auf dem server ...
+      - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{secrets.SSH_KEY}}
@@ -81,10 +78,12 @@ jobs:
         with:
           host: ${{secrets.SSH_HOST}}
           user: ${{ secrets.SSH_USER }}
-          key: /home/runner/.ssh/id_rsa
+          key: ${{secrets.SSH_KEY}}
           first_ssh: |
             cd ${{ secrets.SSH_PATH }}
-          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy/* => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
+            rm -r * || :
+          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
           last_ssh: |
+            unzip development-deploy.zip
             
             
