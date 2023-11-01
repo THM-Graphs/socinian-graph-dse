@@ -47,11 +47,14 @@ jobs:
           cp -r server development-deploy/
         working-directory: ${{ github.workspace }}
 
+      - name: Zip artifact for deployment
+        run: zip development-deploy.zip ./development-deploy -r
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: development-artifact
-          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy/
+          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip
 
 
   deploy-dev:
@@ -64,7 +67,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: development-artifact
-          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy/
+
+      - name: unzip artifact for deployment
+        run: unzip development-deploy.zip
 
       - name: Install SSH Key #Ist das nötig? Der hinterlegte SSH KEY ist ja schon auf dem server ...
         uses: shimataro/ssh-key-action@v2
