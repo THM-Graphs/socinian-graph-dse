@@ -80,19 +80,19 @@ jobs:
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{secrets.SSH_KEY}}
-          known_hosts: ${{secrets.KNOWN_HOSTS}}
+          key: ${{secrets.DEV_SSH_KEY}}
+          known_hosts: ${{secrets.DEV_KNOWN_HOSTS}}
       - name: ssh-scp-ssh-pipelines
         uses: cross-the-world/ssh-scp-ssh-pipelines@v1.1.4
         with:
-          host: ${{secrets.SSH_HOST}}
-          user: ${{ secrets.SSH_USER }}
-          key: ${{secrets.SSH_KEY}}
+          host: ${{secrets.DEV_SSH_HOST}}
+          user: ${{ secrets.DEV_SSH_USER }}
+          key: ${{secrets.DEV_SSH_KEY}}
           first_ssh: |
             cd ${{ secrets.SSH_PATH }}
             pm2 delete --silent "GraphQL Dev" || :
             rm -r * || :
-          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip => ${{ secrets.SSH_PATH }} # Warum ist der path geheim?
+          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip => ${{ secrets.SSH_PATH }}
           last_ssh: |
             cd ${{ secrets.SSH_PATH }}
             mkdir temp_folder
