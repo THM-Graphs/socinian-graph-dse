@@ -1,0 +1,82 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Deployment
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build the project
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: cd client
+      - run: npm ci --force
+      - run: npm run build --if-present
+
+      - run: cd ../server
+      - run: npm ci
+      - run: npm run compile
+
+      - run: cd ..
+
+      - name: Create directory structure for deployment
+        run: |
+          mkdir -p development-deploy/client
+          mkdir -p development-deploy/server
+          cp -r client/dist development-deploy/client/
+          cp -r server development-deploy/
+        working-directory: ${{ github.workspace }}
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: development-artifact
+          path: .
+
+
+  deploy-dev:
+    name: deploy to development server
+    needs: [ build ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: development-artifact
+          path: .
+
+      - name: Install SSH Key #Ist das nötig? Der hinterlegte SSH KEY ist ja schon auf dem server ...
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          known_hosts: ${{secrets.KNOWN_HOSTS}}
+      - name: ssh-scp-ssh-pipelines
+        uses: cross-the-world/ssh-scp-ssh-pipelines@v1.1.4
+        with:
+          host: ${{secrets.SSH_HOST}}
+          user: ${{ secrets.SSH_USER }}
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          first_ssh: |
+            cd ${{ secrets.SSH_PATH }}
+          scp: ./* => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
+          last_ssh: |
+            
+            
