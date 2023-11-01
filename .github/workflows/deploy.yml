@@ -83,6 +83,8 @@ jobs:
             cd ${{ secrets.SSH_PATH }}
             pm2 delete --silent "GraphQL Dev" || :
             rm -r * || :
+            export NEO4J_USERNAME=${{secrets.NEO4J_USERNAME}}
+            export NEO4J_PASSWORD=${{secrets.NEO4J_PASSWORD}}
           scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
           last_ssh: |
             cd ${{ secrets.SSH_PATH }}
@@ -92,5 +94,6 @@ jobs:
             mv temp_folder/development-deploy/server ./
             rm -r temp_folder
             cd server
+            npm ci
             pm2 start npm --name "GraphQL Dev" -- start
             pm2 save
