@@ -37,7 +37,7 @@ jobs:
       - run: npm ci
         working-directory: './server'
       - run: npm run compile
-        working-directory: './client'
+        working-directory: './server'
 
       - name: Create directory structure for deployment
         run: |
