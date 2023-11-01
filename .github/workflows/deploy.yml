@@ -29,8 +29,12 @@ jobs:
           cache-dependency-path: |
             client/package-lock.json
             server/package-lock.json
+      - run: cd client
       - run: npm install --force
       - run: npm run build --if-present
+
+      - run: cd ../server
+      - run: npm install --force
       - run: npm run compile --if-present
 
       - name: Create directory structure for deployment
