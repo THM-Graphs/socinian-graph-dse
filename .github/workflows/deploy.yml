@@ -5,9 +5,7 @@ name: Deployment
 
 on:
   push:
-    branches: [ "develop" ]
-  pull_request:
-    branches: [ "develop" ]
+    branches: ["develop"]
   workflow_dispatch:
 
 jobs:
@@ -17,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [16.x]
 
     steps:
       - uses: actions/checkout@v3
@@ -25,19 +23,31 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: |
             client/package-lock.json
             server/package-lock.json
       - run: npm ci --force
-        working-directory: './client'
+        working-directory: "./client"
       - run: npm run build
-        working-directory: './client'
+        working-directory: "./client"
 
       - run: npm ci
-        working-directory: './server'
+        working-directory: "./server"
       - run: npm run compile
-        working-directory: './server'
+        working-directory: "./server"
+
+      - name: Create environment file
+        env:
+          HOST: ${{ secrets.DEV_NEO4J_HOST }}
+          USERNAME: ${{ secrets.DEV_NEO4J_USERNAME }}
+          PASSWORD: ${{ secrets.DEV_NEO4J_PASSWORD }}
+        run: |
+          sed -i -e '$a\' .env
+          echo NEO4J_HOST=$HOST >> .env
+          echo NEO4J_USERNAME=$USERNAME >> .env
+          echo NEO4J_PASSWORD=$PASSWORD >> .env
+        working-directory: "./server"
 
       - name: Create directory structure for deployment
         run: |
@@ -56,10 +66,9 @@ jobs:
           name: development-artifact
           path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip
 
-
   deploy-dev:
     name: deploy to development server
-    needs: [ build ]
+    needs: [build]
     runs-on: ubuntu-latest
 
     steps:
@@ -83,7 +92,7 @@ jobs:
             cd ${{ secrets.SSH_PATH }}
             pm2 delete --silent "GraphQL Dev" || :
             rm -r * || :
-          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
+          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip => ${{ secrets.SSH_PATH }} # Warum ist der path geheim?
           last_ssh: |
             cd ${{ secrets.SSH_PATH }}
             mkdir temp_folder
