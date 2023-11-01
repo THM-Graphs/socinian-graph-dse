@@ -81,6 +81,7 @@ jobs:
         with:
           host: ${{secrets.SSH_HOST}}
           user: ${{ secrets.SSH_USER }}
+          key: /home/runner/.ssh/id_rsa
           first_ssh: |
             cd ${{ secrets.SSH_PATH }}
           scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy/* => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
