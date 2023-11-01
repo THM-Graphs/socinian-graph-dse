@@ -41,20 +41,20 @@ jobs:
 
       - name: Create directory structure for deployment
         run: |
-          mkdir -p publikationsumgebung/client
-          mkdir -p publikationsumgebung/server
-          cp -r client/dist publikationsumgebung/client/
-          cp -r server publikationsumgebung/
+          mkdir -p development-deploy/client
+          mkdir -p development-deploy/server
+          cp -r client/dist development-deploy/client/
+          cp -r server development-deploy/
         working-directory: ${{ github.workspace }}
 
       - name: Zip artifact for deployment
-        run: zip publikationsumgebung.zip ./publikationsumgebung -r
+        run: zip development-deploy.zip ./development-deploy -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: development-artifact
-          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/publikationsumgebung.zip
+          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip
 
 
   deploy-dev:
@@ -83,9 +83,9 @@ jobs:
             cd ${{ secrets.SSH_PATH }}
             pm2 delete --silent "GraphQL Dev" || :
             rm -r * || :
-          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/publikationsumgebung.zip => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
+          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
           last_ssh: |
             cd ${{ secrets.SSH_PATH }}
-            unzip publikationsumgebung.zip
+            unzip development-deploy.zip
             pm2 start npm --name "GraphQL Dev" -- start
             pm2 save
