@@ -74,14 +74,14 @@ jobs:
       - name: Install SSH Key #Ist das nötig? Der hinterlegte SSH KEY ist ja schon auf dem server ...
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{secrets.SSH_PRIVATE_KEY}}
+          key: ${{secrets.SSH_KEY}}
           known_hosts: ${{secrets.KNOWN_HOSTS}}
       - name: ssh-scp-ssh-pipelines
         uses: cross-the-world/ssh-scp-ssh-pipelines@v1.1.4
         with:
           host: ${{secrets.SSH_HOST}}
           user: ${{ secrets.SSH_USER }}
-          key: ${{secrets.SSH_PRIVATE_KEY}}
+          key: ${{secrets.SSH_KEY}}
           first_ssh: |
             cd ${{ secrets.SSH_PATH }}
           scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy/* => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
