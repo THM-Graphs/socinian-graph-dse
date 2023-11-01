@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: development-artifact
-          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/release/
+          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy/
 
 
   deploy-dev:
@@ -64,7 +64,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: development-artifact
-          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/release/
+          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy/
 
       - name: Install SSH Key #Ist das nötig? Der hinterlegte SSH KEY ist ja schon auf dem server ...
         uses: shimataro/ssh-key-action@v2
@@ -79,7 +79,7 @@ jobs:
           key: ${{secrets.SSH_PRIVATE_KEY}}
           first_ssh: |
             cd ${{ secrets.SSH_PATH }}
-          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/release/* => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
+          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy/* => ${{ secrets.SSH_PATH }}  # Warum ist der path geheim?
           last_ssh: |
             
             
