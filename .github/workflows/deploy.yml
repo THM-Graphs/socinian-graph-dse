@@ -13,28 +13,25 @@ jobs:
     name: build the project
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "20.x"
           cache: "npm"
           cache-dependency-path: |
             client/package-lock.json
             server/package-lock.json
-      - run: npm ci --force
-        working-directory: "./client"
-      - run: npm run build
+            
+      - run: |
+          npm ci --force
+          npm run build
         working-directory: "./client"
 
-      - run: npm ci
-        working-directory: "./server"
-      - run: npm run compile
+      - run: |
+          npm ci
+          npm run compile
         working-directory: "./server"
 
       - name: Create environment file
