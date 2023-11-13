@@ -94,9 +94,15 @@ jobs:
 
       - name: Set environment variables
         run: |
-          SSH_HOST=${{ github.ref == 'refs/heads/main' && secrets.PROD_SSH_HOST || secrets.DEV_SSH_HOST || '' }}
-          SSH_USER=${{ github.ref == 'refs/heads/main' && secrets.PROD_SSH_USER || secrets.DEV_SSH_USER || '' }}
-          SSH_KEY=${{ github.ref == 'refs/heads/main' && secrets.PROD_SSH_KEY || secrets.DEV_SSH_KEY || '' }}
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            SSH_HOST=${{ secrets.PROD_SSH_HOST }}
+            SSH_USER=${{ secrets.PROD_SSH_USER }}
+            SSH_KEY=${{ secrets.PROD_SSH_KEY }}
+          else
+            SSH_HOST=${{ secrets.DEV_SSH_HOST }}
+            SSH_USER=${{ secrets.DEV_SSH_USER }}
+            SSH_KEY=${{ secrets.DEV_SSH_KEY }}
+          fi
 
       - name: ssh-scp-ssh-pipelines
         uses: cross-the-world/ssh-scp-ssh-pipelines@v1.1.4
