@@ -36,15 +36,19 @@ jobs:
         working-directory: "./server"
 
       - name: Create environment file
-        env:
-          HOST: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.PROD_NEO4J_HOST }}${{ else }}${{ secrets.DEV_NEO4J_HOST }}${{ endif }}
-          USERNAME: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.PROD_NEO4J_USERNAME }}${{ else }}${{ secrets.DEV_NEO4J_USERNAME }}${{ endif }}
-          PASSWORD: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.NEO4J_PASSWORD }}${{ else }}${{ secrets.DEV_NEO4J_PASSWORD }}${{ endif }}
         run: |
-          sed -i -e '$a\' .env
-          echo NEO4J_HOST=$HOST >> .env
-          echo NEO4J_USERNAME=$USERNAME >> .env
-          echo NEO4J_PASSWORD=$PASSWORD >> .env
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            HOST=${{ secrets.PROD_NEO4J_HOST }}
+            USERNAME=${{ secrets.PROD_NEO4J_USERNAME }}
+            PASSWORD=${{ secrets.PROD_NEO4J_PASSWORD }}
+          else
+            HOST=${{ secrets.DEV_NEO4J_HOST }}
+            USERNAME=${{ secrets.DEV_NEO4J_USERNAME }}
+            PASSWORD=${{ secrets.DEV_NEO4J_PASSWORD }}
+          fi
+          echo "NEO4J_HOST=$HOST" >> .env
+          echo "NEO4J_USERNAME=$USERNAME" >> .env
+          echo "NEO4J_PASSWORD=$PASSWORD" >> .env
         working-directory: "./server"
 
       - name: Create directory structure for deployment
@@ -63,6 +67,7 @@ jobs:
         with:
           name: artifact
           path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/deploy.zip
+
 
   deploy:
     name: deploy to server
