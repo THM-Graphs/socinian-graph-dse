@@ -5,8 +5,9 @@ name: Deployment
 
 on:
   push:
-    branches: ["develop"]
-  workflow_dispatch:
+    branches:
+      - develop
+      - main
 
 jobs:
   build:
@@ -23,7 +24,7 @@ jobs:
           cache-dependency-path: |
             client/package-lock.json
             server/package-lock.json
-            
+
       - run: |
           npm ci --force
           npm run build
@@ -36,9 +37,9 @@ jobs:
 
       - name: Create environment file
         env:
-          HOST: ${{ secrets.DEV_NEO4J_HOST }}
-          USERNAME: ${{ secrets.DEV_NEO4J_USERNAME }}
-          PASSWORD: ${{ secrets.DEV_NEO4J_PASSWORD }}
+          HOST: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.PROD_NEO4J_HOST }}${{ else }}${{ secrets.DEV_NEO4J_HOST }}${{ endif }}
+          USERNAME: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.PROD_NEO4J_USERNAME }}${{ else }}${{ secrets.DEV_NEO4J_USERNAME }}${{ endif }}
+          PASSWORD: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.NEO4J_PASSWORD }}${{ else }}${{ secrets.DEV_NEO4J_PASSWORD }}${{ endif }}
         run: |
           sed -i -e '$a\' .env
           echo NEO4J_HOST=$HOST >> .env
@@ -48,23 +49,23 @@ jobs:
 
       - name: Create directory structure for deployment
         run: |
-          mkdir -p development-deploy/client
-          mkdir -p development-deploy/server
-          cp -r client/dist development-deploy/client/
-          cp -r server development-deploy/
+          mkdir -p deploy/client
+          mkdir -p deploy/server
+          cp -r client/dist deploy/client/
+          cp -r server deploy/
         working-directory: ${{ github.workspace }}
 
       - name: Zip artifact for deployment
-        run: zip development-deploy.zip ./development-deploy -r
+        run: zip deploy.zip ./deploy -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: development-artifact
-          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip
+          name: artifact
+          path: /home/runner/work/socinian-graph-dse/socinian-graph-dse/deploy.zip
 
-  deploy-dev:
-    name: deploy to development server
+  deploy:
+    name: deploy to server
     needs: [build]
     runs-on: ubuntu-latest
 
@@ -72,32 +73,33 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: development-artifact
+          name: artifact
 
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{secrets.DEV_SSH_KEY}}
-          known_hosts: ${{secrets.DEV_KNOWN_HOSTS}}
+          key: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.PROD_SSH_KEY }}${{ else }}${{ secrets.DEV_SSH_KEY }}${{ endif }}
+          known_hosts: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.PROD_KNOWN_HOSTS }}${{ else }}${{ secrets.DEV_KNOWN_HOSTS }}${{ endif }}
+
       - name: ssh-scp-ssh-pipelines
         uses: cross-the-world/ssh-scp-ssh-pipelines@v1.1.4
         with:
-          host: ${{secrets.DEV_SSH_HOST}}
-          user: ${{ secrets.DEV_SSH_USER }}
-          key: ${{secrets.DEV_SSH_KEY}}
+          host: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.PROD_SSH_HOST }}${{ else }}${{ secrets.DEV_SSH_HOST }}${{ endif }}
+          user: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.PROD_SSH_USER }}${{ else }}${{ secrets.DEV_SSH_USER }}${{ endif }}
+          key: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.PROD_SSH_KEY }}${{ else }}${{ secrets.DEV_SSH_KEY }}${{ endif }}
           first_ssh: |
             cd ${{ secrets.SSH_PATH }}
-            pm2 delete --silent "GraphQL Dev" || :
+            pm2 delete --silent ${{ if eq(github.ref, 'refs/heads/main') }}${{ "GraphQL" }}${{ else }}${{ "GraphQL Dev" }}${{ endif }} || :
             rm -r * || :
-          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/development-deploy.zip => ${{ secrets.SSH_PATH }}
+          scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/deploy.zip => ${{ secrets.SSH_PATH }}
           last_ssh: |
             cd ${{ secrets.SSH_PATH }}
             mkdir temp_folder
-            unzip development-deploy.zip -d temp_folder
-            mv temp_folder/development-deploy/client ./
-            mv temp_folder/development-deploy/server ./
+            unzip deploy.zip -d temp_folder
+            mv temp_folder/deploy/client ./
+            mv temp_folder/deploy/server ./
             rm -r temp_folder
             cd server
             npm ci
-            pm2 start npm --name "GraphQL Dev" -- start
+            pm2 start npm --name ${{ if eq(github.ref, 'refs/heads/main') }}${{ "GraphQL" }}${{ else }}${{ "GraphQL Dev" }}${{ endif }} -- start
             pm2 save
