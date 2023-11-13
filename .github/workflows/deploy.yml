@@ -80,11 +80,17 @@ jobs:
         with:
           name: artifact
 
-      - name: Install SSH Key
+      - name: Install openSSH
+        run: |
+          sudo apt-get update
+          sudo apt-get install openssh-client -y
+          
+      - name: SSH Key Action
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ github.ref == 'refs/heads/main' && secrets.PROD_SSH_KEY || secrets.DEV_SSH_KEY || '' }}
           known_hosts: ${{ github.ref == 'refs/heads/main' && secrets.PROD_KNOWN_HOSTS || secrets.DEV_KNOWN_HOSTS || '' }}
+
 
       - name: Set environment variables
         run: |
