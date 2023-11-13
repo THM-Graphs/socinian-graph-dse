@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnChanges, SimpleChanges } from "@angular
 import { IStandoffProperty } from "src/app/models/IStandoffProperty";
 import { AnnotationParser } from "../../../../utils/parser/AnnotationParser";
 import { AnnotationListService } from "../../../services/annotation-list.service";
+import { SelectionUtils } from "src/utils/SelectionUtils";
 
 declare const bootstrap: any;
 
@@ -12,6 +13,7 @@ declare const bootstrap: any;
 export class TextViewComponent implements OnChanges {
   @Input() selectedText: string;
   @Input() standOffProperties: IStandoffProperty[] = [];
+  @Input() textId?: string;
 
   public parsedText: string = "";
 
@@ -26,9 +28,12 @@ export class TextViewComponent implements OnChanges {
     setTimeout(() => this.listener(), 500);
   }
 
-  public generateStandOffPropertyText(): void {
+  public generateStandOffPropertyText(...standoffProperties: IStandoffProperty[]): void {
     this.parsedText = "";
-    const annotationParser: AnnotationParser = new AnnotationParser(this.selectedText, this.standOffProperties);
+    const annotationParser: AnnotationParser = new AnnotationParser(this.selectedText, [
+      ...this.standOffProperties,
+      ...standoffProperties,
+    ]);
     this.parsedText = annotationParser.parseText();
   }
 
@@ -77,6 +82,22 @@ export class TextViewComponent implements OnChanges {
     }
   }
 
+  public handleSelection(): void {
+    const selection: Selection | null = document.getSelection();
+    const selectedText: string | undefined = selection?.toString().trim();
+    if (!selection || !selection.anchorNode || !selection.focusNode) return;
+    if (!selectedText || selectedText === "") return;
+
+    const isBackwards: boolean = SelectionUtils.isSelectionBackwards(selection);
+    const startingNode: Node = isBackwards ? selection.focusNode : selection.anchorNode;
+    const offset: number = isBackwards ? selection.focusOffset : selection.anchorOffset;
+
+    const startIndex: number = SelectionUtils.getSelectionStartIndex(startingNode, offset);
+    const endIndex: number = startIndex + selectedText.length - 1;
+
+    this.renderSelection(startIndex, endIndex);
+  }
+
   public handleCommentedClick($event: Event): void {
     const element: HTMLElement = $event.target as HTMLElement;
     const commentedId: string = element.getAttribute("data-comment-id") ?? "";
@@ -107,5 +128,20 @@ export class TextViewComponent implements OnChanges {
     }
 
     return phrase.join(" ");
+  }
+
+  private renderSelection(startIndex: number, endIndex: number): void {
+    const text: string = this.selectedText.substring(startIndex, endIndex);
+
+    const standoffProperty: IStandoffProperty = {
+      guid: "selection",
+      startIndex: startIndex,
+      endIndex: endIndex,
+      text: text,
+      teiType: "selection",
+    } as IStandoffProperty;
+
+    this.generateStandOffPropertyText(standoffProperty);
+    setTimeout(() => this.listener(), 500);
   }
 }

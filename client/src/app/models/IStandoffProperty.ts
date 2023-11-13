@@ -7,7 +7,7 @@ export interface IStandoffProperty {
   text: string;
   teiType: string;
   type: string;
-  comment: IText;
+  comment?: IText;
   data: string;
   standoffProperties?: IStandoffProperty[];
 }
