@@ -90,16 +90,18 @@ jobs:
         run: |
           SSH_HOST=${{ github.ref == 'refs/heads/main' && secrets.PROD_SSH_HOST || secrets.DEV_SSH_HOST || '' }}
           SSH_USER=${{ github.ref == 'refs/heads/main' && secrets.PROD_SSH_USER || secrets.DEV_SSH_USER || '' }}
+          SSH_KEY=${{ github.ref == 'refs/heads/main' && secrets.PROD_SSH_KEY || secrets.DEV_SSH_KEY || '' }}
+          SSH_KEY=${{ github.ref == 'refs/heads/main' && secrets.PROD_SSH_KEY || secrets.DEV_SSH_KEY || '' }}
 
       - name: ssh-scp-ssh-pipelines
         uses: cross-the-world/ssh-scp-ssh-pipelines@v1.1.4
         with:
           host: ${{ env.SSH_HOST }}
           user: ${{ env.SSH_USER }}
-          key: ${{ secrets.PROD_SSH_KEY }}
+          key: ${{ env.SSH_KEY }}
           first_ssh: |
             cd ${{ secrets.SSH_PATH }}
-            pm2 delete --silent ${{ github.ref == 'refs/heads/main' && "GraphQL" || "GraphQL Dev" }} || :
+            pm2 delete --silent "GraphQL Dev" || :
             rm -r * || :
           scp: /home/runner/work/socinian-graph-dse/socinian-graph-dse/deploy.zip => ${{ secrets.SSH_PATH }}
           last_ssh: |
@@ -111,6 +113,7 @@ jobs:
             rm -r temp_folder
             cd server
             npm ci
-            pm2 start npm --name ${{ github.ref == 'refs/heads/main' && "GraphQL" || "GraphQL Dev" }} -- start
+            pm2 start npm --name "GraphQL Dev" -- start
             pm2 save
+  
   
