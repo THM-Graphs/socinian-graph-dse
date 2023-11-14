@@ -36,19 +36,15 @@ jobs:
         working-directory: "./server"
 
       - name: Create environment file
+        env:
+          HOST: ${{ github.ref == 'refs/heads/main' && secrets.PROD_NEO4J_HOST || secrets.DEV_NEO4J_HOST || '' }}
+          USERNAME: ${{ github.ref == 'refs/heads/main' && secrets.PROD_NEO4J_USERNAME || secrets.DEV_NEO4J_USERNAME || '' }}
+          PASSWORD: ${{ github.ref == 'refs/heads/main' && secrets.PROD_NEO4J_PASSWORD || secrets.DEV_NEO4J_PASSWORD || '' }}
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            HOST=${{ secrets.PROD_NEO4J_HOST }}
-            USERNAME=${{ secrets.PROD_NEO4J_USERNAME }}
-            PASSWORD=${{ secrets.PROD_NEO4J_PASSWORD }}
-          else
-            HOST=${{ secrets.DEV_NEO4J_HOST }}
-            USERNAME=${{ secrets.DEV_NEO4J_USERNAME }}
-            PASSWORD=${{ secrets.DEV_NEO4J_PASSWORD }}
-          fi
-          echo "NEO4J_HOST=$HOST" >> .env
-          echo "NEO4J_USERNAME=$USERNAME" >> .env
-          echo "NEO4J_PASSWORD=$PASSWORD" >> .env
+          sed -i -e '$a\' .env
+          echo NEO4J_HOST=$HOST >> .env
+          echo NEO4J_USERNAME=$USERNAME >> .env
+          echo NEO4J_PASSWORD=$PASSWORD >> .env
         working-directory: "./server"
 
       - name: Create directory structure for deployment
