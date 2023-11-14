@@ -40,6 +40,8 @@
       <app-text-view
         [selectedText]="selectedLetter.abstract.text"
         [standOffProperties]="selectedLetter.abstract.standoffProperties"
+        [mouseSelection]="true"
+        [textId]="selectedLetter.abstract.guid"
       ></app-text-view>
     </div>
   </section>
@@ -78,6 +80,8 @@
     <app-text-view
       [selectedText]="selectedVariant.text"
       [standOffProperties]="selectedVariant.standoffProperties"
+      [mouseSelection]="true"
+      [textId]="selectedVariant.guid"
     ></app-text-view>
   </section>
   <section class="card card-body variant-data-bottom mb-5 rounded-0">

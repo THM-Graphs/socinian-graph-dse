@@ -1,0 +1,9 @@
+@import "../../../../styles/theme";
+
+.selection-box {
+  background: map_get(map_get($root, accent), 10);
+  color: map_get(map_get($root, accent), 100);
+  padding: 10px;
+  position: absolute;
+  left: 0;
+}

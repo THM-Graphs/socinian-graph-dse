@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { IEntity } from "../models/IEntity";
-import { getIconByType } from "../const/ICON_MAP";
+import { getIconByCategory } from "../constants/ICON_MAP";
 import { IText } from "../models/IText";
 import { StandoffPropertyService } from "./standoffproperty.service";
 import { IStandoffProperty } from "../models/IStandoffProperty";
-import { ENTITY_TYPES } from "../const/ENTITY_TYPES";
+import { ENTITY_CATEGORY } from "../constants/ENTITY_CATEGORY";
 
 export interface Annotation {
-  type: AnnotationType;
+  type: ANNOTATION_TYPE;
   id: string;
   title: string;
   contents: string;
@@ -16,7 +16,7 @@ export interface Annotation {
   isLoading: boolean;
 }
 
-export enum AnnotationType {
+export enum ANNOTATION_TYPE {
   REGISTER_ENTRY,
   LETTER_ENTRY,
   COMMENT,
@@ -45,7 +45,7 @@ export class AnnotationListService {
 
   public async addEntityAnnotation(standoffPropertyId: string, clickedPhrase: string): Promise<void> {
     const annotation: Annotation = {
-      type: AnnotationType.REGISTER_ENTRY,
+      type: ANNOTATION_TYPE.REGISTER_ENTRY,
       id: standoffPropertyId,
       isLoading: true,
     } as Annotation;
@@ -55,7 +55,7 @@ export class AnnotationListService {
     if (!entity) return this.closeAnnotation(standoffPropertyId);
 
     const href: string = `/entry/${entity.guid}`;
-    const icon: string = getIconByType(entity.type);
+    const icon: string = getIconByCategory(entity.type);
 
     annotation.title = this.getPhrasedTitle(clickedPhrase, icon, href, entity.label);
     annotation.isLoading = false;
@@ -63,7 +63,7 @@ export class AnnotationListService {
 
   public async addMetadataAnnotation(standoffPropertyId: string, clickedPhrase: string): Promise<void> {
     const annotation: Annotation = {
-      type: AnnotationType.LETTER_ENTRY,
+      type: ANNOTATION_TYPE.LETTER_ENTRY,
       id: standoffPropertyId,
       isLoading: true,
     } as Annotation;
@@ -73,7 +73,7 @@ export class AnnotationListService {
     if (!text || !text.letter) return this.closeAnnotation(standoffPropertyId);
 
     const href: string = `/view/${text.letter.guid}`;
-    const icon: string = getIconByType("text");
+    const icon: string = getIconByCategory(ENTITY_CATEGORY.TEXT);
 
     annotation.title = this.getPhrasedTitle(clickedPhrase, icon, href, text.letter.label);
     annotation.isLoading = false;
@@ -81,7 +81,7 @@ export class AnnotationListService {
 
   public async addReferenceAnnotation(standOffId: string, label: string): Promise<void> {
     const annotation: Annotation = {
-      type: AnnotationType.REFERENCE,
+      type: ANNOTATION_TYPE.REFERENCE,
       id: standOffId,
       isLoading: true,
     } as Annotation;
@@ -91,7 +91,7 @@ export class AnnotationListService {
     if (!comment) return this.closeAnnotation(standOffId);
 
     const href: string = `/view/${comment.letter.guid}`;
-    const icon: string = getIconByType(ENTITY_TYPES.word);
+    const icon: string = getIconByCategory(ENTITY_CATEGORY.WORD);
 
     annotation.title = this.getPhrasedTitle(label, icon, href, comment.letter.label);
     annotation.standoffProperties = comment.standoffProperties;
@@ -102,7 +102,7 @@ export class AnnotationListService {
 
   public async addCommentedAnnotation(standOffId: string, label: string): Promise<void> {
     const annotation: Annotation = {
-      type: AnnotationType.COMMENT,
+      type: ANNOTATION_TYPE.COMMENT,
       id: standOffId,
       isLoading: true,
     } as Annotation;

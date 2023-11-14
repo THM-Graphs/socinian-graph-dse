@@ -1,1 +1,3 @@
 <div class="rendered-text-view" [innerHTML]="parsedText | safeHtml" (mouseup)="handleSelection()"></div>
+
+<div class="selection-box" *ngIf="mouseSelection">Zitierlink kopieren</div>

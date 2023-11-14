@@ -5,7 +5,7 @@ import { ISearchLetterEntry, ISearchEntity, ISearch } from "../../../models/ISea
 import { LangManager } from "../../../../utils/LangManager";
 import { Utils } from "../../../../utils/Utils";
 import { LocalStorage } from "../../../../utils/LocalStorage";
-import { getIconByType } from "src/app/const/ICON_MAP";
+import { getIconByCategory } from "src/app/constants/ICON_MAP";
 
 interface SearchDetailsTab<T> {
   key: number;
@@ -146,7 +146,7 @@ export class SearchResultsComponent implements OnInit {
         return {
           label: register.label,
           href: `/register/${register.type}/${register.guid}`,
-          icon: getIconByType(register.type),
+          icon: getIconByCategory(register.type),
         };
       }),
     ];

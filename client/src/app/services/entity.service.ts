@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Apollo, gql } from "apollo-angular";
-import { ENTITY_TYPES } from "../const/ENTITY_TYPES";
+import { ENTITY_CATEGORY } from "../constants/ENTITY_CATEGORY";
 import { ApolloQueryResult, TypedDocumentNode } from "@apollo/client/core";
 import { IEntity } from "../models/IEntity";
 
@@ -55,7 +55,7 @@ const GET_ENTITY_BY_ID: TypedDocumentNode = gql`
 export class EntityService {
   constructor(private apollo: Apollo) {}
 
-  public async getEntities(type?: ENTITY_TYPES | string): Promise<IEntity[]> {
+  public async getEntities(type?: ENTITY_CATEGORY | string): Promise<IEntity[]> {
     try {
       const queryResult: ApolloQueryResult<{ entities: IEntity[] }> = (await this.apollo
         .watchQuery({

@@ -1,12 +1,10 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
-    name: 'objectValue'
+  name: "objectValue",
 })
 export class ObjectValuePipe implements PipeTransform {
-
-    transform<T extends object>(object: T): any[] {
-        return Object.values(object);
-    }
-
+  transform<T extends object>(object: T): any[] {
+    return Object.values(object);
+  }
 }

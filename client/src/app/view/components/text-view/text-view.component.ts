@@ -8,12 +8,15 @@ declare const bootstrap: any;
 
 @Component({
   selector: "app-text-view",
+  styleUrls: ["./text-view.component.scss"],
   templateUrl: "./text-view.component.html",
 })
 export class TextViewComponent implements OnChanges {
   @Input() selectedText: string;
   @Input() standOffProperties: IStandoffProperty[] = [];
+
   @Input() textId?: string;
+  @Input() mouseSelection: boolean = false;
 
   public parsedText: string = "";
 
@@ -83,6 +86,8 @@ export class TextViewComponent implements OnChanges {
   }
 
   public handleSelection(): void {
+    if (!this.mouseSelection) return;
+
     const selection: Selection | null = document.getSelection();
     const selectedText: string | undefined = selection?.toString().trim();
     if (!selection || !selection.anchorNode || !selection.focusNode) return;
@@ -97,6 +102,8 @@ export class TextViewComponent implements OnChanges {
 
     this.renderSelection(startIndex, endIndex);
   }
+
+  public handleSelectionBox(): void {}
 
   public handleCommentedClick($event: Event): void {
     const element: HTMLElement = $event.target as HTMLElement;
