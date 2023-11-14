@@ -89,7 +89,7 @@ jobs:
 
       - name: ssh-scp-ssh-pipelines
         env:
-          APP_NAME: ${{ github.ref == 'refs/heads/main' && 'GraphQL' || 'GraphQL Dev' }}
+          APP_NAME: ${{ github.ref == 'refs/heads/main' && '"GraphQL"' || '"GraphQL Dev"' }}
         uses: cross-the-world/ssh-scp-ssh-pipelines@v1.1.4
         with:
           host: ${{ github.ref == 'refs/heads/main' && secrets.PROD_SSH_HOST || secrets.DEV_SSH_HOST || '' }}
