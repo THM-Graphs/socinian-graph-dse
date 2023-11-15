@@ -18,5 +18,5 @@ export interface IText {
   metadataPrintSourceName: string;
   metadataPrintSourceUrl: string;
   standoffProperties: IStandoffProperty[];
-  data: string;
+  data?: string;
 }

@@ -1,3 +1,4 @@
+import { ENTITY_CATEGORY } from "../constants/ENTITY_CATEGORY.js";
 import { IEntity } from "./IEntity";
 import { IMetadata } from "./IMetadata";
 
@@ -11,7 +12,7 @@ export interface ISearchLetterEntry {
 export interface ISearchEntity {
   guid: string;
   label: string;
-  type: string;
+  type: ENTITY_CATEGORY;
   reference?: IEntity;
 }
 

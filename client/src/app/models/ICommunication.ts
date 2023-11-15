@@ -4,5 +4,5 @@ export interface ICommunication {
   guid: string;
   letter: IMetadata;
   attachments: IMetadata[];
-  data: string;
+  data?: string;
 }

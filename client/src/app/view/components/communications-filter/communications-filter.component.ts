@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 import { ICommunication } from "src/app/models/ICommunication";
-import { IParticipant, ParticipantType } from "src/app/models/IParticipant";
+import { IParticipant, PARTICIPANT } from "src/app/models/IParticipant";
 import { LangManager } from "src/utils/LangManager";
 import * as removeAccents from "remove-accents";
 
@@ -159,7 +159,7 @@ export class CommunicationsFilterComponent implements OnChanges {
   private dateSort(desc: boolean): void {
     const getParticipantDate: (c: ICommunication) => Date = (c: ICommunication) => {
       const sender: IParticipant | undefined = c.letter.participants.find(
-        (p: IParticipant) => p.type === ParticipantType.sentPerson
+        (p: IParticipant) => p.type === PARTICIPANT.SENDER
       );
 
       if (!sender?.dateStart) {
