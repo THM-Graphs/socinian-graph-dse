@@ -135,6 +135,14 @@ export default class AnnotationHandler {
     };
   }
 
+  public static handleCustomParagraph(standOffProperty: IStandoffProperty): Annotation {
+    return {
+      element: "p",
+      attributes: [`data-start="${standOffProperty.startIndex}"`],
+      identifier: standOffProperty.teiType,
+    };
+  }
+
   public static handlePb(standOffProperty: IStandoffProperty, isClosing: boolean): string {
     if (isClosing) return "";
     const data: { facs: string; n: string } = JSON.parse(standOffProperty.data);

@@ -1,9 +1,19 @@
 @import "../../../../styles/theme";
 
-.selection-box {
-  background: map_get(map_get($root, accent), 10);
-  color: map_get(map_get($root, accent), 100);
-  padding: 10px;
+.selection-menu {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   position: absolute;
-  left: 0;
+  z-index: 100;
+  text-align: center;
+
+  i {
+    font-size: 10pt;
+    padding-right: 5px;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .fa-close {
+    transform: translateX(14%);
+  }
 }

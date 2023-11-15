@@ -43,8 +43,8 @@
             <ng-container *ngIf="selectedSection.text">
               <div [class.brief-text]="!isTextFullyOpened">
                 <app-text-view
-                  [selectedText]="selectedSection.text"
-                  [standOffProperties]="selectedSection.standoffProperties"
+                  [text]="selectedSection.text"
+                  [standOffs]="selectedSection.standoffProperties"
                 ></app-text-view>
               </div>
 

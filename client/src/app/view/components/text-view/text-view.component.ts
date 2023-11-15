@@ -1,69 +1,186 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, AfterViewInit } from "@angular/core";
 import { IStandoffProperty } from "src/app/models/IStandoffProperty";
 import { AnnotationParser } from "../../../../utils/parser/AnnotationParser";
 import { AnnotationListService } from "../../../services/annotation-list.service";
-import { SelectionUtils } from "src/utils/SelectionUtils";
+import { Tooltip } from "bootstrap";
+import { TextViewSelectionUtils } from "./text-view.selection-utils";
+import { ActivatedRoute, ParamMap } from "@angular/router";
 
 declare const bootstrap: any;
 
+enum ENTITY_TYPE {
+  LETTER = "letter",
+  COMMENT = "comment",
+}
+
+interface IEventListener {
+  element: Element;
+  event: string;
+  handler: Function;
+}
 @Component({
   selector: "app-text-view",
   styleUrls: ["./text-view.component.scss"],
   templateUrl: "./text-view.component.html",
 })
-export class TextViewComponent implements OnChanges {
-  @Input() selectedText: string;
-  @Input() standOffProperties: IStandoffProperty[] = [];
+export class TextViewComponent implements OnChanges, AfterViewInit {
+  @ViewChild("selectionMenu") selectionMenu: ElementRef;
 
-  @Input() textId?: string;
+  @Input() text: string = "";
+  @Input() guid: string = "";
+  @Input() standOffs: IStandoffProperty[] = [];
   @Input() mouseSelection: boolean = false;
 
   public parsedText: string = "";
+  public isSelectionMenuActive: boolean = false;
 
-  constructor(private elementRef: ElementRef, private annotationListService: AnnotationListService) {}
+  private annotations: IStandoffProperty[] = [];
+  private selection: IStandoffProperty | undefined;
+  private tooltips: Tooltip[] = [];
+  private eventListeners: IEventListener[] = [];
+
+  constructor(
+    private elementRef: ElementRef,
+    private annotationListService: AnnotationListService,
+    private route: ActivatedRoute
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes["selectedText"]) this.initText();
+    if (changes["text"]) {
+      this.selection = undefined;
+
+      const paramsMap: ParamMap = this.route.snapshot.queryParamMap;
+      const selectionStart: number = Number(paramsMap.get("s") ?? 0);
+      const selectionEnd: number = Number(paramsMap.get("e") ?? 0);
+      const guid: string = paramsMap.get("guid") ?? "";
+
+      if (guid === this.guid) this.setSelection(selectionStart, selectionEnd);
+      this.renderText();
+    }
   }
 
-  public initText(): void {
-    this.generateStandOffPropertyText();
-    setTimeout(() => this.listener(), 500);
+  public ngAfterViewInit(): void {
+    if (this.selection) {
+      const selection: HTMLElement = this.elementRef.nativeElement.querySelector(".selection");
+      selection.scrollIntoView({ block: "end", behavior: "smooth" });
+    }
   }
 
-  public generateStandOffPropertyText(...standoffProperties: IStandoffProperty[]): void {
+  public renderText(): void {
+    this.disposeEvents();
     this.parsedText = "";
-    const annotationParser: AnnotationParser = new AnnotationParser(this.selectedText, [
-      ...this.standOffProperties,
-      ...standoffProperties,
-    ]);
-    this.parsedText = annotationParser.parseText();
+
+    this.collectAnnotations();
+    this.parsedText = this.renderAnnotations();
+    setTimeout(() => this.initListeners(), 500);
   }
 
-  public listener(): void {
-    const parent: HTMLElement = this.elementRef.nativeElement;
-    const registerElements = parent.querySelectorAll(".register-entry, .custom-entry");
-    const abbrElements = parent.querySelectorAll(".abbr");
-    const dateElements = parent.querySelectorAll(".date");
-    const commentedElements = parent.querySelectorAll(".commented");
+  private renderAnnotations(): string {
+    const annotationParser: AnnotationParser = new AnnotationParser(this.text, [...this.annotations]);
+    return annotationParser.parseText();
+  }
 
-    commentedElements.forEach((element: Element) => {
-      element.addEventListener("click", this.handleCommentedClick.bind(this));
+  private setSelection(startIndex: number, endIndex: number): void {
+    const text: string = this.text.substring(startIndex, endIndex);
+
+    this.selection = {
+      guid: "selection",
+      startIndex: startIndex,
+      endIndex: endIndex,
+      text: text,
+      teiType: "selection",
+    } as IStandoffProperty;
+  }
+
+  private collectAnnotations(): void {
+    this.annotations = new Array(...this.standOffs);
+    if (this.selection) this.annotations.push(this.selection);
+  }
+
+  private disposeEvents(): void {
+    this.tooltips.forEach((tooltip: Tooltip) => tooltip.dispose());
+    this.tooltips = [];
+
+    this.eventListeners.forEach((listener) => {
+      listener.element.removeAllListeners?.();
     });
-    registerElements.forEach((element: Element) => {
+  }
+
+  private initListeners(): void {
+    const parent: HTMLElement = this.elementRef.nativeElement;
+    const registerEntries: NodeListOf<HTMLElement> = parent.querySelectorAll(".register-entry, .custom-entry");
+    const abbreviations: NodeListOf<HTMLElement> = parent.querySelectorAll(".abbr");
+    const dateEntries: NodeListOf<HTMLElement> = parent.querySelectorAll(".date");
+    const comments: NodeListOf<HTMLElement> = parent.querySelectorAll(".commented");
+
+    comments.forEach((element: Element) => {
+      element.addEventListener("click", this.handleCommentClick.bind(this));
+      this.eventListeners.push({ element, event: "click", handler: this.handleCommentClick.bind(this) });
+    });
+
+    registerEntries.forEach((element: Element) => {
       element.addEventListener("click", this.handleRegisterClick.bind(this));
+      this.eventListeners.push({ element, event: "click", handler: this.handleRegisterClick.bind(this) });
     });
-    abbrElements.forEach((element: Element) => {
+
+    abbreviations.forEach((element: Element) => {
       const abbreviation: string = element.getAttribute("data-abbr") ?? "";
       const abbrTooltipOptions: any = { title: abbreviation, offset: [0, 5] };
-      new bootstrap.Tooltip(element, abbrTooltipOptions);
+      this.tooltips.push(new bootstrap.Tooltip(element, abbrTooltipOptions));
     });
-    dateElements.forEach((element: Element) => {
+
+    dateEntries.forEach((element: Element) => {
       if (element.getAttribute("data-abbr")) return;
       const date: string = element.getAttribute("data-calendar") ?? "";
       const dateTooltipOptions: any = { title: date, offset: [0, 5] };
-      new bootstrap.Tooltip(element, dateTooltipOptions);
+      this.tooltips.push(new bootstrap.Tooltip(element, dateTooltipOptions));
     });
+  }
+
+  private displaySelectionMenu(): void {
+    const selection: HTMLElement | null = this.elementRef.nativeElement.querySelector(".selection");
+    if (!selection) return;
+
+    const offsetTop: number = selection.offsetTop;
+    const offsetLeft: number = selection.offsetLeft;
+
+    const element: HTMLElement = this.selectionMenu.nativeElement;
+    element.style.top = `${offsetTop}px`;
+    element.style.left = `${offsetLeft}px`;
+    this.isSelectionMenuActive = true;
+  }
+
+  public handleSelection(): void {
+    if (!this.mouseSelection) return;
+    this.isSelectionMenuActive = false;
+
+    const selection: Selection | null = document.getSelection();
+    const selectedText: string | undefined = selection?.toString().trim();
+    if (!selection || !selection.anchorNode || !selection.focusNode) return;
+    if (!selectedText || selectedText === "") return;
+
+    const isBackwards: boolean = TextViewSelectionUtils.isSelectionBackwards(selection);
+    const startingNode: Node = isBackwards ? selection.focusNode : selection.anchorNode;
+    const offset: number = isBackwards ? selection.focusOffset : selection.anchorOffset;
+
+    const startIndex: number = TextViewSelectionUtils.getSelectionStartIndex(startingNode, offset);
+    const endIndex: number = startIndex + selectedText.length - 1;
+    selection.empty();
+
+    this.setSelection(startIndex, endIndex);
+    this.renderText();
+    setTimeout(() => this.displaySelectionMenu(), 100);
+  }
+
+  public async handleCopySelectionURL(): Promise<void> {
+    if (!this.guid) return;
+
+    const startIndex: number = this.selection?.startIndex ?? 0;
+    const endIndex: number = this.selection?.endIndex ?? 0;
+
+    const currentUrl: string = window.location.href.split("?")[0];
+    const params: string = `?guid=${this.guid}&s=${startIndex}&e=${endIndex}`;
+    await navigator.clipboard.writeText(currentUrl + params);
   }
 
   public handleRegisterClick($event: Event): void {
@@ -73,11 +190,12 @@ export class TextViewComponent implements OnChanges {
     if (!id || !type) return;
 
     const clickedPhrase: string = this.getFullPhrase(element, `data-register-id`);
+
     switch (type) {
-      case "letter":
+      case ENTITY_TYPE.LETTER:
         this.annotationListService.addMetadataAnnotation(id, clickedPhrase);
         break;
-      case "comment":
+      case ENTITY_TYPE.COMMENT:
         this.annotationListService.addReferenceAnnotation(id, clickedPhrase);
         break;
       default:
@@ -85,27 +203,7 @@ export class TextViewComponent implements OnChanges {
     }
   }
 
-  public handleSelection(): void {
-    if (!this.mouseSelection) return;
-
-    const selection: Selection | null = document.getSelection();
-    const selectedText: string | undefined = selection?.toString().trim();
-    if (!selection || !selection.anchorNode || !selection.focusNode) return;
-    if (!selectedText || selectedText === "") return;
-
-    const isBackwards: boolean = SelectionUtils.isSelectionBackwards(selection);
-    const startingNode: Node = isBackwards ? selection.focusNode : selection.anchorNode;
-    const offset: number = isBackwards ? selection.focusOffset : selection.anchorOffset;
-
-    const startIndex: number = SelectionUtils.getSelectionStartIndex(startingNode, offset);
-    const endIndex: number = startIndex + selectedText.length - 1;
-
-    this.renderSelection(startIndex, endIndex);
-  }
-
-  public handleSelectionBox(): void {}
-
-  public handleCommentedClick($event: Event): void {
+  public handleCommentClick($event: Event): void {
     const element: HTMLElement = $event.target as HTMLElement;
     const commentedId: string = element.getAttribute("data-comment-id") ?? "";
     if (!commentedId) return;
@@ -117,6 +215,7 @@ export class TextViewComponent implements OnChanges {
   private getFullPhrase(element: HTMLElement, idAttribute: string): string {
     const id: string = element.getAttribute(idAttribute) ?? "";
     const phrase: string[] = [];
+
     let cursor: HTMLElement = element.previousElementSibling as HTMLElement;
 
     while (cursor) {
@@ -135,20 +234,5 @@ export class TextViewComponent implements OnChanges {
     }
 
     return phrase.join(" ");
-  }
-
-  private renderSelection(startIndex: number, endIndex: number): void {
-    const text: string = this.selectedText.substring(startIndex, endIndex);
-
-    const standoffProperty: IStandoffProperty = {
-      guid: "selection",
-      startIndex: startIndex,
-      endIndex: endIndex,
-      text: text,
-      teiType: "selection",
-    } as IStandoffProperty;
-
-    this.generateStandOffPropertyText(standoffProperty);
-    setTimeout(() => this.listener(), 500);
   }
 }

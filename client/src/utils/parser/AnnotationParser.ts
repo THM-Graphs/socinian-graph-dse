@@ -79,7 +79,8 @@ export class AnnotationParser {
       case "lg":
       case "salute":
       case "signed":
-        return !isClosing ? `<p class="${standOffProperty.teiType}">` : "</p>";
+        annotation = AnnotationHandler.handleCustomParagraph(standOffProperty);
+        break;
       case "opener":
       case "closer":
         return !isClosing ? `<div class="${standOffProperty.teiType}">` : "</div>";
