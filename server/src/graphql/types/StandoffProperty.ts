@@ -1,13 +1,13 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLNonNull, GraphQLList } from "graphql";
+import {GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLString,} from "graphql";
 import StandoffPropertyDAO from "../../database/StandoffProperty.dao";
-import { IStandoffProperty } from "../../models/IStandoffProperty";
-import { Text } from "./Text";
+import {IStandoffProperty} from "../../models/IStandoffProperty";
+import {Text} from "./Text";
 
 export const StandoffProperty: GraphQLObjectType = new GraphQLObjectType({
   name: "StandoffProperty",
   fields: () => ({
     guid: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: "Identifies the current seleceted property.",
     },
     startIndex: {
@@ -20,7 +20,8 @@ export const StandoffProperty: GraphQLObjectType = new GraphQLObjectType({
     },
     text: {
       type: GraphQLString,
-      description: "Contains the text in between of the starting and ending index.",
+      description:
+        "Contains the text in between of the starting and ending index.",
     },
     teiType: {
       type: GraphQLString,

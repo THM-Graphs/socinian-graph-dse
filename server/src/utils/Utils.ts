@@ -8,7 +8,11 @@ export class Utils {
   }
 
   public static matchWordsAndQuotes(phrase: string): string[] {
-    return phrase.match(/"(?:\\"|[^"])+"|\S+/g)?.map((s) => this.escapeAndRemoveQuotes(s)) ?? [];
+    return (
+      phrase
+        .match(/"(?:\\"|[^"])+"|\S+/g)
+        ?.map((s) => this.escapeAndRemoveQuotes(s)) ?? []
+    );
   }
 
   public static escapeAndRemoveQuotes(word: string): string {

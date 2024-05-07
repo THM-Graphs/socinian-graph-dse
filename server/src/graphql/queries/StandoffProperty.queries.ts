@@ -1,14 +1,14 @@
-import { GraphQLFieldConfigMap, GraphQLNonNull, GraphQLString } from "graphql";
+import {GraphQLFieldConfigMap, GraphQLNonNull, GraphQLString} from "graphql";
 import StandoffPropertyDAO from "../../database/StandoffProperty.dao";
-import { Entity } from "../types/Entity";
-import { Text } from "../types/Text";
-import { filterXSS } from "xss";
+import {Entity} from "../types/Entity";
+import {Text} from "../types/Text";
+import {filterXSS} from "xss";
 
 export const StandoffPropertyQueries: GraphQLFieldConfigMap<string, string> = {
   refersEntity: {
     type: Entity,
     args: {
-      id: { type: GraphQLNonNull(GraphQLString) },
+      id: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (_, args: { id: string }) => {
       const standOffPropertyId: string = filterXSS(args.id);
@@ -18,7 +18,7 @@ export const StandoffPropertyQueries: GraphQLFieldConfigMap<string, string> = {
   refersVariant: {
     type: Text,
     args: {
-      id: { type: GraphQLNonNull(GraphQLString) },
+      id: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (_, args: { id: string }) => {
       const standOffPropertyId: string = filterXSS(args.id);
@@ -28,7 +28,7 @@ export const StandoffPropertyQueries: GraphQLFieldConfigMap<string, string> = {
   comment: {
     type: Text,
     args: {
-      id: { type: GraphQLNonNull(GraphQLString) },
+      id: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (_, args: { id: string }) => {
       const standoffPropertyId: string = filterXSS(args.id);
@@ -38,7 +38,7 @@ export const StandoffPropertyQueries: GraphQLFieldConfigMap<string, string> = {
   reference: {
     type: Text,
     args: {
-      id: { type: GraphQLNonNull(GraphQLString) },
+      id: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (_, args: { id: string }) => {
       const standoffPropertyId: string = filterXSS(args.id);

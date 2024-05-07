@@ -1,15 +1,16 @@
-import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
+import {GraphQLNonNull, GraphQLObjectType, GraphQLString} from "graphql";
 
 export const ProjectText: GraphQLObjectType = new GraphQLObjectType({
   name: "ProjectText",
   fields: () => ({
     guid: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: "Identifies the current selected project text.",
     },
     label: {
       type: GraphQLString,
-      description: "Project text label. Mostly the naming of a category or the headline of this text.",
+      description:
+        "Project text label. Mostly the naming of a category or the headline of this text.",
     },
     text: {
       type: GraphQLString,

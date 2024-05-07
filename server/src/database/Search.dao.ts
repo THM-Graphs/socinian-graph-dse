@@ -7,7 +7,9 @@ import removeAccents from "remove-accents";
 const OCCURRENCE_LENGTH = 50;
 
 export default class SearchDAO {
-  public static async getLetters(phrase: string): Promise<ISearchLetterEntry[]> {
+  public static async getLetters(
+    phrase: string,
+  ): Promise<ISearchLetterEntry[]> {
     const searchArray: string[] = Utils.matchWordsAndQuotes(phrase);
     const searchStatement: string[] = searchArray.map((_, index: number) => {
       return `toLower(t.text) CONTAINS toLower($${index.toString()}) 
@@ -22,10 +24,16 @@ export default class SearchDAO {
     RETURN DISTINCT collect({guid: lm.guid, label: lm.label, text: t.text}) as letters`;
 
     if (searchArray.length === 0) return [];
-    searchArray.push(...searchArray.map((searchString: string) => removeAccents(searchString)));
+    searchArray.push(
+      ...searchArray.map((searchString: string) => removeAccents(searchString)),
+    );
 
-    const result: QueryResult = await Neo4jDriver.runQuery(query, Utils.arrayToObject(searchArray));
-    const letters: ISearchLetterEntry[] = result.records[0]?.get("letters") ?? [];
+    const result: QueryResult = await Neo4jDriver.runQuery(
+      query,
+      Utils.arrayToObject(searchArray),
+    );
+    const letters: ISearchLetterEntry[] =
+      result.records[0]?.get("letters") ?? [];
 
     letters.forEach((letter: ISearchLetterEntry) => {
       letter.occurrences = [];
@@ -35,9 +43,17 @@ export default class SearchDAO {
 
       for (let phrase of searchArray) {
         phrase = removeAccents(phrase);
-        while ((index = text.toLocaleLowerCase().indexOf(phrase.toLocaleLowerCase(), endIndex)) > -1) {
-          const startIndex = index - OCCURRENCE_LENGTH < 0 ? 0 : index - OCCURRENCE_LENGTH;
-          endIndex = index + OCCURRENCE_LENGTH > text.length ? text.length : index + OCCURRENCE_LENGTH;
+        while (
+          (index = text
+            .toLocaleLowerCase()
+            .indexOf(phrase.toLocaleLowerCase(), endIndex)) > -1
+        ) {
+          const startIndex =
+            index - OCCURRENCE_LENGTH < 0 ? 0 : index - OCCURRENCE_LENGTH;
+          endIndex =
+            index + OCCURRENCE_LENGTH > text.length
+              ? text.length
+              : index + OCCURRENCE_LENGTH;
           letter.occurrences.push(text.substring(startIndex, endIndex));
         }
       }
@@ -61,7 +77,10 @@ export default class SearchDAO {
     MATCH (e:Entity) WHERE ${searchStatement.join(" AND ")}
     RETURN DISTINCT collect({guid: e.guid, label: e.label, type: e.type}) as entities`;
 
-    const result: QueryResult = await Neo4jDriver.runQuery(query, Utils.arrayToObject(searchArray));
+    const result: QueryResult = await Neo4jDriver.runQuery(
+      query,
+      Utils.arrayToObject(searchArray),
+    );
     return result.records[0]?.get("entities") ?? [];
   }
 }

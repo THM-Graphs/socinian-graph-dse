@@ -7,10 +7,6 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]}
+  "include": ["**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

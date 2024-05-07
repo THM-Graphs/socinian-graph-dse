@@ -6,13 +6,16 @@ import { IText } from "../models/IText";
 import Neo4jDriver from "./Neo4jDriver";
 
 export default class StandoffPropertyDAO {
-  public static async getProperties(textId: string): Promise<IStandoffProperty[]> {
+  public static async getProperties(
+    textId: string,
+  ): Promise<IStandoffProperty[]> {
     const query: string = `
     MATCH (t:Text {guid: $textId})-[:HAS_ANNOTATION]-(s:Spo)
     RETURN collect(properties(s)) as standoffProperties`;
 
     const result: QueryResult = await Neo4jDriver.runQuery(query, { textId });
-    const standoffProperties: IStandoffProperty[] = result.records[0]?.get("standoffProperties") ?? [];
+    const standoffProperties: IStandoffProperty[] =
+      result.records[0]?.get("standoffProperties") ?? [];
     return standoffProperties.map((standoffProperty: IStandoffProperty) => ({
       ...standoffProperty,
       data: JSON.stringify(standoffProperty),
@@ -23,7 +26,9 @@ export default class StandoffPropertyDAO {
     const query: string = `
     MATCH (s:Spo {guid: $standoffPropertyId})<-[:COMMENT_ON]-(t:Text)
     RETURN properties(t) as text`;
-    const result: QueryResult = await Neo4jDriver.runQuery(query, { standoffPropertyId });
+    const result: QueryResult = await Neo4jDriver.runQuery(query, {
+      standoffPropertyId,
+    });
 
     const text: IText = result.records[0]?.get("text") ?? null;
     if (text) text.data = JSON.stringify(text);
@@ -35,7 +40,9 @@ export default class StandoffPropertyDAO {
     MATCH (s:Spo {guid: $standoffPropertyId})-[:REFERS_TO]->(r:Text)
     MATCH (r)-[:COMMENT_ON]-()-[:HAS_ANNOTATION]-()-[:HAS_TEXT]-(m:Metadata)
     RETURN properties(r) as reference, properties(m) as metadata`;
-    const result: QueryResult = await Neo4jDriver.runQuery(query, { standoffPropertyId });
+    const result: QueryResult = await Neo4jDriver.runQuery(query, {
+      standoffPropertyId,
+    });
 
     const text: IText = result.records[0]?.get("reference") ?? null;
     if (!text) return null;
@@ -48,7 +55,9 @@ export default class StandoffPropertyDAO {
     const query: string = `
     MATCH (s:Spo {guid: $standoffPropertyId})-[:REFERS_TO]->(v:Text)
     RETURN properties(v) as variant`;
-    const result: QueryResult = await Neo4jDriver.runQuery(query, { standoffPropertyId });
+    const result: QueryResult = await Neo4jDriver.runQuery(query, {
+      standoffPropertyId,
+    });
 
     const text: IText = result.records[0]?.get("variant") ?? null;
     if (text) text.data = JSON.stringify(text);
@@ -59,7 +68,9 @@ export default class StandoffPropertyDAO {
     const query: string = `
     MATCH (s:Spo {guid: $standoffPropertyId})-[:REFERS_TO]->(e:Entity)
     RETURN properties(e) as entity`;
-    const result: QueryResult = await Neo4jDriver.runQuery(query, { standoffPropertyId });
+    const result: QueryResult = await Neo4jDriver.runQuery(query, {
+      standoffPropertyId,
+    });
 
     const entity: IEntity = result.records[0]?.get("entity") ?? null;
     if (entity) entity.data = JSON.stringify(entity);

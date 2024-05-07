@@ -1,8 +1,8 @@
-import { GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
+import {GraphQLList, GraphQLObjectType, GraphQLString} from "graphql";
 import EntityDAO from "../../database/Entity.dao";
-import { IEntity } from "../../models/IEntity";
-import { Metadata } from "./Metadata";
-import { Normdata } from "./Normdata";
+import {IEntity} from "../../models/IEntity";
+import {Metadata} from "./Metadata";
+import {Normdata} from "./Normdata";
 
 const AdditionalLabel: GraphQLObjectType = new GraphQLObjectType({
   name: "AdditionalLabel",
@@ -38,7 +38,7 @@ export const Entity: GraphQLObjectType = new GraphQLObjectType({
       description: "Contains the type of this entity.",
     },
     occurrences: {
-      type: GraphQLList(Metadata),
+      type: new GraphQLList(Metadata),
       description: "Contains all letter occurrences for this entity.",
       resolve: async (context: IEntity) => {
         if (context.occurrences) return context.occurrences;
@@ -46,21 +46,21 @@ export const Entity: GraphQLObjectType = new GraphQLObjectType({
       },
     },
     normdata: {
-      type: GraphQLList(Normdata),
+      type: new GraphQLList(Normdata),
       description: "Contains the normdata object for this entity.",
       resolve: async (context: IEntity) => {
         return await EntityDAO.getNormdata(context.guid);
       },
     },
     additionalLabels: {
-      type: GraphQLList(AdditionalLabel),
+      type: new GraphQLList(AdditionalLabel),
       description: "Contains a list of additional labels for this entity.",
       resolve: async (context: IEntity) => {
         return await EntityDAO.getAdditionalLabels(context.guid);
       },
     },
     additionalInformation: {
-      type: GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLString),
       description: "Contains a list of strings with additional information.",
       resolve: async (context: IEntity) => {
         return await EntityDAO.getAdditionalInformation(context.guid);

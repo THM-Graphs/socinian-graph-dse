@@ -1,11 +1,11 @@
-import { GraphQLFieldConfigMap, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
-import { filterXSS } from "xss";
+import {GraphQLFieldConfigMap, GraphQLList, GraphQLNonNull, GraphQLString,} from "graphql";
+import {filterXSS} from "xss";
 import EntityDAO from "../../database/Entity.dao";
-import { Entity } from "../types/Entity";
+import {Entity} from "../types/Entity";
 
 export const EntityQueries: GraphQLFieldConfigMap<string, string> = {
   entities: {
-    type: GraphQLList(Entity),
+    type: new GraphQLList(Entity),
     args: {
       type: { type: GraphQLString },
     },
@@ -17,7 +17,7 @@ export const EntityQueries: GraphQLFieldConfigMap<string, string> = {
   entity: {
     type: Entity,
     args: {
-      id: { type: GraphQLNonNull(GraphQLString) },
+      id: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (_, args: { id: string }) => {
       const entityId = filterXSS(args?.id);

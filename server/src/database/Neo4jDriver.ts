@@ -9,16 +9,24 @@ export default class Neo4jDriver {
     const password: string = process.env.NEO4J_PASSWORD;
 
     if (!host || !username || !password) {
-      console.error("[Neo4j Driver]", "Missing environment variables for either host, username or password");
+      console.error(
+        "[Neo4j Driver]",
+        "Missing environment variables for either host, username or password",
+      );
       process.exit(1);
     }
 
-    this.instance = neo4j.driver(host, neo4j.auth.basic(username, password), { disableLosslessIntegers: true });
+    this.instance = neo4j.driver(host, neo4j.auth.basic(username, password), {
+      disableLosslessIntegers: true,
+    });
     console.success("[Neo4j Driver]", "Connection has been established.");
     return this.instance;
   }
 
-  public static async runQuery(query: string, ...args: unknown[]): Promise<QueryResult | null> {
+  public static async runQuery(
+    query: string,
+    ...args: unknown[]
+  ): Promise<QueryResult | null> {
     const session: Session = this.instance.session();
     let queryResult: QueryResult = null;
 

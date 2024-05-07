@@ -27,20 +27,30 @@ export default class CommunicationDAO {
       const attachments: IMetadata[] = record.get("attachment") ?? [];
 
       letter.variants = variants;
-      communications.push({ guid: communication.guid, letter, attachments, data });
+      communications.push({
+        guid: communication.guid,
+        letter,
+        attachments,
+        data,
+      });
     }
 
     return communications;
   }
 
-  public static async getCommunication(communicationId: string): Promise<ICommunication> {
+  public static async getCommunication(
+    communicationId: string,
+  ): Promise<ICommunication> {
     const query: string = `
     MATCH (l:Metadata)<-[:HAS_LETTER]-(c:Communication {guid: $communicationId})
     OPTIONAL MATCH (c)-[:HAS_ATTACHMENT]->(a:Metadata)
     RETURN properties(c) as communication, collect(DISTINCT properties(a)) as attachment, properties(l) as letter`;
 
-    const result: QueryResult = await Neo4jDriver.runQuery(query, { communicationId });
-    const communication: ICommunication = result.records[0]?.get("communication") ?? null;
+    const result: QueryResult = await Neo4jDriver.runQuery(query, {
+      communicationId,
+    });
+    const communication: ICommunication =
+      result.records[0]?.get("communication") ?? null;
     if (!communication) return communication;
 
     communication.data = JSON.stringify(communication);
@@ -54,19 +64,28 @@ export default class CommunicationDAO {
     MATCH (l:Metadata)<-[:HAS_LETTER]-(c:Communication {guid: $communicationId})
     RETURN properties(l) as letter`;
 
-    const result: QueryResult = await Neo4jDriver.runQuery(query, { communicationId });
+    const result: QueryResult = await Neo4jDriver.runQuery(query, {
+      communicationId,
+    });
     const letter: IMetadata = result.records[0]?.get("letter") ?? null;
     if (letter) letter.data = JSON.stringify(letter);
     return letter;
   }
 
-  public static async getAttachments(communicationId: string): Promise<IMetadata[]> {
+  public static async getAttachments(
+    communicationId: string,
+  ): Promise<IMetadata[]> {
     const query: string = `
     MATCH (a:Metadata)<-[:HAS_ATTACHMENT]-(c:Communication {guid: $communicationId})
     RETURN collect(DISTINCT properties(a)) as attachment`;
 
-    const result: QueryResult = await Neo4jDriver.runQuery(query, { communicationId });
+    const result: QueryResult = await Neo4jDriver.runQuery(query, {
+      communicationId,
+    });
     const attachments: IMetadata[] = result.records[0]?.get("attachment") ?? [];
-    return attachments.map((m: IMetadata) => ({ ...m, data: JSON.stringify(m) }));
+    return attachments.map((m: IMetadata) => ({
+      ...m,
+      data: JSON.stringify(m),
+    }));
   }
 }

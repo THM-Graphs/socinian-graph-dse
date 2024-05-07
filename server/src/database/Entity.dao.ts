@@ -23,7 +23,10 @@ export default class EntityDAO {
     for (const record of result.records) {
       const entity: IEntity = record.get("entity");
       const metadata: IMetadata[] = record.get("metadata") ?? [];
-      const occurrences: IMetadata[] = metadata.map((m: IMetadata) => ({ ...m, data: JSON.stringify(m) }));
+      const occurrences: IMetadata[] = metadata.map((m: IMetadata) => ({
+        ...m,
+        data: JSON.stringify(m),
+      }));
       entities.push({ ...entity, data: JSON.stringify(entity), occurrences });
     }
 
@@ -76,7 +79,9 @@ export default class EntityDAO {
     return normdataElements;
   }
 
-  public static async getAdditionalLabels(entityId: string): Promise<IAdditionalLabel[]> {
+  public static async getAdditionalLabels(
+    entityId: string,
+  ): Promise<IAdditionalLabel[]> {
     const query: string = `
     MATCH (e:Entity {guid: $entityId})-[:HAS_ADDITIONAL_LABEL]->(a:AdditionalLabel)
     RETURN collect(properties(a)) as labels`;
@@ -85,7 +90,9 @@ export default class EntityDAO {
     return result.records[0]?.get("labels") ?? [];
   }
 
-  public static async getAdditionalInformation(entityId: string): Promise<string[]> {
+  public static async getAdditionalInformation(
+    entityId: string,
+  ): Promise<string[]> {
     const query: string = `
     MATCH (e:Entity {guid: $entityId})-[:HAS_ADDITIONAL_INFORMATION]->(unknown)
     RETURN collect(properties(unknown)) as nodes`;

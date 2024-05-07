@@ -1,15 +1,15 @@
-import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString, GraphQLBoolean } from "graphql";
+import {GraphQLBoolean, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString,} from "graphql";
 import StandoffPropertyDAO from "../../database/StandoffProperty.dao";
 import TextDAO from "../../database/Text.dao";
-import { IText } from "../../models/IText";
-import { Metadata } from "./Metadata";
-import { StandoffProperty } from "./StandoffProperty";
+import {IText} from "../../models/IText";
+import {Metadata} from "./Metadata";
+import {StandoffProperty} from "./StandoffProperty";
 
 export const Text: GraphQLObjectType = new GraphQLObjectType({
   name: "Text",
   fields: () => ({
     guid: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: "Identifies the text node.",
     },
     label: {
@@ -68,8 +68,9 @@ export const Text: GraphQLObjectType = new GraphQLObjectType({
       description: "Contains a stringified copy of the neo4j object.",
     },
     standoffProperties: {
-      type: GraphQLList(StandoffProperty),
-      description: "Containing the standoff properties associated with this text.",
+      type: new GraphQLList(StandoffProperty),
+      description:
+        "Containing the standoff properties associated with this text.",
       resolve: async (context: IText) => {
         return await StandoffPropertyDAO.getProperties(context.guid);
       },

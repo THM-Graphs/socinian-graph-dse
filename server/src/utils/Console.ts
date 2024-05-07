@@ -66,7 +66,12 @@ export default class Console {
     console[config.type] = (...args: unknown[]) => {
       if (config.type === "debug" && !this.debugMode) return;
 
-      console.log(config.color, `[${this.getTimestamp()}] [${config.signature}] `, ...args, CONSOLE_COLORS.RESET);
+      console.log(
+        config.color,
+        `[${this.getTimestamp()}] [${config.signature}] `,
+        ...args,
+        CONSOLE_COLORS.RESET,
+      );
     };
   }
 

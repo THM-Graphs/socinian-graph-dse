@@ -1,13 +1,13 @@
-import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
+import {GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString,} from "graphql";
 import CommunicationDAO from "../../database/Communication.dao";
-import { ICommunication } from "../../models/ICommunication";
-import { Metadata } from "./Metadata";
+import {ICommunication} from "../../models/ICommunication";
+import {Metadata} from "./Metadata";
 
 export const Communication: GraphQLObjectType = new GraphQLObjectType({
   name: "Communication",
   fields: () => ({
     guid: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: "Identifies the current selected communication node.",
     },
     data: {
@@ -23,7 +23,7 @@ export const Communication: GraphQLObjectType = new GraphQLObjectType({
       },
     },
     attachments: {
-      type: GraphQLList(Metadata),
+      type: new GraphQLList(Metadata),
       description: "Yields attachment metadata attached to this communication.",
       resolve: async (context: ICommunication) => {
         if (context.attachments) return context.attachments;

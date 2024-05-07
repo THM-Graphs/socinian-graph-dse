@@ -1,14 +1,14 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLNonNull, GraphQLList } from "graphql";
+import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString,} from "graphql";
 import MetadataDAO from "../../database/Metadata.dao";
-import { IMetadata } from "../../models/IMetadata";
-import { Participant } from "./Participants";
-import { Text } from "./Text";
+import {IMetadata} from "../../models/IMetadata";
+import {Participant} from "./Participants";
+import {Text} from "./Text";
 
 export const Metadata: GraphQLObjectType = new GraphQLObjectType({
   name: "Metadata",
   fields: () => ({
     guid: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: "Identifies the letterMetadata node.",
     },
     doctype: {
@@ -39,7 +39,7 @@ export const Metadata: GraphQLObjectType = new GraphQLObjectType({
       },
     },
     variants: {
-      type: GraphQLList(Text),
+      type: new GraphQLList(Text),
       description: "Contains a list of variants related to this metadata.",
       resolve: async (context: IMetadata) => {
         if (context.variants) return context.variants;
@@ -47,7 +47,7 @@ export const Metadata: GraphQLObjectType = new GraphQLObjectType({
       },
     },
     participants: {
-      type: GraphQLList(Participant),
+      type: new GraphQLList(Participant),
       description: "Contains a list of participants e.g. sender and receiver.",
       resolve: async (context: IMetadata) => {
         return await MetadataDAO.getParticipants(context.guid);

@@ -1,11 +1,11 @@
-import { GraphQLFieldConfigMap, GraphQLList, GraphQLNonNull, GraphQLString } from "graphql";
-import { filterXSS } from "xss";
+import {GraphQLFieldConfigMap, GraphQLList, GraphQLNonNull, GraphQLString,} from "graphql";
+import {filterXSS} from "xss";
 import CommunicationDAO from "../../database/Communication.dao";
-import { Communication } from "../types/Communication";
+import {Communication} from "../types/Communication";
 
 export const CommunicationQueries: GraphQLFieldConfigMap<string, string> = {
   communications: {
-    type: GraphQLList(Communication),
+    type: new GraphQLList(Communication),
     resolve: async () => {
       return await CommunicationDAO.getCommunications();
     },
@@ -13,7 +13,7 @@ export const CommunicationQueries: GraphQLFieldConfigMap<string, string> = {
   communication: {
     type: Communication,
     args: {
-      id: { type: GraphQLNonNull(GraphQLString) },
+      id: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (_, args: { id: string }) => {
       const communicationId: string = filterXSS(args.id);
