@@ -10,7 +10,7 @@ export const CommunicationQueries: GraphQLFieldConfigMap<string, string> = {
     type: new GraphQLList(Communication),
     args: { isDetailed: { type: GraphQLBoolean } },
     resolve: async (_, args: { isDetailed: boolean }): Promise<ICommunication[]> => {
-      if (args.isDetailed) return await CommunicationDAO.getDetailedCommunications();
+      if (args?.isDetailed) return await CommunicationDAO.getDetailedCommunications();
       return await CommunicationDAO.getCommunications();
     },
   },

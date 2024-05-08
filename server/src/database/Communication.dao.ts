@@ -5,6 +5,7 @@ import { IText } from '../interfaces/IText';
 import Neo4jDriver from '../utils/Neo4jDriver.js';
 import { Nullable } from '../types.js';
 import { ISection } from '../interfaces/ISection.js';
+import { Utils } from '../utils/Utils.js';
 
 const COMMUNICATIONS_QUERY: string = `
 MATCH (l :Metadata)<-[:HAS_LETTER]-(c :Communication)
@@ -45,7 +46,9 @@ export default class CommunicationDAO {
   public static async getCommunications(): Promise<ICommunication[]> {
     const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(COMMUNICATIONS_QUERY);
     const communications: Nullable<ICommunication[]> = result?.records[0]?.get('communications');
-    return communications ?? [];
+    if (!communications) return [];
+
+    return communications.map(Utils.stringifyNode);
   }
 
   public static async getDetailedCommunications(): Promise<ICommunication[]> {
@@ -62,7 +65,7 @@ export default class CommunicationDAO {
       if (!communication) continue;
       if (letter) letter.variants = variants ?? [];
 
-      communication.data = JSON.stringify(communication);
+      Utils.stringifyNode(communication);
       communication.letter = letter;
       communication.attachments = attachments ?? [];
       communications.push(communication);
@@ -79,7 +82,7 @@ export default class CommunicationDAO {
     const letter: Nullable<IMetadata> = result.records[0].get('letter');
     const attachments: Nullable<IMetadata[]> = result.records[0].get('attachments');
 
-    communication.data = JSON.stringify(communication);
+    Utils.stringifyNode(communication);
     communication.attachments = attachments ?? [];
     communication.letter = letter ?? null;
 
@@ -91,8 +94,7 @@ export default class CommunicationDAO {
     const letter: Nullable<IMetadata> = result?.records[0]?.get('letter');
     if (!letter) return null;
 
-    letter.data = JSON.stringify(letter);
-    return letter;
+    return Utils.stringifyNode(letter);
   }
 
   public static async getAttachments(communicationId: string): Promise<IMetadata[]> {
@@ -100,12 +102,14 @@ export default class CommunicationDAO {
     const attachments: Nullable<IMetadata[]> = result?.records[0]?.get('attachments');
     if (!attachments) return [];
 
-    return attachments.map((m: IMetadata) => ({ ...m, data: JSON.stringify(m) }));
+    return attachments.map(Utils.stringifyNode);
   }
 
   public static async getSections(communicationId: string): Promise<ISection[]> {
     const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(SECTIONS_QUERY, { guid: communicationId });
     const sections: Nullable<ISection[]> = result?.records[0]?.get('sections');
-    return sections ?? [];
+    if (!sections) return [];
+
+    return sections.map(Utils.stringifyNode);
   }
 }

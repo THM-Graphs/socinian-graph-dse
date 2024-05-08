@@ -1,21 +1,21 @@
 import { IMetadata } from './IMetadata';
 import { INormdata } from './INormdata';
+import { INode } from './INode.js';
 
-export interface IEntity {
+export interface IEntity extends INode {
   guid: string;
   type: EntityType;
   label: string;
-  data: string;
   normdata: INormdata[];
   additionalLabels: IAdditionalLabel[];
   additionalInformation: string[];
   occurrences: IMetadata[];
 }
 
-export interface IAdditionalLabel {
+export interface IAdditionalLabel extends INode {
   forename: string;
   surname: string;
   label: string;
 }
 
-export type EntityType = 'person' | 'place' | 'term' | 'bible_verse';
+export type EntityType = 'person' | 'place' | 'term' | 'bible_verse' | '';
