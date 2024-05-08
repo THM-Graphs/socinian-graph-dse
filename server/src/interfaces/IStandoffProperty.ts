@@ -1,4 +1,4 @@
-import { IText } from "./IText";
+import { IText } from './IText';
 
 export interface IStandoffProperty {
   guid: string;
@@ -7,7 +7,7 @@ export interface IStandoffProperty {
   text: string;
   teiType: string;
   type: string;
-  comment?: IText;
+  comment: IText;
+  standoffProperties: IStandoffProperty[];
   data: string;
-  standoffProperties?: IStandoffProperty[];
 }

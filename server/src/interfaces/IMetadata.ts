@@ -1,5 +1,6 @@
-import { IParticipant } from "./IParticipant";
-import { IText } from "./IText";
+import { IParticipant } from './IParticipant';
+import { IText } from './IText';
+import { Nullable } from '../types.js';
 
 export interface IMetadata {
   guid: string;
@@ -7,8 +8,8 @@ export interface IMetadata {
   label: string;
   editor: string;
   status: string;
-  abstract: IText;
+  abstract: Nullable<IText>;
   variants: IText[];
   participants: IParticipant[];
-  data?: string;
+  data: string;
 }
