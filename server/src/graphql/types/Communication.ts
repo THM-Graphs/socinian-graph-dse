@@ -1,33 +1,45 @@
-import {GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString,} from "graphql";
-import CommunicationDAO from "../../database/Communication.dao";
-import {ICommunication} from "../../models/ICommunication";
-import {Metadata} from "./Metadata";
+import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import CommunicationDAO from '../../database/Communication.dao';
+import { ICommunication } from '../../interfaces/ICommunication';
+import { Metadata } from './Metadata';
+import { Nullable } from '../../types.js';
+import { IMetadata } from '../../interfaces/IMetadata.js';
+import { Section } from './Section.js';
+import { ISection } from '../../interfaces/ISection.js';
 
 export const Communication: GraphQLObjectType = new GraphQLObjectType({
-  name: "Communication",
+  name: 'Communication',
   fields: () => ({
     guid: {
       type: new GraphQLNonNull(GraphQLString),
-      description: "Identifies the current selected communication node.",
+      description: 'Identifier (usually UUID).',
     },
     data: {
       type: GraphQLString,
-      description: "Contains a stringified copy of the neo4j object.",
+      description: 'Communication node as string.',
     },
     letter: {
       type: Metadata,
-      description: "Yields letter metadata related to this communication.",
-      resolve: async (context: ICommunication) => {
+      description: 'Communication main letter.',
+      resolve: async (context: ICommunication): Promise<Nullable<IMetadata>> => {
         if (context.letter) return context.letter;
         return await CommunicationDAO.getLetter(context.guid);
       },
     },
     attachments: {
       type: new GraphQLList(Metadata),
-      description: "Yields attachment metadata attached to this communication.",
-      resolve: async (context: ICommunication) => {
+      description: 'Communication attachments.',
+      resolve: async (context: ICommunication): Promise<IMetadata[]> => {
         if (context.attachments) return context.attachments;
         return await CommunicationDAO.getAttachments(context.guid);
+      },
+    },
+    sections: {
+      type: new GraphQLList(Section),
+      description: 'Communication sections.',
+      resolve: async (context: ICommunication): Promise<ISection[]> => {
+        if (context.sections) return context.sections;
+        return await CommunicationDAO.getSections(context.guid);
       },
     },
   }),
