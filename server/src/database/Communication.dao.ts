@@ -8,14 +8,14 @@ import { ISection } from '../interfaces/ISection.js';
 import { Utils } from '../utils/Utils.js';
 
 const COMMUNICATIONS_QUERY: string = `
-MATCH (l :Metadata)<-[:HAS_LETTER]-(c :Communication)
+MATCH (l:Metadata)<-[:HAS_LETTER]-(c:Communication)
 RETURN properties(c) as communications`;
 
 const DETAILED_COMMUNICATIONS_QUERY: string = `
-MATCH (l :Metadata)<-[:HAS_LETTER]-(c :Communication)
-OPTIONAL MATCH (c)-[:HAS_ATTACHMENT]->(a :Metadata)
+MATCH (l:Metadata)<-[:HAS_LETTER]-(c:Communication)
+OPTIONAL MATCH (c)-[:HAS_ATTACHMENT]->(a:Metadata)
 WITH l, c, collect(DISTINCT properties(a)) as attachments
-OPTIONAL MATCH (l)-[:HAS_TEXT]->(v :Text {type: "variant"})
+OPTIONAL MATCH (l)-[:HAS_TEXT]->(v:Text {type: "variant"})
 
 RETURN properties(c) as communication,
   properties(l) as letter,
@@ -23,23 +23,23 @@ RETURN properties(c) as communication,
   attachments`;
 
 const COMMUNICATION_QUERY: string = `
-MATCH (l :Metadata)<-[:HAS_LETTER]-(c :Communication {guid: $guid})
-OPTIONAL MATCH (c)-[:HAS_ATTACHMENT]->(a :Metadata)
+MATCH (l:Metadata)<-[:HAS_LETTER]-(c:Communication {guid: $guid})
+OPTIONAL MATCH (c)-[:HAS_ATTACHMENT]->(a:Metadata)
 
 RETURN properties(c) as communication,
   collect(DISTINCT properties(a)) as attachments,
   properties(l) as letter`;
 
 const LETTER_QUERY: string = `
-MATCH (l :Metadata)<-[:HAS_LETTER]-(c :Communication {guid: $guid})
+MATCH (l:Metadata)<-[:HAS_LETTER]-(c:Communication {guid: $guid})
 RETURN properties(l) as letter`;
 
 const ATTACHMENTS_QUERY: string = `
-MATCH (a :Metadata)<-[:HAS_ATTACHMENT]-(c :Communication {guid: $guid})
+MATCH (a:Metadata)<-[:HAS_ATTACHMENT]-(c:Communication {guid: $guid})
 RETURN collect(DISTINCT properties(a)) as attachments`;
 
 const SECTIONS_QUERY: string = `
-MATCH (c: Communication {guid: "MAIN_acr_tnp_42b"})-[:IS_PART_OF]->(s: Section)
+MATCH (c:Communication {guid: "MAIN_acr_tnp_42b"})-[:IS_PART_OF]->(s:Section)
 RETURN collect(DISTINCT properties(s)) as sections`;
 
 export default class CommunicationDAO {

@@ -1,55 +1,59 @@
-import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString,} from "graphql";
-import MetadataDAO from "../../database/Metadata.dao";
-import {IMetadata} from "../../models/IMetadata";
-import {Participant} from "./Participants";
-import {Text} from "./Text";
+import { GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import MetadataDAO from '../../database/Metadata.dao';
+import { IMetadata } from '../../interfaces/IMetadata';
+import { Participant } from './Participants';
+import { Text } from './Text';
+import { Nullable } from '../../types.js';
+import { IText } from '../../interfaces/IText.js';
+import { IParticipant } from '../../interfaces/IParticipant.js';
 
 export const Metadata: GraphQLObjectType = new GraphQLObjectType({
-  name: "Metadata",
+  name: 'Metadata',
   fields: () => ({
     guid: {
       type: new GraphQLNonNull(GraphQLString),
-      description: "Identifies the letterMetadata node.",
+      description: 'Identifier (usually UUID).',
     },
     doctype: {
       type: GraphQLString,
-      description: "Contains the document type for this metadata.",
+      description: 'Metadata document type.',
     },
     editor: {
       type: GraphQLString,
-      description: "Contains the editor responsible for this letter.",
+      description: 'Metadata responsible editor.',
     },
     label: {
       type: GraphQLString,
-      description: "Contains a label describing the letter.",
+      description: 'Metadata label.',
     },
     status: {
       type: GraphQLInt,
-      description: "Contains the current status of this letter.",
+      description: 'Metadata current in-work-status as integer.',
     },
     data: {
       type: GraphQLString,
-      description: "Contains a stringified copy of the neo4j object.",
+      description: 'Metadata node as string.',
     },
     abstract: {
       type: Text,
-      description: "Contains an abstract related to this metadata.",
-      resolve: async (context: IMetadata) => {
+      description: 'Metadata abstract.',
+      resolve: async (context: IMetadata): Promise<Nullable<IText>> => {
         return await MetadataDAO.getAbstract(context.guid);
       },
     },
     variants: {
       type: new GraphQLList(Text),
-      description: "Contains a list of variants related to this metadata.",
-      resolve: async (context: IMetadata) => {
+      description: 'Metadata variants.',
+      resolve: async (context: IMetadata): Promise<IText[]> => {
         if (context.variants) return context.variants;
         return await MetadataDAO.getVariants(context.guid);
       },
     },
     participants: {
       type: new GraphQLList(Participant),
-      description: "Contains a list of participants e.g. sender and receiver.",
-      resolve: async (context: IMetadata) => {
+      description: 'Metadata participants, e.g., places and persons.',
+      resolve: async (context: IMetadata): Promise<IParticipant[]> => {
+        if (context.participants) return context.participants;
         return await MetadataDAO.getParticipants(context.guid);
       },
     },

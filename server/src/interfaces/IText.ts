@@ -1,7 +1,8 @@
-import { IMetadata } from "./IMetadata";
-import { IStandoffProperty } from "./IStandoffProperty";
+import { IMetadata } from './IMetadata';
+import { IStandoffProperty } from './IStandoffProperty';
+import { INode } from './INode.js';
 
-export interface IText {
+export interface IText extends INode {
   guid: string;
   label: string;
   text: string;
@@ -18,5 +19,4 @@ export interface IText {
   metadataPrintSourceName: string;
   metadataPrintSourceUrl: string;
   standoffProperties: IStandoffProperty[];
-  data: string;
 }

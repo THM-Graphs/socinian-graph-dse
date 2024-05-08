@@ -1,7 +1,8 @@
 import { IEntity } from './IEntity';
 import { Nullable } from '../types.js';
+import { INode } from './INode.js';
 
-export interface IParticipant {
+export interface IParticipant extends INode {
   type: string;
   dateEnd: string;
   dateCertainty: string;
@@ -9,5 +10,4 @@ export interface IParticipant {
   dateType: string;
   place: Nullable<IEntity>;
   person: Nullable<IEntity>;
-  data: string;
 }

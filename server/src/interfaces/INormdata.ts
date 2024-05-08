@@ -1,4 +1,6 @@
-export interface INormdata {
+import { INode } from './INode.js';
+
+export interface INormdata extends INode {
   guid: string;
   label: string;
   namespace: string;
