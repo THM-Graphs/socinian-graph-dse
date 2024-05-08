@@ -14,7 +14,7 @@ OPTIONAL MATCH (l)-[:HAS_TEXT]->(v :Text {type: "variant"})
 RETURN properties(c) as communication,
   properties(l) as letter,
   collect(DISTINCT properties(v)) as variants,
-  attachments,
+  attachments
 `;
 
 const COMMUNICATION_QUERY: string = `
