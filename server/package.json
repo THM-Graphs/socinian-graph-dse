@@ -7,12 +7,10 @@
     "start": "node ./src/start.js",
     "develop": "concurrently \"nodemon node ./src/start.js --debug\" \"npm run compile:watch\"",
     "compile": "tsc -p ./",
-    "compile:watch": "tsc -p ./ --watch",
-    "prestart": "npm run compile",
-    "postinstall": "npm run compile"
+    "compile:watch": "tsc -p ./ --watch"
   },
   "author": "Sebastian Enns",
-  "license": "CC BY-NC 4.0 DEED",
+  "license": "CC-BY-NC-4.0",
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
