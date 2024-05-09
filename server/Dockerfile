@@ -1,4 +1,8 @@
 FROM node:21-alpine as builder
+
+LABEL maintainer="Sebastian Enns <mail@sebenns.com>"
+LABEL description="GraphQL+Neo4j DSE server on node."
+
 WORKDIR /server
 
 COPY package*.json ./
