@@ -9,6 +9,7 @@ export interface ISearchEntry {
 
 export interface ISearchLetterEntry extends ISearchEntry {
   occurrences: string[];
+  text: Nullable<string>;
   reference: Nullable<IMetadata>;
 }
 

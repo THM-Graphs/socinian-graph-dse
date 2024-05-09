@@ -52,10 +52,10 @@ export default class CommunicationDAO {
   }
 
   public static async getDetailedCommunications(): Promise<ICommunication[]> {
-    const communications: ICommunication[] = [];
     const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(DETAILED_COMMUNICATIONS_QUERY);
     if (!result) return [];
 
+    const communications: ICommunication[] = [];
     for (const record of result.records) {
       const communication: Nullable<ICommunication> = record.get('communication');
       const letter: Nullable<IMetadata> = record.get('letter');

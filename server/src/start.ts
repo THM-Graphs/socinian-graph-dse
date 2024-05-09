@@ -1,32 +1,34 @@
-import express, { Express, Response } from 'express';
-import Neo4jDriver from './database/Neo4jDriver';
+import express, { Express, Request, Response } from 'express';
+import Neo4jDriver from './utils/Neo4jDriver.js';
 import http, { Server } from 'http';
 import path from 'path';
-import Console from './utils/Console';
+import Logger from './utils/Logger.js';
 import { schema } from './graphql/_schema';
 import { createHandler } from 'graphql-http/lib/use/http';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import graphqlPlayground from 'graphql-playground-middleware-express';
 
 dotenv.config();
+const ROOT_PATH: string = path.resolve(__dirname, '..', '..');
+const APPLICATION_PATH: string = path.resolve(ROOT_PATH, 'client', 'dist', 'pub-env');
+const APPLICATION_PORT: string = process.env.HTTPS_SERVER_PORT ?? '8443';
 
-Console.init(!process.argv.includes('--debug'));
+Logger.init(!process.argv.includes('--debug'));
 console.debug('Debug Mode has been activated.');
-Neo4jDriver.createDatabaseConnection();
-
-const rootPath: string = path.resolve(__dirname, '..', '..');
-const applicationPath: string = path.resolve(rootPath, 'client', 'dist', 'pub-env');
-const applicationPort: string = process.env.HTTPS_SERVER_PORT;
 
 const application: Express = express();
+Neo4jDriver.createDatabaseConnection();
+
 const httpsServer: Server = http.createServer(application);
-httpsServer.listen(applicationPort, () => {
-  console.info('[Server]', `Server has been started on Port ${applicationPort}`);
-  console.info('[Server]', `GraphiQL IDE: https://localhost:${applicationPort}/playground`);
+httpsServer.listen(APPLICATION_PORT, () => {
+  console.info('[Server]', `BACKEND SERVER RUNNING ON: ${APPLICATION_PORT}`);
+  console.info('[Server]', `GRAPHQL PLAYGROUND: https://localhost:${APPLICATION_PORT}/editor`);
 });
 
 application.use('/graphql', createHandler({ schema }));
-application.get('/playground', graphqlPlayground({ endpoint: '/graphql' }));
+application.use('/', express.static(APPLICATION_PATH));
 
-application.use('/', express.static(applicationPath));
-application.get('*', (_, res: Response) => res.status(200).sendFile(`${applicationPath}/index.html`, { maxAge: '1y' }));
+application.get('/editor', graphqlPlayground({ endpoint: '/graphql' }));
+application.get('*', (_: Request, res: Response) =>
+  res.status(200).sendFile(`${APPLICATION_PATH}/index.html`, { maxAge: '1y' }),
+);

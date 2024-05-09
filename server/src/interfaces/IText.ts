@@ -1,12 +1,16 @@
 import { IMetadata } from './IMetadata';
-import { IStandoffProperty } from './IStandoffProperty';
+import { IAnnotation } from './IAnnotation.js';
 import { INode } from './INode.js';
+import { Nullable } from '../types.js';
 
-export interface IText extends INode {
+export interface IBaseText extends INode {
   guid: string;
-  label: string;
   text: string;
-  letter: IMetadata;
+  label: string;
+}
+
+export interface IText extends IBaseText {
+  letter: Nullable<IMetadata>;
   type: string;
   metadataLanguage: string;
   metadataLicence: string;
@@ -18,5 +22,5 @@ export interface IText extends INode {
   metadataIsReference: boolean;
   metadataPrintSourceName: string;
   metadataPrintSourceUrl: string;
-  standoffProperties: IStandoffProperty[];
+  annotations: IAnnotation[];
 }

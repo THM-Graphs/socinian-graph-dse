@@ -8,7 +8,7 @@ const PROJECT_TEXT_QUERY: string = `
 MATCH (t:Project {guid: $guid})
 RETURN properties(t) as projectText`;
 
-export default class ProjectDao {
+export default class ProjectDAO {
   public static async getProjectText(projectTextId: string): Promise<Nullable<IBaseText>> {
     const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(PROJECT_TEXT_QUERY, { guid: projectTextId });
     const text: Nullable<IBaseText> = result?.records[0]?.get('projectText');

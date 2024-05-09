@@ -1,7 +1,7 @@
 import { IText } from './IText';
 import { INode } from './INode.js';
 
-export interface IStandoffProperty extends INode {
+export interface IAnnotation extends INode {
   guid: string;
   startIndex: number;
   endIndex: number;
@@ -9,5 +9,5 @@ export interface IStandoffProperty extends INode {
   teiType: string;
   type: string;
   comment: IText;
-  standoffProperties: IStandoffProperty[];
+  annotations: IAnnotation[];
 }

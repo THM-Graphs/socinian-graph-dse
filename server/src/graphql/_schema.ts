@@ -6,7 +6,7 @@ import { SearchQueries } from './queries/Search.queries';
 import { CommunicationQueries } from './queries/Communication.queries';
 import { ProjectQueries } from './queries/Project.queries.js';
 import { TextQueries } from './queries/Text.queries';
-import { StandoffPropertyQueries } from './queries/StandoffProperty.queries';
+import { AnnotationQueries } from './queries/Annotation.queries.js';
 
 // Merging all queries with spread operator
 const Queries: GraphQLObjectType = new GraphQLObjectType({
@@ -19,7 +19,7 @@ const Queries: GraphQLObjectType = new GraphQLObjectType({
     ...TextQueries,
     ...SearchQueries,
     ...ProjectQueries,
-    ...StandoffPropertyQueries,
+    ...AnnotationQueries,
   },
 });
 

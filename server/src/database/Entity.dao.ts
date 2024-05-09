@@ -5,7 +5,7 @@ import { IMetadata } from '../interfaces/IMetadata';
 import { INormdata } from '../interfaces/INormdata';
 import { Nullable } from '../types.js';
 import { Utils } from '../utils/Utils.js';
-import { IStandoffProperty } from '../interfaces/IStandoffProperty.js';
+import { IAnnotation } from '../interfaces/IAnnotation.js';
 
 const OCCURRENCES_QUERY_FRAGMENT: string = `
 WITH e,
@@ -59,10 +59,10 @@ export default class EntityDAO {
   }
 
   public static async getDetailedEntities(type: string = ''): Promise<IEntity[]> {
-    const entities: IEntity[] = [];
     const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(DETAILED_ENTITIES_QUERY, { type });
     if (!result) return [];
 
+    const entities: IEntity[] = [];
     for (const record of result.records) {
       const entity: Nullable<IEntity> = record.get('entities');
       const metadata: Nullable<IMetadata[]> = record.get('metadata');
@@ -93,9 +93,9 @@ export default class EntityDAO {
     return occurrences.map(Utils.stringifyNode);
   }
 
-  public static async getAnnotations(entityId: string): Promise<IStandoffProperty[]> {
+  public static async getAnnotations(entityId: string): Promise<IAnnotation[]> {
     const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(ANNOTATIONS_QUERY, { guid: entityId });
-    const annotations: Nullable<IStandoffProperty[]> = result?.records[0]?.get('annotations');
+    const annotations: Nullable<IAnnotation[]> = result?.records[0]?.get('annotations');
     if (!annotations) return [];
 
     return annotations.map(Utils.stringifyNode);

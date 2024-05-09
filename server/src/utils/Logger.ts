@@ -5,49 +5,51 @@ declare global {
   }
 }
 
+type ConsoleType = 'success' | 'warning' | 'error' | 'info' | 'debug';
+
 interface Configuration {
-  type: string;
+  type: ConsoleType;
   color: string;
   signature: string;
 }
 
 const CONSOLE_COLORS = {
-  RESET: "\x1b[0m",
-  ERROR: "\x1b[31m",
-  SUCCESS: "\x1b[32m",
-  WARNING: "\x1b[33m",
-  INFO: "\x1b[34m",
+  RESET: '\x1b[0m',
+  ERROR: '\x1b[31m',
+  SUCCESS: '\x1b[32m',
+  WARNING: '\x1b[33m',
+  INFO: '\x1b[34m',
 };
 
 const CONFIGURATIONS: Configuration[] = [
   {
-    type: "success",
+    type: 'success',
     color: CONSOLE_COLORS.SUCCESS,
-    signature: "✓",
+    signature: '✓',
   },
   {
-    type: "warning",
+    type: 'warning',
     color: CONSOLE_COLORS.WARNING,
-    signature: "?",
+    signature: '?',
   },
   {
-    type: "error",
+    type: 'error',
     color: CONSOLE_COLORS.ERROR,
-    signature: "!",
+    signature: '!',
   },
   {
-    type: "info",
+    type: 'info',
     color: CONSOLE_COLORS.INFO,
-    signature: "i",
+    signature: 'i',
   },
   {
-    type: "debug",
+    type: 'debug',
     color: CONSOLE_COLORS.RESET,
-    signature: "DEBUG",
+    signature: 'DEBUG',
   },
 ];
 
-export default class Console {
+export default class Logger {
   private static debugMode: boolean;
 
   public static setDebug(debugMode: boolean): void {
@@ -63,15 +65,10 @@ export default class Console {
   }
 
   private static initConsole(config: Configuration): void {
-    console[config.type] = (...args: unknown[]) => {
-      if (config.type === "debug" && !this.debugMode) return;
+    console[config.type] = (...args: unknown[]): void => {
+      if (config.type === 'debug' && !this.debugMode) return;
 
-      console.log(
-        config.color,
-        `[${this.getTimestamp()}] [${config.signature}] `,
-        ...args,
-        CONSOLE_COLORS.RESET,
-      );
+      console.log(config.color, `[${this.getTimestamp()}] [${config.signature}] `, ...args, CONSOLE_COLORS.RESET);
     };
   }
 
