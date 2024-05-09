@@ -13,7 +13,7 @@ const ROOT_PATH: string = path.resolve(__dirname, '..', '..');
 const APPLICATION_PATH: string = path.resolve(ROOT_PATH, 'client', 'dist', 'pub-env');
 const APPLICATION_PORT: string = process.env.HTTPS_SERVER_PORT ?? '8443';
 
-Logger.init(!process.argv.includes('--debug'));
+Logger.init(process.argv.includes('--debug'));
 console.debug('Debug Mode has been activated.');
 
 const application: Express = express();
@@ -22,7 +22,7 @@ Neo4jDriver.createDatabaseConnection();
 const httpsServer: Server = http.createServer(application);
 httpsServer.listen(APPLICATION_PORT, () => {
   console.info('[Server]', `BACKEND SERVER RUNNING ON: ${APPLICATION_PORT}`);
-  console.info('[Server]', `GRAPHQL PLAYGROUND: https://localhost:${APPLICATION_PORT}/editor`);
+  console.info('[Server]', `GRAPHQL PLAYGROUND: http://localhost:${APPLICATION_PORT}/editor`);
 });
 
 application.use('/graphql', createHandler({ schema }));

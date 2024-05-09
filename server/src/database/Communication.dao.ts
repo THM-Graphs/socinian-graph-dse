@@ -9,7 +9,7 @@ import { Utils } from '../utils/Utils.js';
 
 const COMMUNICATIONS_QUERY: string = `
 MATCH (l:Metadata)<-[:HAS_LETTER]-(c:Communication)
-RETURN properties(c) as communications`;
+RETURN collect(properties(c)) as communications`;
 
 const DETAILED_COMMUNICATIONS_QUERY: string = `
 MATCH (l:Metadata)<-[:HAS_LETTER]-(c:Communication)
