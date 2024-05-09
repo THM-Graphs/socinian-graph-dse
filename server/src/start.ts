@@ -7,6 +7,7 @@ import { schema } from './graphql/_schema';
 import { createHandler } from 'graphql-http/lib/use/http';
 import dotenv from 'dotenv';
 import graphqlPlayground from 'graphql-playground-middleware-express';
+import { ExpressUtils } from './utils/ExpressUtils.js';
 
 dotenv.config();
 const ROOT_PATH: string = path.resolve(__dirname, '..', '..');
@@ -25,6 +26,7 @@ httpsServer.listen(APPLICATION_PORT, () => {
   console.info('[Server]', `GRAPHQL PLAYGROUND: http://localhost:${APPLICATION_PORT}/editor`);
 });
 
+application.use(ExpressUtils.decodeMiddleware);
 application.use('/graphql', createHandler({ schema }));
 application.use('/', express.static(APPLICATION_PATH));
 
