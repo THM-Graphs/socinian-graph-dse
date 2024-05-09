@@ -1,6 +1,7 @@
 import { IMetadata } from './IMetadata';
 import { INormdata } from './INormdata';
 import { INode } from './INode.js';
+import { IStandoffProperty } from './IStandoffProperty.js';
 
 export interface IEntity extends INode {
   guid: string;
@@ -9,6 +10,7 @@ export interface IEntity extends INode {
   normdata: INormdata[];
   additionalLabels: IAdditionalLabel[];
   additionalInformation: string[];
+  annotations: IStandoffProperty[];
   occurrences: IMetadata[];
 }
 

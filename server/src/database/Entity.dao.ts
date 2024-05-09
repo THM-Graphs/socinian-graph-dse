@@ -5,6 +5,7 @@ import { IMetadata } from '../interfaces/IMetadata';
 import { INormdata } from '../interfaces/INormdata';
 import { Nullable } from '../types.js';
 import { Utils } from '../utils/Utils.js';
+import { IStandoffProperty } from '../interfaces/IStandoffProperty.js';
 
 const OCCURRENCES_QUERY_FRAGMENT: string = `
 WITH e,
@@ -31,6 +32,10 @@ RETURN properties(e) as entity`;
 const OCCURRENCES_QUERY: string = `
 MATCH (e:Entity {guid: $guid}) ${OCCURRENCES_QUERY_FRAGMENT}
 RETURN apoc.coll.toSet( [x in metadata | properties(x)] ) as occurrences`;
+
+const ANNOTATIONS_QUERY: string = `
+MATCH (:Entity {guid: $guid})<-[:REFERS_TO]-(a:Spo)
+RETURN properties(a) as annotations`;
 
 const NORMDATA_QUERY: string = `
 MATCH (e:Entity {guid: $guid})-[:HAS_NORMDATA]->(n:Normdata)-[:HAS_PROVIDER]->(p:NormdataProvider)
@@ -86,6 +91,14 @@ export default class EntityDAO {
     if (!occurrences) return [];
 
     return occurrences.map(Utils.stringifyNode);
+  }
+
+  public static async getAnnotations(entityId: string): Promise<IStandoffProperty[]> {
+    const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(ANNOTATIONS_QUERY, { guid: entityId });
+    const annotations: Nullable<IStandoffProperty[]> = result?.records[0]?.get('annotations');
+    if (!annotations) return [];
+
+    return annotations.map(Utils.stringifyNode);
   }
 
   public static async getNormdata(entityId: string): Promise<INormdata[]> {

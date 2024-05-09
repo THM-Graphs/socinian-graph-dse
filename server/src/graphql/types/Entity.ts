@@ -5,6 +5,8 @@ import { Metadata } from './Metadata';
 import { Normdata } from './Normdata';
 import { IMetadata } from '../../interfaces/IMetadata.js';
 import { INormdata } from '../../interfaces/INormdata.js';
+import { StandoffProperty } from './StandoffProperty.js';
+import { IStandoffProperty } from '../../interfaces/IStandoffProperty.js';
 
 const AdditionalLabel: GraphQLObjectType = new GraphQLObjectType({
   name: 'AdditionalLabel',
@@ -38,6 +40,14 @@ export const Entity: GraphQLObjectType = new GraphQLObjectType({
     type: {
       type: GraphQLString,
       description: 'Entity type.',
+    },
+    annotations: {
+      type: new GraphQLList(StandoffProperty),
+      description: 'Annotations related to this entity.',
+      resolve: async (context: IEntity): Promise<IStandoffProperty[]> => {
+        if (context.annotations) return context.annotations;
+        return await EntityDAO.getAnnotations(context.annotations);
+      },
     },
     occurrences: {
       type: new GraphQLList(Metadata),
