@@ -19,7 +19,7 @@ MATCH (m:Metadata {guid: $guid})-[:HAS_ANNOTATION]-(unknown)--(e:Entity)
 RETURN properties(unknown) as participant, collect(properties(e)) as entities`;
 
 const VARIANTS_QUERY: string = `
-MATCH (m:Metadata {guid: $metadataId})-[:HAS_TEXT]->(t:Text {type: "variant"})
+MATCH (m:Metadata {guid: $guid})-[:HAS_TEXT]->(t:Text {type: "variant"})
 RETURN collect(properties(t)) as variants`;
 
 export default class MetadataDAO {
