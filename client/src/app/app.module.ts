@@ -4,7 +4,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { GraphQLModule } from "./graphql.module";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { HomeComponent } from "./view/pages/home/home.component";
 import { NavigationComponent } from "./view/components/navigation/navigation.component";
 import { FooterComponent } from "./view/components/footer/footer.component";
@@ -34,34 +34,30 @@ import { CommunicationsFilterComponent } from "./view/components/communications-
 import { SectionComponent } from "./view/pages/section/section.component";
 import { EntityComponent } from "./view/pages/entity/entity.component";
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    NavigationComponent,
-    FooterComponent,
-    RegisterComponent,
-    CollectionComponent,
-    LetterStatusPipe,
-    CommunicationView,
-    SearchResultsComponent,
-    SearchComponent,
-    ObjectValuePipe,
-    SafeHtmlPipe,
-    TextViewComponent,
-    AnnotationListComponent,
-    ImageBoxComponent,
-    SectionListComponent,
-    LoadingSpinnerComponent,
-    MarkdownViewComponent,
-    ProjectComponent,
-    CommunicationsListComponent,
-    CommunicationsFilterComponent,
-    SectionComponent,
-    EntityComponent,
-  ],
-  imports: [BrowserModule, FormsModule, AppRoutingModule, GraphQLModule, HttpClientModule],
-  providers: [Apollo, SectionService, CommunicationService, EntityService, SearchService],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HomeComponent,
+        NavigationComponent,
+        FooterComponent,
+        RegisterComponent,
+        CollectionComponent,
+        LetterStatusPipe,
+        CommunicationView,
+        SearchResultsComponent,
+        SearchComponent,
+        ObjectValuePipe,
+        SafeHtmlPipe,
+        TextViewComponent,
+        AnnotationListComponent,
+        ImageBoxComponent,
+        SectionListComponent,
+        LoadingSpinnerComponent,
+        MarkdownViewComponent,
+        ProjectComponent,
+        CommunicationsListComponent,
+        CommunicationsFilterComponent,
+        SectionComponent,
+        EntityComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule, FormsModule, AppRoutingModule, GraphQLModule], providers: [Apollo, SectionService, CommunicationService, EntityService, SearchService, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {}
