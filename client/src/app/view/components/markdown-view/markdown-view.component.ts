@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { marked, MarkedExtension } from 'marked';
+import { marked, MarkedExtension, Tokens } from 'marked';
 
 @Component({
   selector: 'app-markdown-text',
@@ -15,34 +15,37 @@ export class MarkdownViewComponent implements OnChanges {
 
   constructor() {
     const renderer: MarkedExtension['renderer'] = {
-      image(href: string | null, title: string | null, text: string): string {
+      image(token: Tokens.Image): string {
         return `</p><p class="d-block-inline text-center markdown-paragraph">
-            <img src="/assets/images/socinian/${href}" class="mt-4 img-fluid" alt="${text}" title="${title}" \>
+            <img src="/assets/images/socinian/${token.href}" class="mt-4 img-fluid" alt="${token.text}" title="${token.title}" \>
           </span>
         </p><p class="markdown-paragraph">`;
       },
-      link(href: string, title: string | null | undefined, text: string): string {
-        return `<a href="${href}" target="blank">${text}</a>`;
+
+      link(token: Tokens.Link): string {
+        return `<a href="${token.href}" target="blank">${token.text}</a>`;
       },
-      heading(text: string, level: number, raw: string): string {
-        const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+
+      heading(token: Tokens.Heading): string {
+        const escapedText = token.text.toLowerCase().replace(/[^\w]+/g, '-');
 
         return `
-            <h${level} id="${escapedText}}" class="markdown-heading">
-              ${text}
-            </h${level}>`;
+            <h${token.depth} id="${escapedText}}" class="markdown-heading">
+              ${token.text}
+            </h${token.depth}>`;
       },
-      paragraph(text: string) {
-        return `<p class="markdown-paragraph">${text}</p>`;
+
+      paragraph(token: Tokens.Paragraph): string {
+        return `<p class="markdown-paragraph">${token.text}</p>`;
       },
     };
 
     marked.use({ renderer });
   }
 
-  public async ngOnChanges(changes: SimpleChanges): Promise<void> {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes['rawMarkdown']) {
-      this.htmlText = await marked.parse(this.rawMarkdown);
+      this.htmlText = marked.parse(this.rawMarkdown) as string;
     }
   }
 }
