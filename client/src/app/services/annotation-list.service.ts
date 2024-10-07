@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
-import { IEntity } from "../models/IEntity";
-import { getIconByType } from "../const/ICON_MAP";
-import { IText } from "../models/IText";
-import { StandoffPropertyService } from "./standoffproperty.service";
-import { IStandoffProperty } from "../models/IStandoffProperty";
-import { ENTITY_TYPES } from "../const/ENTITY_TYPES";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { IEntity } from '../models/IEntity';
+import { getIconByType } from '../const/ICON_MAP';
+import { IText } from '../models/IText';
+import { AnnotationService } from './annotation.service.js';
+import { IStandoffProperty } from '../models/IStandoffProperty';
+import { ENTITY_TYPES } from '../const/ENTITY_TYPES';
 
 export interface Annotation {
   type: AnnotationType;
@@ -24,13 +24,13 @@ export enum AnnotationType {
 }
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class AnnotationListService {
   public annotationList: Annotation[] = [];
   public annotationListChange: Subject<Annotation> = new Subject<Annotation>();
 
-  constructor(private standoffPropertyService: StandoffPropertyService) {
+  constructor(private standoffPropertyService: AnnotationService) {
     this.annotationListChange.subscribe((annotation: Annotation) => this.annotationList.unshift(annotation));
   }
 
@@ -73,7 +73,7 @@ export class AnnotationListService {
     if (!text || !text.letter) return this.closeAnnotation(standoffPropertyId);
 
     const href: string = `/view/${text.letter.guid}`;
-    const icon: string = getIconByType("text");
+    const icon: string = getIconByType('text');
 
     annotation.title = this.getPhrasedTitle(clickedPhrase, icon, href, text.letter.label);
     annotation.isLoading = false;
@@ -120,7 +120,7 @@ export class AnnotationListService {
 
   private getPhrasedTitle(phrase: string, icon: string, href: string, label: string): string {
     return `<span class="d-block">» ${phrase} «</span>
-            <i class="small fas ${icon} d-inline-block me-1"></i> 
+            <i class="small fas ${icon} d-inline-block me-1"></i>
             <a href="${href}" class="small" target="_blank">${label}</a>`;
   }
 }

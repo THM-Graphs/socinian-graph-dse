@@ -1,9 +1,11 @@
-import { Injectable } from "@angular/core";
-import { Apollo, gql } from "apollo-angular";
-import { ApolloQueryResult, TypedDocumentNode } from "@apollo/client/core";
-import { ISection } from "../models/ISection";
+import { Injectable } from '@angular/core';
+import { gql } from 'apollo-angular';
+import { TypedDocumentNode } from '@apollo/client/core';
+import { ISection } from '../models/ISection';
+import { ApolloService } from './apollo.service.js';
+import { Nullable } from '../../global.js';
 
-const COMMUNICATION: string = `
+const COMMUNICATIONS_FRAGMENT: string = `
   communications {
     guid
     letter {
@@ -27,8 +29,7 @@ const COMMUNICATION: string = `
     }
   }
 `;
-
-const GET_SECTION_LIST: TypedDocumentNode = gql`
+const GET_SECTION_LIST: TypedDocumentNode = gql(`
   query GetSectionList {
     sections {
       guid
@@ -57,9 +58,8 @@ const GET_SECTION_LIST: TypedDocumentNode = gql`
       }
     }
   }
-`;
-
-const GET_CHILDREN_LIST: TypedDocumentNode = gql`
+`);
+const GET_CHILDREN_LIST: TypedDocumentNode = gql(`
   query GetChildrenList($sectionId: String!) {
     section(id: $sectionId) {
       guid
@@ -70,10 +70,9 @@ const GET_CHILDREN_LIST: TypedDocumentNode = gql`
       }
     }
   }
-`;
-
-const GET_SECTION_BY_ID: TypedDocumentNode = gql`
-  query GetSectionById($sectionId: String!) {
+`);
+const GET_SECTION: TypedDocumentNode = gql(`
+  query GetSection($sectionId: String!) {
     section(id: $sectionId) {
       guid
       label
@@ -86,7 +85,7 @@ const GET_SECTION_BY_ID: TypedDocumentNode = gql`
         type
         data
       }
-      ${COMMUNICATION}
+      ${COMMUNICATIONS_FRAGMENT}
       children {
         guid
         label
@@ -94,61 +93,31 @@ const GET_SECTION_BY_ID: TypedDocumentNode = gql`
       }
     }
   }
-`;
+`);
+
+interface QueryResponse {
+  section?: ISection;
+  sections?: ISection[];
+}
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
-export class SectionService {
-  constructor(private apollo: Apollo) {}
-
+export class SectionService extends ApolloService {
   public async getSectionList(): Promise<ISection[]> {
-    try {
-      const queryResult: ApolloQueryResult<{ sections: ISection[] }> = (await this.apollo
-        .watchQuery({
-          query: GET_SECTION_LIST,
-          fetchPolicy: "cache-and-network",
-        })
-        .result()) as ApolloQueryResult<{ sections: ISection[] }>;
-
-      return queryResult.data.sections;
-    } catch (error: unknown) {
-      console.error("Failed to query sections:", error);
-      return [];
-    }
+    const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_SECTION_LIST);
+    return result?.sections ?? [];
   }
 
   public async getChildrenList(sectionId: string): Promise<ISection[]> {
-    try {
-      const queryResult: ApolloQueryResult<{ section: ISection }> = (await this.apollo
-        .watchQuery({
-          query: GET_CHILDREN_LIST,
-          variables: { sectionId },
-          fetchPolicy: "cache-and-network",
-        })
-        .result()) as ApolloQueryResult<{ section: ISection }>;
-
-      return queryResult.data.section.children;
-    } catch (error: unknown) {
-      console.error("Failed to query children list for id", sectionId, error);
-      return [];
-    }
+    const variables: Record<string, string> = { sectionId: sectionId };
+    const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_CHILDREN_LIST, variables);
+    return result?.section?.children ?? [];
   }
 
-  public async getSection(sectionId: string): Promise<ISection | null> {
-    try {
-      const queryResult: ApolloQueryResult<{ section: ISection }> = (await this.apollo
-        .watchQuery({
-          query: GET_SECTION_BY_ID,
-          variables: { sectionId },
-          fetchPolicy: "cache-and-network",
-        })
-        .result()) as ApolloQueryResult<{ section: ISection }>;
-
-      return queryResult.data.section;
-    } catch (error: unknown) {
-      console.error("Failed to query section with id", sectionId, error);
-      return null;
-    }
+  public async getSection(sectionId: string): Promise<Nullable<ISection>> {
+    const variables: Record<string, string> = { sectionId: sectionId };
+    const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_SECTION, variables);
+    return result?.section;
   }
 }

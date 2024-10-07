@@ -1,9 +1,10 @@
-import { Injectable } from "@angular/core";
-import { Apollo, gql, TypedDocumentNode } from "apollo-angular";
-import { ApolloQueryResult } from "@apollo/client/core";
-import { ICommunication } from "../models/ICommunication";
+import { Injectable } from '@angular/core';
+import { gql, TypedDocumentNode } from 'apollo-angular';
+import { ICommunication } from '../models/ICommunication';
+import { ApolloService } from './apollo.service.js';
+import { Nullable } from '../../global.js';
 
-const GET_ALL_COMMUNICATIONS: TypedDocumentNode = gql`
+const GET_ALL_COMMUNICATIONS: TypedDocumentNode = gql(`
   query GetAllCommunications {
     communications {
       guid
@@ -27,10 +28,9 @@ const GET_ALL_COMMUNICATIONS: TypedDocumentNode = gql`
       }
     }
   }
-`;
-
-const GET_COMMUNICATION_BY_ID: TypedDocumentNode = gql`
-  query GetCommunicationById($communicationId: String!) {
+`);
+const GET_COMMUNICATION: TypedDocumentNode = gql(`
+  query GetCommunication($communicationId: String!) {
     communication(id: $communicationId) {
       guid
       letter {
@@ -114,44 +114,25 @@ const GET_COMMUNICATION_BY_ID: TypedDocumentNode = gql`
       }
     }
   }
-`;
+`);
+
+interface QueryResponse {
+  communications?: ICommunication[];
+  communication?: ICommunication;
+}
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
-export class CommunicationService {
-  constructor(private apollo: Apollo) {}
-
+export class CommunicationService extends ApolloService {
   public async getCommunications(): Promise<ICommunication[]> {
-    try {
-      const queryResult: ApolloQueryResult<{ communications: ICommunication[] }> = (await this.apollo
-        .watchQuery({
-          query: GET_ALL_COMMUNICATIONS,
-          fetchPolicy: "cache-and-network",
-        })
-        .result()) as ApolloQueryResult<{ communications: ICommunication[] }>;
-
-      return queryResult.data.communications;
-    } catch (error: unknown) {
-      console.error("Failed to query communications:", error);
-      return [];
-    }
+    const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_ALL_COMMUNICATIONS);
+    return result?.communications ?? [];
   }
 
-  public async getCommunication(communicationId: string): Promise<ICommunication | null> {
-    try {
-      const queryResult: ApolloQueryResult<{ communication: ICommunication }> = (await this.apollo
-        .watchQuery({
-          query: GET_COMMUNICATION_BY_ID,
-          variables: { communicationId },
-          fetchPolicy: "cache-and-network",
-        })
-        .result()) as ApolloQueryResult<{ communication: ICommunication }>;
-
-      return queryResult.data.communication;
-    } catch (error: unknown) {
-      console.error("Failed to query communication by id", communicationId, error);
-      return null;
-    }
+  public async getCommunication(communicationId: string): Promise<Nullable<ICommunication>> {
+    const variables: Record<string, string> = { communicationId: communicationId };
+    const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_COMMUNICATION, variables);
+    return result?.communication;
   }
 }

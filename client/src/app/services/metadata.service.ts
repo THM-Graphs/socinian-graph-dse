@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { ApolloQueryResult } from "@apollo/client/core";
-import { Apollo, gql, TypedDocumentNode } from "apollo-angular";
-import { IMetadata } from "../models/IMetadata";
+import { Injectable } from '@angular/core';
+import { ApolloQueryResult } from '@apollo/client/core';
+import { Apollo, gql, TypedDocumentNode } from 'apollo-angular';
+import { IMetadata } from '../models/IMetadata';
 
-const TEXT: string = `
+const TEXT_FRAGMENT: string = `
 guid
 label
 text
@@ -37,9 +37,8 @@ standoffProperties {
   type
   data
 }`;
-
-const GET_METADATA_BY_ID: TypedDocumentNode = gql`
-  query GetMetadataById($metadataId: String!) {
+const GET_METADATA: TypedDocumentNode = gql(`
+  query GetMetadata($metadataId: String!) {
     metadata(id: $metadataId) {
       guid
       doctype
@@ -47,10 +46,10 @@ const GET_METADATA_BY_ID: TypedDocumentNode = gql`
       label
       status
       variants {
-        ${TEXT}
+        ${TEXT_FRAGMENT}
       }
       abstract {
-        ${TEXT}
+        ${TEXT_FRAGMENT}
       }
       participants {
         type
@@ -71,10 +70,10 @@ const GET_METADATA_BY_ID: TypedDocumentNode = gql`
       }
     }
   }
-`;
+`);
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class MetadataService {
   constructor(private apollo: Apollo) {}
@@ -83,15 +82,15 @@ export class MetadataService {
     try {
       const queryResult: ApolloQueryResult<{ metadata: IMetadata }> = (await this.apollo
         .watchQuery({
-          query: GET_METADATA_BY_ID,
+          query: GET_METADATA,
           variables: { metadataId },
-          fetchPolicy: "cache-and-network",
+          fetchPolicy: 'cache-and-network',
         })
         .result()) as ApolloQueryResult<{ metadata: IMetadata }>;
 
       return queryResult.data.metadata;
     } catch (error: unknown) {
-      console.error("Failed to query metadata by id", metadataId, error);
+      console.error('Failed to query metadata by id', metadataId, error);
       return null;
     }
   }

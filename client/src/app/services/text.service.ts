@@ -1,10 +1,11 @@
-import { Injectable } from "@angular/core";
-import { Apollo, TypedDocumentNode, gql } from "apollo-angular";
-import { IText } from "../models/IText";
-import { ApolloQueryResult } from "@apollo/client/core";
+import { Injectable } from '@angular/core';
+import { gql, TypedDocumentNode } from 'apollo-angular';
+import { IText } from '../models/IText';
+import { ApolloService } from './apollo.service.js';
+import { Nullable } from '../../global.js';
 
-const GET_TEXT_BY_ID: TypedDocumentNode = gql`
-  query GetTextById($textId: String!) {
+const GET_TEXT: TypedDocumentNode = gql(`
+  query GetText($textId: String!) {
     text(id: $textId) {
       guid
       label
@@ -44,28 +45,19 @@ const GET_TEXT_BY_ID: TypedDocumentNode = gql`
       }
     }
   }
-`;
+`);
+
+interface QueryResponse {
+  text?: IText;
+}
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
-export class TextService {
-  constructor(private apollo: Apollo) {}
-
-  public async getText(textId: string): Promise<IText | null> {
-    try {
-      const queryResult: ApolloQueryResult<{ text: IText }> = (await this.apollo
-        .watchQuery({
-          query: GET_TEXT_BY_ID,
-          variables: { textId: textId },
-          fetchPolicy: "cache-and-network",
-        })
-        .result()) as ApolloQueryResult<{ text: IText }>;
-
-      return queryResult.data.text;
-    } catch (error: unknown) {
-      console.error("Failed to query text by id", textId, error);
-      return null;
-    }
+export class TextService extends ApolloService {
+  public async getText(textId: string): Promise<Nullable<IText>> {
+    const variables: Record<string, string> = { textId: textId };
+    const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_TEXT, variables);
+    return result?.text;
   }
 }

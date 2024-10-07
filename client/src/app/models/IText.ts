@@ -1,22 +1,25 @@
-import { IMetadata } from "./IMetadata";
-import { IStandoffProperty } from "./IStandoffProperty";
+import { IMetadata } from './IMetadata';
+import { IStandoffProperty } from './IStandoffProperty';
 
 export interface IText {
+  letter: IMetadata;
+  standoffProperties: IStandoffProperty[];
+
   guid: string;
   label: string;
   text: string;
-  letter: IMetadata;
   type: string;
+
+  metadataRemark: IText;
   metadataLanguage: string;
   metadataLicence: string;
   metadataShelfmark: string;
-  metadataRemark: IText;
   metadataTextGenre: string;
   metadataTextType: string;
   metadataArchive: string;
   metadataIsReference: boolean;
   metadataPrintSourceName: string;
   metadataPrintSourceUrl: string;
-  standoffProperties: IStandoffProperty[];
+
   data: string;
 }
