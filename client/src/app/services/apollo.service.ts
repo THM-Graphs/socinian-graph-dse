@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, TypedDocumentNode } from 'apollo-angular';
-import { Nullable } from '../../global.js';
 import { ApolloQueryResult } from '@apollo/client/core';
+import { Nullable } from '../../global';
 
 @Injectable({
   providedIn: 'root',

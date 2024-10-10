@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import { TypedDocumentNode } from '@apollo/client/core';
 import { ISection } from '../models/ISection';
-import { ApolloService } from './apollo.service.js';
-import { Nullable } from '../../global.js';
+import { ApolloService } from './apollo.service';
+import { Nullable } from '../../global';
 
 const COMMUNICATIONS_FRAGMENT: string = `
   communications {

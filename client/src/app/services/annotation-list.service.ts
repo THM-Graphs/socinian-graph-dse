@@ -3,9 +3,10 @@ import { Subject } from 'rxjs';
 import { IEntity } from '../models/IEntity';
 import { getIconByType } from '../const/ICON_MAP';
 import { IText } from '../models/IText';
-import { AnnotationService } from './annotation.service.js';
 import { IStandoffProperty } from '../models/IStandoffProperty';
 import { ENTITY_TYPES } from '../const/ENTITY_TYPES';
+import { Nullable } from '../../global';
+import { AnnotationService } from './annotation.service';
 
 export interface Annotation {
   type: AnnotationType;
@@ -51,7 +52,7 @@ export class AnnotationListService {
     } as Annotation;
     this.annotationListChange.next(annotation);
 
-    const entity: IEntity | null = await this.standoffPropertyService.getEntity(standoffPropertyId);
+    const entity: Nullable<IEntity> = await this.standoffPropertyService.getEntity(standoffPropertyId);
     if (!entity) return this.closeAnnotation(standoffPropertyId);
 
     const href: string = `/entry/${entity.guid}`;
@@ -69,7 +70,7 @@ export class AnnotationListService {
     } as Annotation;
     this.annotationListChange.next(annotation);
 
-    const text: IText | null = await this.standoffPropertyService.getVariant(standoffPropertyId);
+    const text: Nullable<IText> = await this.standoffPropertyService.getVariant(standoffPropertyId);
     if (!text || !text.letter) return this.closeAnnotation(standoffPropertyId);
 
     const href: string = `/view/${text.letter.guid}`;
@@ -87,7 +88,7 @@ export class AnnotationListService {
     } as Annotation;
     this.annotationListChange.next(annotation);
 
-    const comment: IText | null = await this.standoffPropertyService.getReference(standOffId);
+    const comment: Nullable<IText> = await this.standoffPropertyService.getReference(standOffId);
     if (!comment) return this.closeAnnotation(standOffId);
 
     const href: string = `/view/${comment.letter.guid}`;
@@ -108,7 +109,7 @@ export class AnnotationListService {
     } as Annotation;
     this.annotationListChange.next(annotation);
 
-    const comment: IText | null = await this.standoffPropertyService.getComment(standOffId);
+    const comment: Nullable<IText> = await this.standoffPropertyService.getComment(standOffId);
     if (!comment) return this.closeAnnotation(standOffId);
 
     annotation.title = `<span class="d-block">» ${label} «</span>`;

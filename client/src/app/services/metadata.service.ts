@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ApolloQueryResult } from '@apollo/client/core';
-import { Apollo, gql, TypedDocumentNode } from 'apollo-angular';
+import { gql, TypedDocumentNode } from 'apollo-angular';
 import { IMetadata } from '../models/IMetadata';
+import { ApolloService } from './apollo.service';
+import { Nullable } from '../../global';
 
 const TEXT_FRAGMENT: string = `
 guid
@@ -72,26 +73,17 @@ const GET_METADATA: TypedDocumentNode = gql(`
   }
 `);
 
+interface QueryResponse {
+  metadata?: IMetadata;
+}
+
 @Injectable({
   providedIn: 'root',
 })
-export class MetadataService {
-  constructor(private apollo: Apollo) {}
-
-  public async getMetadata(metadataId: string): Promise<IMetadata | null> {
-    try {
-      const queryResult: ApolloQueryResult<{ metadata: IMetadata }> = (await this.apollo
-        .watchQuery({
-          query: GET_METADATA,
-          variables: { metadataId },
-          fetchPolicy: 'cache-and-network',
-        })
-        .result()) as ApolloQueryResult<{ metadata: IMetadata }>;
-
-      return queryResult.data.metadata;
-    } catch (error: unknown) {
-      console.error('Failed to query metadata by id', metadataId, error);
-      return null;
-    }
+export class MetadataService extends ApolloService {
+  public async getMetadata(metadataId: string): Promise<Nullable<IMetadata>> {
+    const variables: Record<string, string> = { metadataId: metadataId };
+    const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_METADATA, variables);
+    return result?.metadata;
   }
 }

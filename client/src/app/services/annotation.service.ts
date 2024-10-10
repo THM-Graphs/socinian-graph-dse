@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { gql, TypedDocumentNode } from 'apollo-angular';
 import { IEntity } from '../models/IEntity';
 import { IText } from '../models/IText';
-import { Nullable } from '../../global.js';
-import { ApolloService } from './apollo.service.js';
+import { Nullable } from '../../global';
+import { ApolloService } from './apollo.service';
 
 const GET_COMMENT: TypedDocumentNode = gql(`
   query GetComment($annotationId: String!) {

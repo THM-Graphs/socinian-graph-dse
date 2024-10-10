@@ -4,6 +4,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { IProject } from 'src/app/models/IProject.js';
 import { ProjectService } from 'src/app/services/project.service';
 import { LangManager } from 'src/utils/LangManager';
+import { Nullable } from '../../../../global.js';
 
 @Component({
   selector: 'app-project',
@@ -61,7 +62,7 @@ export class ProjectComponent {
 
   public async onSelectProjectCategory(guid: string): Promise<void> {
     this.isTextLoading = true;
-    const projectText: IProject | null = await this.projectService.getProjectText(guid);
+    const projectText: Nullable<IProject> = await this.projectService.getProjectText(guid);
     if (projectText) this.selectedText = projectText;
     this.location.go(`/project/${this.selectedText.guid}`);
     this.scrollTop();

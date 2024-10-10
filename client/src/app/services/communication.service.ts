@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { gql, TypedDocumentNode } from 'apollo-angular';
 import { ICommunication } from '../models/ICommunication';
-import { ApolloService } from './apollo.service.js';
-import { Nullable } from '../../global.js';
+import { ApolloService } from './apollo.service';
+import { Nullable } from '../../global';
 
 const GET_ALL_COMMUNICATIONS: TypedDocumentNode = gql(`
   query GetAllCommunications {

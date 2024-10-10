@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { gql, TypedDocumentNode } from 'apollo-angular';
 import { IText } from '../models/IText';
-import { ApolloService } from './apollo.service.js';
-import { Nullable } from '../../global.js';
+import { ApolloService } from './apollo.service';
+import { Nullable } from '../../global';
 
 const GET_TEXT: TypedDocumentNode = gql(`
   query GetText($textId: String!) {

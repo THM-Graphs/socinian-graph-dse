@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { LangManager } from "../../../../utils/LangManager";
-import { ISearchLetterEntry, ISearchEntity, ISearch } from "../../../models/ISearch";
-import { Utils } from "../../../../utils/Utils";
-import { SearchService } from "../../../services/search.service";
-import { getIconByType, ICON_MAP } from "src/app/const/ICON_MAP";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { LangManager } from '../../../../utils/LangManager';
+import { ISearch, ISearchEntity, ISearchLetterEntry } from '../../../models/ISearch';
+import { Utils } from '../../../../utils/Utils';
+import { SearchService } from '../../../services/search.service';
+import { getIconByType, ICON_MAP } from 'src/app/const/ICON_MAP';
+import { Nullable } from '../../../../global.js';
 
 export interface SearchResult {
   result: string;
@@ -16,22 +17,22 @@ const MAXIMUM_REGISTER_RESULTS = 3;
 const MAXIMUM_TEXT_RESULTS = 5;
 
 @Component({
-  selector: "app-search",
-  templateUrl: "./search.component.html",
-  styleUrls: ["./search.component.scss"],
+  selector: 'app-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent implements OnInit {
   @Output() onSearch: EventEmitter<string> = new EventEmitter();
   @Output() onInput: EventEmitter<string> = new EventEmitter();
   @Input() isSuggestionEnabled: boolean = false;
-  @Input() inputSearchString: string = "";
+  @Input() inputSearchString: string = '';
 
   public lang = LangManager;
   public searchResults: SearchResult[] = [];
   public isSearchResultLoading: boolean = false;
 
   public availableSearchResults: number = 0;
-  public searchString: string = "";
+  public searchString: string = '';
 
   private searchTimer: any;
 
@@ -55,7 +56,7 @@ export class SearchComponent implements OnInit {
     this.searchResults = [];
     this.availableSearchResults = 0;
 
-    if (this.searchString === "" || this.searchString.length < 3) return;
+    if (this.searchString === '' || this.searchString.length < 3) return;
     this.onInput.emit(this.searchString);
     if (!this.isSuggestionEnabled) return;
 
@@ -63,7 +64,7 @@ export class SearchComponent implements OnInit {
     clearTimeout(this.searchTimer);
 
     this.searchTimer = setTimeout(async () => {
-      if (this.searchString === "") {
+      if (this.searchString === '') {
         this.isSearchResultLoading = false;
         return;
       }
@@ -74,12 +75,12 @@ export class SearchComponent implements OnInit {
   }
 
   private async simpleSearch(): Promise<void> {
-    const result: ISearch = await this.simpleSearchService.getSimpleSearchResults(this.searchString);
+    const result: Nullable<ISearch> = await this.simpleSearchService.getSimpleSearchResults(this.searchString);
     const registerResults: ISearchEntity[] = result?.entities.slice(0, MAXIMUM_REGISTER_RESULTS) ?? [];
     const textResults: ISearchLetterEntry[] = result?.letters?.slice(0, MAXIMUM_TEXT_RESULTS) ?? [];
 
     if (registerResults.length > 0 || textResults.length > 0) {
-      this.availableSearchResults = result.letters.length + result.entities.length;
+      this.availableSearchResults = result!.letters.length + result!.entities.length;
     }
 
     this.searchResults.push(
@@ -89,7 +90,7 @@ export class SearchComponent implements OnInit {
           href: `/register/${register.type}/${register.guid}`,
           icon: getIconByType(register.type),
         };
-      })
+      }),
     );
 
     this.searchResults.push(
@@ -101,9 +102,9 @@ export class SearchComponent implements OnInit {
             const index = occurrence.toLocaleLowerCase().indexOf(searchString.toLocaleLowerCase());
             occurrence =
               occurrence.slice(0, index) +
-              "<b>" +
+              '<b>' +
               occurrence.slice(index, index + searchString.length) +
-              "</b>" +
+              '</b>' +
               occurrence.slice(index + searchString.length);
           }
           return occurrence;
@@ -113,9 +114,9 @@ export class SearchComponent implements OnInit {
           result: letter.label,
           href: `/view/${letter.guid}`,
           icon: ICON_MAP.text.icon,
-          details: detailedOccurrence ? `... ${detailedOccurrence[0]} ...` : "",
+          details: detailedOccurrence ? `... ${detailedOccurrence[0]} ...` : '',
         };
-      })
+      }),
     );
   }
 }

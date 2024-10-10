@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { IProject } from 'src/app/models/IProject.js';
 import { ProjectService } from 'src/app/services/project.service';
 import { LangManager, Languages } from 'src/utils/LangManager';
+import { Nullable } from '../../../../global.js';
 
 const PUBLISHED_SECTION: string = 'ed_f13a5020-2370-4d65-917c-325ca9e77f31';
 
@@ -32,7 +33,7 @@ export class HomeComponent implements OnInit {
   }
 
   private async getIntoductionText(): Promise<void> {
-    const introduction: IProject | null = await this.projectService.getProjectText('landing-page');
+    const introduction: Nullable<IProject> = await this.projectService.getProjectText('landing-page');
     if (introduction) this.introductionMarkdown = introduction.text;
   }
 }

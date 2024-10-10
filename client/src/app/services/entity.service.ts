@@ -3,8 +3,8 @@ import { gql } from 'apollo-angular';
 import { ENTITY_TYPES } from '../const/ENTITY_TYPES';
 import { TypedDocumentNode } from '@apollo/client/core';
 import { IEntity } from '../models/IEntity';
-import { ApolloService } from './apollo.service.js';
-import { Nullable } from '../../global.js';
+import { ApolloService } from './apollo.service';
+import { Nullable } from '../../global';
 
 const GET_ALL_ENTITIES: TypedDocumentNode = gql(`
   query GetAllEntities($type: String) {
