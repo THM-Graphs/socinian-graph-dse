@@ -23,7 +23,7 @@
     "@fortawesome/fontawesome-free": "^6.6.0",
     "apollo-angular": "^7.2.0",
     "autoprefixer": "10.4.20",
-    "bootstrap": "^5.3",
+    "bootstrap": "^5.3.3",
     "graphql": "^16",
     "marked": "^14.1.2",
     "remove-accents": "^0.5.0",

@@ -5,6 +5,8 @@
 }
 
 .list-group-item {
+  border: 0;
+
   .list-group-item {
     background: map_get(map_get($root, accent), 30);
     color: map_get(map_get($root, tints), 100);
