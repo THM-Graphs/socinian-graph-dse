@@ -38,8 +38,10 @@
     </div>
     <div class="abstract-text fade-in-fast" *ngIf="isAbstractOpen">
       <app-text-view
-        [selectedText]="selectedLetter.abstract.text"
-        [standOffProperties]="selectedLetter.abstract.standoffProperties"
+        [text]="selectedLetter.abstract.text"
+        [standOffs]="selectedLetter.abstract.standoffProperties"
+        [mouseSelection]="true"
+        guid="abstract"
       ></app-text-view>
     </div>
   </section>
@@ -76,8 +78,10 @@
   </section>
   <section class="card card-body text-view rounded-0">
     <app-text-view
-      [selectedText]="selectedVariant.text"
-      [standOffProperties]="selectedVariant.standoffProperties"
+      [text]="selectedVariant.text"
+      [standOffs]="selectedVariant.standoffProperties"
+      [mouseSelection]="true"
+      [guid]="selectedVariant.guid"
     ></app-text-view>
   </section>
   <section class="card card-body variant-data-bottom mb-5 rounded-0">
@@ -86,8 +90,8 @@
         <h5>{{ lang.get("TEXT_VIEW_PAGE_VARIANT_REMARK") }}:</h5>
         <p class="mb-0">
           <app-text-view
-            [selectedText]="selectedVariant.metadataRemark.text"
-            [standOffProperties]="selectedVariant.metadataRemark.standoffProperties"
+            [text]="selectedVariant.metadataRemark.text"
+            [standOffs]="selectedVariant.metadataRemark.standoffProperties"
           ></app-text-view>
         </p>
       </div>

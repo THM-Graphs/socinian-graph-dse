@@ -6,7 +6,7 @@ export interface IMetadata {
   doctype: string;
   label: string;
   editor: string | null;
-  status: string;
+  status: number;
   abstract: IText;
   variants: IText[];
   participants: IParticipant[];

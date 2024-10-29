@@ -1,5 +1,5 @@
 import { IMetadata } from "src/app/models/IMetadata";
-import { IParticipant, ParticipantType } from "src/app/models/IParticipant";
+import { IParticipant, PARTICIPANT } from "src/app/models/IParticipant";
 
 export class CommunicationViewUtils {
   public static getTextType(textType: string): string {
@@ -65,11 +65,11 @@ export class CommunicationViewUtils {
   }
 
   public static getSender(letter: IMetadata): IParticipant {
-    return letter.participants.find((p: IParticipant) => p.type === ParticipantType.sentPerson) as IParticipant;
+    return letter.participants.find((p: IParticipant) => p.type === PARTICIPANT.SENDER) as IParticipant;
   }
 
   public static getReceiver(letter: IMetadata): IParticipant {
-    return letter.participants.find((p: IParticipant) => p.type === ParticipantType.receivedPerson) as IParticipant;
+    return letter.participants.find((p: IParticipant) => p.type === PARTICIPANT.RECEIVER) as IParticipant;
   }
 
   public static isFullDateString(date: string): boolean {

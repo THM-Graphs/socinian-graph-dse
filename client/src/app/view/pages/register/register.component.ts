@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { LangManager } from "../../../../utils/LangManager";
-import { ENTITY_TYPES } from "../../../const/ENTITY_TYPES";
+import { ENTITY_CATEGORY } from "../../../constants/ENTITY_CATEGORY";
 import { EntityService } from "../../../services/entity.service";
 import * as removeAccents from "remove-accents";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -9,12 +9,12 @@ import { IEntity } from "src/app/models/IEntity";
 
 interface RegisterCategory {
   name: string;
-  type: ENTITY_TYPES | string;
+  type: ENTITY_CATEGORY | string;
   icon: string;
 }
 
 interface SelectedRegister {
-  type: ENTITY_TYPES | string;
+  type: ENTITY_CATEGORY | string;
 }
 
 @Component({
@@ -39,22 +39,22 @@ export class RegisterComponent implements OnInit {
   public categories: RegisterCategory[] = [
     {
       name: "REGISTER_HUMAN_INDEX",
-      type: ENTITY_TYPES.person,
+      type: ENTITY_CATEGORY.PERSON,
       icon: "fa-person",
     },
     {
       name: "REGISTER_PLACE_INDEX",
-      type: ENTITY_TYPES.place,
+      type: ENTITY_CATEGORY.PLACE,
       icon: "fa-map",
     },
     {
       name: "REGISTER_WORD_INDEX",
-      type: ENTITY_TYPES.word,
+      type: ENTITY_CATEGORY.WORD,
       icon: "fa-quote-left",
     },
     {
       name: "REGISTER_BIBLE_VERSE_INDEX",
-      type: ENTITY_TYPES.bibleVerse,
+      type: ENTITY_CATEGORY.BIBLE_VERSE,
       icon: "fa-align-center",
     },
   ];
@@ -114,7 +114,7 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  private async loadRegisterEntries(type: ENTITY_TYPES | string): Promise<void> {
+  private async loadRegisterEntries(type: ENTITY_CATEGORY | string): Promise<void> {
     this.registerEntries = await this.registerService.getEntities(type);
   }
 

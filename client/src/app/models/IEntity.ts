@@ -1,15 +1,15 @@
-import { ENTITY_TYPES } from "../const/ENTITY_TYPES";
+import { ENTITY_CATEGORY } from "../constants/ENTITY_CATEGORY";
 import { IMetadata } from "./IMetadata";
 import { INormdata } from "./INormdata";
 export interface IEntity {
   guid: string;
-  type: string | ENTITY_TYPES;
+  type: ENTITY_CATEGORY;
   label: string;
-  data: string;
   normdata: INormdata[];
   additionalLabels: IAdditionalLabel[];
   additionalInformation: string[];
   occurrences: IMetadata[];
+  data?: string;
 }
 
 export interface IAdditionalLabel {

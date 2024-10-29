@@ -50,7 +50,8 @@ export class EntityComponent implements OnInit {
     const entity: Nullable<IEntity> = await this.entityService.getEntity(entityId);
     if (!entity) return this.router.navigate(['/register']);
     this.entity = entity;
-    this.data = JSON.parse(entity.data);
+    if (entity.data) this.data = JSON.parse(entity.data);
+
     this.isLoading = false;
   }
 

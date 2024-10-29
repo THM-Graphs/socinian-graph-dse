@@ -1,12 +1,12 @@
 import { IEntity } from "./IEntity";
 
-export enum ParticipantType {
-  receivedPerson = "receivedPerson",
-  sentPerson = "sentPerson",
+export enum PARTICIPANT {
+  RECEIVER = "receivedPerson",
+  SENDER = "sentPerson",
 }
 
 export interface IParticipant {
-  type: string;
+  type: PARTICIPANT;
   dateEnd: string;
   dateCertainty: string;
   dateStart: string;

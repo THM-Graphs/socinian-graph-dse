@@ -55,9 +55,9 @@ export class AnnotationParser {
       HTMLStartAnnotations.sort(AnnotationUtils.sortHTMLStartAnnoations);
       HTMLEndAnnotations.sort(AnnotationUtils.sortHTMLEndAnnotations);
 
-      this.annotatedText += HTMLStartAnnotations.filter((a) => a.length > 0).join(" ");
+      this.annotatedText += HTMLStartAnnotations.filter((a) => a.length > 0).join("");
       this.annotatedText += this.rawText[i];
-      this.annotatedText += HTMLEndAnnotations.filter((a) => a.length > 0).join(" ");
+      this.annotatedText += HTMLEndAnnotations.filter((a) => a.length > 0).join("");
     }
 
     return this.annotatedText;
@@ -79,7 +79,8 @@ export class AnnotationParser {
       case "lg":
       case "salute":
       case "signed":
-        return !isClosing ? `<p class="${standOffProperty.teiType}">` : "</p>";
+        annotation = AnnotationHandler.handleCustomParagraph(standOffProperty);
+        break;
       case "opener":
       case "closer":
         return !isClosing ? `<div class="${standOffProperty.teiType}">` : "</div>";
@@ -163,6 +164,9 @@ export class AnnotationParser {
       case "foreign":
       case "comment":
         return "";
+      case "selection":
+        annotation = AnnotationHandler.handleSelection(standOffProperty);
+        break;
       default:
         console.error("Could not parse TEI type:", standOffProperty.teiType);
         return "";
@@ -187,8 +191,8 @@ export class AnnotationParser {
     if (existingAnnotations.length > 0) {
       overlappedHTML = `</${annotation.element}>`;
       existingAnnotations.forEach((e: Annotation) => {
-        attributes.push(...e.attributes);
-        identifier.push(e.identifier);
+        e.attributes.forEach((attr) => !attributes.includes(attr) && attributes.push(attr));
+        !identifier.includes(e.identifier) && identifier.push(e.identifier);
       });
     }
 

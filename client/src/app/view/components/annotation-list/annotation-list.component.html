@@ -35,8 +35,8 @@
     <ng-template #withStandoff>
       <app-text-view
         class="card-body fade-in-medium"
-        [standOffProperties]="annotation.standoffProperties ?? []"
-        [selectedText]="annotation.contents"
+        [standOffs]="annotation.standoffProperties ?? []"
+        [text]="annotation.contents"
       >
       </app-text-view>
     </ng-template>

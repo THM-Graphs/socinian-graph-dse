@@ -130,8 +130,16 @@ export default class AnnotationHandler {
     const data: { rendition: string } = JSON.parse(standOffProperty.data);
     return {
       element: "p",
-      attributes: [],
+      attributes: [`data-start="${standOffProperty.startIndex}"`],
       identifier: data.rendition === "#et" ? "ps-5" : "paragraph",
+    };
+  }
+
+  public static handleCustomParagraph(standOffProperty: IStandoffProperty): Annotation {
+    return {
+      element: "p",
+      attributes: [`data-start="${standOffProperty.startIndex}"`],
+      identifier: standOffProperty.teiType,
     };
   }
 
@@ -163,6 +171,14 @@ export default class AnnotationHandler {
       element: "span",
       attributes: [],
       identifier: "post-script",
+    };
+  }
+
+  public static handleSelection(standOffProperty: IStandoffProperty): Annotation {
+    return {
+      element: "span",
+      attributes: [],
+      identifier: "selection",
     };
   }
 
