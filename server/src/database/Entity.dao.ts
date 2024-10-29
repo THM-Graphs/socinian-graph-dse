@@ -18,7 +18,7 @@ WITH *, sent + from + sentTo + received + refers as metadata, e`;
 
 const ENTITIES_QUERY: string = `
 MATCH (e:Entity {type: $type})
-RETURN properties(e) as entities`;
+RETURN collect(properties(e)) as entities`;
 
 const DETAILED_ENTITIES_QUERY: string = `
 MATCH (e:Entity {type: $type}) ${OCCURRENCES_QUERY_FRAGMENT}
