@@ -125,6 +125,26 @@
     </ul>
   </section>
 
+  <section class="attachments card card-body rounded-0" *ngIf="selectedLetter && selectedLetter.attachedBy.length > 0">
+    <div class="card-label">
+      {{ lang.get("TEXT_VIEW_PAGE_ATTACHED_BY_TITLE") }}
+    </div>
+
+    <div class="card-action-menu user-select-none pointer" (click)="isAttachedByOpen = !isAttachedByOpen">
+      <i class="fas fa-angle-down" *ngIf="!isAttachedByOpen"></i>
+      <i class="fas fa-angle-up" *ngIf="isAttachedByOpen"></i>
+    </div>
+
+    <ul class="list-group" *ngIf="isAttachedByOpen">
+      <ng-container *ngFor="let communication of selectedLetter.attachedBy">
+        <li class="list-group-item list-group-item-action rounded-0 py-2 pointer">
+          <i class="fas fa-link"></i>
+          <a class="d-block-inline ms-3" [href]="'/id/' + communication.guid" target="_blank">{{ communication.letter.label }}</a>
+        </li>
+      </ng-container>
+    </ul>
+  </section>
+
   <section class="quote-info card card-body rounded-0">
     <div class="card-label">
       {{ lang.get("TEXT_VIEW_PAGE_CITATION_TITLE") }}

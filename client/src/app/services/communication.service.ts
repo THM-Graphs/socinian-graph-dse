@@ -68,6 +68,13 @@ const GET_COMMUNICATION: TypedDocumentNode = gql(`
             type
           }
         }
+        attachedBy {
+          guid
+          letter {
+            guid
+            label
+          }
+        }
         variants {
           guid
           label

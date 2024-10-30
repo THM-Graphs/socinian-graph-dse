@@ -69,6 +69,7 @@
   "TEXT_VIEW_PAGE_RECEIVED_DATE": "Date of receipt",
   "TEXT_VIEW_PAGE_LETTER_TITLE": "Letter",
   "TEXT_VIEW_PAGE_ATTACHMENT_TITLE": "Attachments",
+  "TEXT_VIEW_PAGE_ATTACHED_BY_TITLE": "attached by",
   "TEXT_VIEW_PAGE_CITATION_TITLE": "Citation",
   "TEXT_VIEW_PAGE_CITATION_IRI": "Link to the most current version of this letter:",
   "TEXT_VIEW_PAGE_CITATION_COPIED_TO_CLIPBOARD": "(copied to clipboard)",

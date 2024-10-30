@@ -69,6 +69,7 @@
   "TEXT_VIEW_PAGE_ABSTRACT_TITLE": "Kopfregest",
   "TEXT_VIEW_PAGE_LETTER_TITLE": "Brief",
   "TEXT_VIEW_PAGE_ATTACHMENT_TITLE": "Beilagen",
+  "TEXT_VIEW_PAGE_ATTACHED_BY_TITLE": "beigelegt in",
   "TEXT_VIEW_PAGE_CITATION_TITLE": "Zitierhinweis",
   "TEXT_VIEW_PAGE_CITATION_IRI": "Link zur aktuellen Version dieses Briefes:",
   "TEXT_VIEW_PAGE_CITATION_COPIED_TO_CLIPBOARD": "(in die Zwischenablage kopiert)",

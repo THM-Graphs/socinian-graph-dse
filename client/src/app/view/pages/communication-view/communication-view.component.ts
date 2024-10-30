@@ -28,6 +28,7 @@ export class CommunicationView implements OnInit, OnDestroy {
   public isAbstractOpen: boolean = true;
   public isMetadataOpen: boolean = true;
   public isAttachmentsOpen: boolean = true;
+  public isAttachedByOpen: boolean = true;
 
   public communication: ICommunication;
   public selectedLetter: IMetadata;

@@ -52,6 +52,13 @@ const GET_METADATA: TypedDocumentNode = gql(`
       abstract {
         ${TEXT_FRAGMENT}
       }
+      attachedBy {
+        guid
+        letter {
+          guid
+          label
+        }
+      }
       participants {
         type
         dateStart
