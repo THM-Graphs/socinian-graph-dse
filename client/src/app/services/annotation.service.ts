@@ -7,7 +7,7 @@ import { ApolloService } from './apollo.service';
 
 const GET_COMMENT: TypedDocumentNode = gql(`
   query GetComment($annotationId: String!) {
-    comment(id: $annotationId) {
+    refersComment(id: $annotationId) {
       guid
       label
       text
@@ -25,7 +25,7 @@ const GET_COMMENT: TypedDocumentNode = gql(`
 `);
 const GET_REFERS_VARIANT: TypedDocumentNode = gql(`
   query GetRefersVariant($annotationId: String!) {
-    refersVariant(id: $annotationId) {
+    refersText(id: $annotationId) {
       guid
       label
       letter {
@@ -45,7 +45,7 @@ const GET_REFERS_ENTITY: TypedDocumentNode = gql(`
 `);
 const GET_REFERENCE: TypedDocumentNode = gql(`
   query GetReference($annotationId: String!) {
-    reference(id: $annotationId) {
+    refersReference(id: $annotationId) {
       guid
       label
       text
@@ -67,10 +67,10 @@ const GET_REFERENCE: TypedDocumentNode = gql(`
 `);
 
 interface QueryResponse {
-  refersVariant?: IText;
+  refersText?: IText;
   refersEntity?: IEntity;
-  comment?: IText;
-  reference?: IText;
+  refersComment?: IText;
+  refersReference?: IText;
 }
 
 @Injectable({
@@ -80,7 +80,7 @@ export class AnnotationService extends ApolloService {
   public async getVariant(annotationId: string): Promise<Nullable<IText>> {
     const variables: Record<string, string> = { annotationId: annotationId };
     const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_REFERS_VARIANT, variables);
-    return result?.refersVariant;
+    return result?.refersText;
   }
 
   public async getEntity(annotationId: string): Promise<Nullable<IEntity>> {
@@ -92,12 +92,12 @@ export class AnnotationService extends ApolloService {
   public async getComment(annotationId: string): Promise<Nullable<IText>> {
     const variables: Record<string, string> = { annotationId: annotationId };
     const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_COMMENT, variables);
-    return result?.comment;
+    return result?.refersComment;
   }
 
   public async getReference(annotationId: string): Promise<Nullable<IText>> {
     const variables: Record<string, string> = { annotationId: annotationId };
     const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_REFERENCE, variables);
-    return result?.reference;
+    return result?.refersReference;
   }
 }
