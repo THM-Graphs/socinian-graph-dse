@@ -17,6 +17,7 @@ metadataArchive
 metadataIsReference
 metadataPrintSourceName
 metadataPrintSourceUrl
+metadataFunder
 metadataRemark {
   text
   standoffProperties {

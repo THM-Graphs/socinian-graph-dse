@@ -22,5 +22,6 @@ export interface IText extends IBaseText {
   metadataIsReference: boolean;
   metadataPrintSourceName: string;
   metadataPrintSourceUrl: string;
+  metadataFunder: string;
   annotations: IAnnotation[];
 }

@@ -59,6 +59,10 @@ export const Text: GraphQLObjectType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Text node source url.',
     },
+    metadataFunder: {
+      type: GraphQLString,
+      description: 'Text node funder.',
+    },
     metadataRemark: {
       type: Text,
       description: 'Text node editor remarks.',

@@ -20,6 +20,7 @@ export interface IText {
   metadataIsReference: boolean;
   metadataPrintSourceName: string;
   metadataPrintSourceUrl: string;
+  metadataFunder: string;
 
   data: string;
 }

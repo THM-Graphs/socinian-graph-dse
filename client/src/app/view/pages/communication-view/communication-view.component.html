@@ -102,6 +102,10 @@
           <span *ngIf="!metadata.href">{{ lang.get(metadata.value) }}</span>
         </div>
       </ng-container>
+      <div class="col-12 add-metadata-element" *ngIf="selectedVariant.metadataFunder">
+        <h5>{{ lang.get("TEXT_VIEW_PAGE_VARIANT_FUNDER") }}:</h5>
+        <p class="mb-0">{{selectedVariant.metadataFunder}}</p>
+      </div>
     </div>
   </section>
 

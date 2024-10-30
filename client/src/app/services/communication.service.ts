@@ -100,6 +100,7 @@ const GET_COMMUNICATION: TypedDocumentNode = gql(`
           metadataIsReference
           metadataPrintSourceName
           metadataPrintSourceUrl
+          metadataFunder
           standoffProperties {
             guid
             startIndex
