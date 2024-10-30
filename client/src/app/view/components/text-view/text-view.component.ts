@@ -54,7 +54,11 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
       const selectionEnd: number = Number(paramsMap.get('e') ?? 0);
       const guid: string = paramsMap.get('guid') ?? '';
 
-      if (guid === this.guid) this.setSelection(selectionStart, selectionEnd);
+      const hasSelection: boolean = selectionStart !== selectionEnd;
+      if (guid === this.guid && hasSelection) {
+        this.setSelection(selectionStart, selectionEnd);
+      }
+
       this.renderText();
     }
   }
@@ -166,10 +170,10 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
 
     const startIndex: number = TextViewSelectionUtils.getSelectionStartIndex(startingNode, offset);
     const endIndex: number = startIndex + selectedText.length - 1;
-    //selection.empty();
+    selection.empty();
 
-    //this.setSelection(startIndex, endIndex);
-    //this.renderText();
+    this.setSelection(startIndex, endIndex);
+    this.renderText();
     setTimeout(() => this.displaySelectionMenu(), 100);
   }
 

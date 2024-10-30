@@ -11,6 +11,7 @@ import { IParticipant } from 'src/app/models/IParticipant';
 import { AnnotationListService } from 'src/app/services/annotation-list.service';
 import { TextService } from 'src/app/services/text.service';
 import { Nullable } from '../../../../global.js';
+import { TRANSCRIPTION_STATUS } from '../../../constants/TRANSCRIPTION_STATUS';
 
 interface MetaData {
   label: string;
@@ -29,6 +30,7 @@ export class CommunicationView implements OnInit, OnDestroy {
   public isMetadataOpen: boolean = true;
   public isAttachmentsOpen: boolean = true;
   public isAttachedByOpen: boolean = true;
+  public isQuotable: boolean = false;
 
   public communication: ICommunication;
   public selectedLetter: IMetadata;
@@ -114,6 +116,7 @@ export class CommunicationView implements OnInit, OnDestroy {
     if (!letter) return this.loadParentDataView(metadataId);
 
     this.communication = communication as ICommunication;
+    this.isQuotable = letter.status === TRANSCRIPTION_STATUS.CONCLUSION;
     this.changeSelectedLetter(letter);
   }
 
