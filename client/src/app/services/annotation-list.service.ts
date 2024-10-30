@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IEntity } from '../models/IEntity';
-import { getIconByType } from '../const/ICON_MAP';
 import { IText } from '../models/IText';
 import { IStandoffProperty } from '../models/IStandoffProperty';
-import { ENTITY_TYPES } from '../const/ENTITY_TYPES';
 import { Nullable } from '../../global';
 import { AnnotationService } from './annotation.service';
+import { ENTITY_CATEGORY } from '../constants/ENTITY_CATEGORY';
+import { getIconByCategory } from '../constants/ICON_MAP';
 
 export interface Annotation {
   type: ANNOTATION_TYPE;

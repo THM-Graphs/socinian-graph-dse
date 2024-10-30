@@ -3,8 +3,8 @@ import { LangManager } from '../../../../utils/LangManager';
 import { ISearch, ISearchEntity, ISearchLetterEntry } from '../../../models/ISearch';
 import { Utils } from '../../../../utils/Utils';
 import { SearchService } from '../../../services/search.service';
-import { getIconByType, ICON_MAP } from 'src/app/const/ICON_MAP';
 import { Nullable } from '../../../../global.js';
+import { getIconByCategory, ICON_MAP } from '../../../constants/ICON_MAP';
 
 export interface SearchResult {
   result: string;
@@ -87,8 +87,8 @@ export class SearchComponent implements OnInit {
       ...registerResults.map((register: ISearchEntity) => {
         return {
           result: register.label,
-          href: `/register/${register.type}/${register.guid}`,
-          icon: getIconByType(register.type),
+          href: `/entry/${register.guid}`,
+          icon: getIconByCategory(register.type),
         };
       }),
     );

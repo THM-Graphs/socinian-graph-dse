@@ -1,5 +1,5 @@
 export class TextViewSelectionUtils {
-  private static parentNodes: string[] = ["div", "p"];
+  private static parentNodes: string[] = ['div', 'p'];
 
   public static isSelectionBackwards(selection: Selection): boolean {
     if (!selection.anchorNode || !selection.focusNode) return false;
@@ -24,12 +24,11 @@ export class TextViewSelectionUtils {
     }
 
     for (const node of nodeList) {
-      const nodeText: string = node.textContent ?? "";
+      const nodeText: string = node.textContent ?? '';
       textLength += nodeText.length;
     }
 
     const parentStartIndex: number = Number(parentElement.dataset.start);
-    console.log(textLength, offset, parentStartIndex);
     return textLength + parentStartIndex;
   }
 

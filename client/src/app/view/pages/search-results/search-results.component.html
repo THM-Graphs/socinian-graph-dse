@@ -32,10 +32,10 @@
     <ul class="nav nav-pills">
       <ng-container *ngFor="let menu of tabMenu | objectValue">
         <li class="nav-item" *ngIf="menu.values.length > 0" (click)="currentSelectedTab = menu.key">
-          <a class="nav-link" [class.active]="menu.key === currentSelectedTab" *ngIf="menu.values.length === 1">
+          <a class="nav-link" [class.active]="menu.key === currentSelectedTab" *ngIf="menu.values.length === 1" target="_blank">
             {{ lang.get(menu.singularTitle, menu.values.length) }}
           </a>
-          <a class="nav-link" [class.active]="menu.key === currentSelectedTab" *ngIf="menu.values.length > 1">
+          <a class="nav-link" [class.active]="menu.key === currentSelectedTab" *ngIf="menu.values.length > 1" target="_blank">
             {{ lang.get(menu.pluralTitle, menu.values.length) }}
           </a>
         </li>

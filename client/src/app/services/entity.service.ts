@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
-import { ENTITY_TYPES } from '../const/ENTITY_TYPES';
 import { TypedDocumentNode } from '@apollo/client/core';
 import { IEntity } from '../models/IEntity';
 import { ApolloService } from './apollo.service';
 import { Nullable } from '../../global';
+import { ENTITY_CATEGORY } from '../constants/ENTITY_CATEGORY';
 
 const GET_ALL_ENTITIES: TypedDocumentNode = gql(`
   query GetAllEntities($type: String) {
@@ -59,7 +59,7 @@ interface QueryResponse {
   providedIn: 'root',
 })
 export class EntityService extends ApolloService {
-  public async getEntities(type?: ENTITY_TYPES | string): Promise<IEntity[]> {
+  public async getEntities(type?: ENTITY_CATEGORY | string): Promise<IEntity[]> {
     const variables: Record<string, Nullable<string>> = { type: type };
     const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_ALL_ENTITIES, variables);
     return result?.entities ?? [];
