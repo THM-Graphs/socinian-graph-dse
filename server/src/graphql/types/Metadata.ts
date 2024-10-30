@@ -4,8 +4,10 @@ import { IMetadata } from '../../interfaces/IMetadata';
 import { Participant } from './Participants';
 import { Text } from './Text';
 import { Nullable } from '../../types.js';
-import { IText } from '../../interfaces/IText.js';
-import { IParticipant } from '../../interfaces/IParticipant.js';
+import { IText } from '../../interfaces/IText';
+import { IParticipant } from '../../interfaces/IParticipant';
+import { Communication } from './Communication';
+import { ICommunication } from '../../interfaces/ICommunication';
 
 export const Metadata: GraphQLObjectType = new GraphQLObjectType({
   name: 'Metadata',
@@ -55,6 +57,14 @@ export const Metadata: GraphQLObjectType = new GraphQLObjectType({
       resolve: async (context: IMetadata): Promise<IParticipant[]> => {
         if (context.participants) return context.participants;
         return await MetadataDAO.getParticipants(context.guid);
+      },
+    },
+    attachedBy: {
+      type: new GraphQLList(Communication),
+      description: 'Metadata attached by communications.',
+      resolve: async (context: IMetadata): Promise<ICommunication[]> => {
+        if (context.attachedBy) return context.attachedBy;
+        return await MetadataDAO.getAttachedBy(context.guid);
       },
     },
   }),

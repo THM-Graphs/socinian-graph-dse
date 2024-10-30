@@ -4,8 +4,9 @@ import { IText } from '../interfaces/IText';
 import { IMetadata } from '../interfaces/IMetadata';
 import { IEntity } from '../interfaces/IEntity';
 import { IParticipant } from '../interfaces/IParticipant';
-import { Nullable } from '../types.js';
-import { Utils } from '../utils/Utils.js';
+import { Nullable } from '../types';
+import { Utils } from '../utils/Utils';
+import { ICommunication } from '../interfaces/ICommunication';
 
 const METADATA_QUERY: string = `
 MATCH (m:Metadata {guid: $guid}) RETURN properties(m) as metadata`;
@@ -21,6 +22,10 @@ RETURN properties(unknown) as participant, collect(properties(e)) as entities`;
 const VARIANTS_QUERY: string = `
 MATCH (m:Metadata {guid: $guid})-[:HAS_TEXT]->(t:Text {type: "variant"})
 RETURN collect(properties(t)) as variants`;
+
+const ATTACHED_BY_QUERY: string = `
+MATCH (m:Metadata {guid: $guid})<-[:HAS_ATTACHMENT]-(c:Communication)
+RETURN collect(properties(c)) as communications`;
 
 export default class MetadataDAO {
   public static async getMetadata(metadataId: string): Promise<Nullable<IMetadata>> {
@@ -65,5 +70,13 @@ export default class MetadataDAO {
     if (!variants) return [];
 
     return variants.map(Utils.stringifyNode);
+  }
+
+  public static async getAttachedBy(metadataId: string): Promise<ICommunication[]> {
+    const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(ATTACHED_BY_QUERY, { guid: metadataId });
+    const communications: Nullable<ICommunication[]> = result?.records[0]?.get('communications');
+    if (!communications) return [];
+
+    return communications.map(Utils.stringifyNode);
   }
 }
