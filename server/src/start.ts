@@ -6,13 +6,13 @@ import Logger from './utils/Logger.js';
 import { schema } from './graphql/_schema';
 import { createHandler } from 'graphql-http/lib/use/http';
 import dotenv from 'dotenv';
-import graphqlPlayground from 'graphql-playground-middleware-express';
 import { ExpressUtils } from './utils/ExpressUtils.js';
 
 dotenv.config();
 const ROOT_PATH: string = path.resolve(__dirname, '..', '..');
 const APPLICATION_PATH: string = path.resolve(ROOT_PATH, 'client', 'dist', 'pub-env');
 const APPLICATION_PORT: string = process.env.HTTPS_SERVER_PORT ?? '8443';
+const GRAPHIQL_PATH: string = path.resolve(__dirname, '..', 'graphiql', 'index.html');
 
 Logger.init(process.argv.includes('--debug'));
 console.debug('Debug Mode has been activated.');
@@ -30,7 +30,7 @@ application.use(ExpressUtils.decodeMiddleware);
 application.use('/graphql', createHandler({ schema }));
 application.use('/', express.static(APPLICATION_PATH));
 
-application.get('/editor', graphqlPlayground({ endpoint: '/graphql' }));
+application.get('/editor', (_: Request, res: Response) => res.sendFile(GRAPHIQL_PATH));
 application.get('*', (_: Request, res: Response) =>
   res.status(200).sendFile(`${APPLICATION_PATH}/index.html`, { maxAge: '1y' }),
 );
