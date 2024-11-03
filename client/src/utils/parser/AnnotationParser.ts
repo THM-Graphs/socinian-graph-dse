@@ -1,12 +1,14 @@
 import { IStandoffProperty } from 'src/app/models/IStandoffProperty';
 import AnnotationHandler from './AnnotationHandler';
 import AnnotationUtils from './AnnotationUtils';
+import { Nullable } from '../../global';
 
 export interface Annotation {
+  containment?: Nullable<number>;
   element: string;
   attributes: string[];
   identifier: string;
-  guid?: string;
+  guid?: Nullable<string>;
 }
 
 export class AnnotationParser {
@@ -14,16 +16,15 @@ export class AnnotationParser {
   protected annotatedText: string = '';
 
   protected standOffProperties: IStandoffProperty[] = [];
-  protected annotationStack: Annotation[] = [];
+  protected annotations: Annotation[] = [];
 
-  constructor(rawText: string, standOffProperties: IStandoffProperty[]) {
-    this.rawText = rawText;
+  constructor(rawText: Nullable<string>, standOffProperties: IStandoffProperty[]) {
+    this.rawText = rawText ?? '';
     this.standOffProperties = [...standOffProperties];
-    this.orderStandOffByStartIndex();
+    this.standOffProperties.sort(AnnotationUtils.sortStartProperties);
   }
 
   public parseText(): string {
-    if (!this.rawText) return '';
     this.annotatedText = '';
 
     for (let i: number = 0; i < this.rawText.length; i++) {
@@ -174,42 +175,100 @@ export class AnnotationParser {
     }
 
     annotation.guid = standOffProperty.guid;
+    annotation.containment = this.parseContainment(annotation);
+
     this.handleAnnotationStack(annotation, isClosing);
-    return this.getOverlappedHTMLTag(annotation, isClosing);
+    return this.getParsedHTMLContext(annotation, isClosing);
   }
 
-  private getOverlappedHTMLTag(annotation: Annotation, isClosing: boolean): string {
+  protected parseContainment(annotation: Annotation): number {
+    if (annotation.containment) return annotation.containment;
+    switch (annotation.element) {
+      case 'div':
+        return 0;
+      case 'p':
+        return 1;
+      case 'span':
+        return 2;
+      case 'a':
+        return 3;
+      default:
+        return 99;
+    }
+  }
+
+  private getParsedHTMLContext(annotation: Annotation, isClosing: boolean): string {
+    const overlaps: Annotation[] = this.annotations.filter(
+      (a: Annotation): boolean => a.element === annotation.element,
+    );
+    const containment: Annotation[] = this.annotations.filter(
+      (a: Annotation): boolean => annotation.containment! < a.containment!,
+    );
+
+    if (containment.length > 0) return this.getContainmentHTML(annotation, containment, isClosing);
+    if (overlaps.length > 0) return this.getOverlappedHTML(annotation, overlaps, isClosing);
+    if (isClosing) return `</${annotation.element}>`;
+
+    const attributeString: string = annotation.attributes.join(' ');
+    const identifierString: string = annotation.identifier;
+    return `<${annotation.element} class="${identifierString}" ${attributeString}>`;
+  }
+
+  private getOverlappedHTML(annotation: Annotation, overlaps: Annotation[], isClosing: boolean): string {
     const attributes: string[] = isClosing ? [] : [...annotation.attributes];
-    const identifier: string[] = isClosing ? [] : [annotation.identifier];
-    let overlappedHTML: string = '';
+    const identifier: string[] = isClosing ? [] : [...annotation.identifier];
 
-    const existingAnnotations: Annotation[] = this.annotationStack.filter((a) => a.element === annotation.element);
+    overlaps.forEach((annotation: Annotation): void => {
+      const isCurrentIdentifier: boolean = identifier.includes(annotation.identifier);
+      if (!isCurrentIdentifier) identifier.push(annotation.identifier);
 
-    if (existingAnnotations.length === 0 && isClosing) {
-      return `</${annotation.element}>`;
-    }
-
-    if (existingAnnotations.length > 0) {
-      overlappedHTML = `</${annotation.element}>`;
-      existingAnnotations.forEach((e: Annotation) => {
-        e.attributes.forEach((attr) => !attributes.includes(attr) && attributes.push(attr));
-        !identifier.includes(e.identifier) && identifier.push(e.identifier);
+      annotation.attributes.forEach((attr: string): void => {
+        const isCurrentAttribute: boolean = attributes.includes(attr);
+        if (!isCurrentAttribute) attributes.push(attr);
       });
-    }
+    });
 
     const attributeString: string = attributes.join(' ');
     const identifierString: string = identifier.join(' ');
-    return `${overlappedHTML}<${annotation.element} class="${identifierString}" ${attributeString}>`;
+    return `</${annotation.element}><${annotation.element} class="${identifierString}" ${attributeString}>`;
+  }
+
+  private getContainmentHTML(annotation: Annotation, containment: Annotation[], isClosing: boolean): string {
+    const reduced: Annotation[] = containment.reduce((acc: Annotation[], curr: Annotation): Annotation[] => {
+      const existingElement: Nullable<Annotation> = acc.find((a: Annotation): boolean => a.element == curr.element);
+
+      if (existingElement) {
+        existingElement.attributes = existingElement.attributes.concat(curr.attributes);
+        existingElement.identifier += ' ' + curr.identifier;
+      } else acc.push({ ...curr });
+
+      return acc;
+    }, []);
+
+    if (isClosing) {
+      reduced.sort(AnnotationUtils.sortContainmentDesc);
+      const elements: string[] = reduced.map((a: Annotation): string => `</${a.element}>`);
+      const elementsString: string = elements.join(' ');
+      return `${elementsString}</${annotation.element}>`;
+    }
+
+    reduced.sort(AnnotationUtils.sortContainmentAsc);
+    const annotations: string[] = reduced.map((a: Annotation): string => {
+      const identifierString: string = a.identifier;
+      const attributeString: string = a.attributes.join(' ');
+      return `<${a.element} class="${identifierString}" ${attributeString}>`;
+    });
+
+    const annotationsString: string = annotations.join(' ');
+    const identifierString: string = annotation.identifier;
+    const attributeString: string = annotation.attributes.join(' ');
+    return `<${annotation.element} class="${identifierString}" ${attributeString}>${annotationsString}`;
   }
 
   private handleAnnotationStack(annotation: Annotation, isClosing: boolean): void {
     if (isClosing) {
-      const index: number = this.annotationStack.findIndex((a) => a.identifier === annotation.identifier);
-      this.annotationStack.splice(index, 1);
-    } else this.annotationStack.push(annotation);
-  }
-
-  private orderStandOffByStartIndex() {
-    this.standOffProperties.sort((a: IStandoffProperty, b: IStandoffProperty) => a.startIndex - b.startIndex);
+      const index: number = this.annotations.findIndex((a) => a.identifier === annotation.identifier);
+      this.annotations.splice(index, 1);
+    } else this.annotations.push(annotation);
   }
 }
