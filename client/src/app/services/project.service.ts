@@ -24,7 +24,6 @@ interface QueryResponse {
 export class ProjectService extends ApolloService {
   public async getProjectText(textId: string): Promise<Nullable<IProject>> {
     const variables: Record<string, string> = { textId: textId };
-    console.log(textId);
     const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_PROJECT, variables);
     return result?.project;
   }

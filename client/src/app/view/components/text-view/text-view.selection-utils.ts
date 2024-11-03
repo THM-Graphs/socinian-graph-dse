@@ -31,7 +31,6 @@ export class TextViewSelectionUtils {
 
       const nodeText: string = node.textContent ?? '';
       textLength += nodeText.length;
-      console.log(nodeText);
     }
 
     const parentStartIndex: number = Number(parentElement.dataset.start);
