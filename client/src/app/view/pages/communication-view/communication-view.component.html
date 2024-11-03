@@ -1,4 +1,8 @@
-<app-loading-spinner [isLoading]="isLoading" minHeight="600"></app-loading-spinner>
+@if (isLoading) {
+  <main class="container-fluid mh-100">
+    <app-loading-spinner [isLoading]="isLoading" minHeight="600"></app-loading-spinner>
+  </main>
+}
 
 <main class="container-fluid container-md py-5" *ngIf="selectedLetter">
   <div class="annotation-list d-none d-md-block sticky-top">
@@ -104,7 +108,7 @@
       </ng-container>
       <div class="col-12 add-metadata-element" *ngIf="selectedVariant.metadataFunder">
         <h5>{{ lang.get("TEXT_VIEW_PAGE_VARIANT_FUNDER") }}:</h5>
-        <p class="mb-0">{{selectedVariant.metadataFunder}}</p>
+        <p class="mb-0">{{ selectedVariant.metadataFunder }}</p>
       </div>
     </div>
   </section>
@@ -143,7 +147,9 @@
       <ng-container *ngFor="let communication of selectedLetter.attachedBy">
         <li class="list-group-item list-group-item-action rounded-0 py-2 pointer">
           <i class="fas fa-link"></i>
-          <a class="d-block-inline ms-3" [href]="'/id/' + communication.guid" target="_blank">{{ communication.letter.label }}</a>
+          <a class="d-block-inline ms-3" [href]="'/id/' + communication.guid" target="_blank">{{
+            communication.letter.label
+          }}</a>
         </li>
       </ng-container>
     </ul>

@@ -24,8 +24,14 @@ export class TextViewSelectionUtils {
     }
 
     for (const node of nodeList) {
+      if (node.nodeName === 'SPAN') {
+        const htmlNode: HTMLElement = node as HTMLElement;
+        if (htmlNode.classList.contains('pb')) continue;
+      }
+
       const nodeText: string = node.textContent ?? '';
       textLength += nodeText.length;
+      console.log(nodeText);
     }
 
     const parentStartIndex: number = Number(parentElement.dataset.start);

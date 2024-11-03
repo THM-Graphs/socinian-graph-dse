@@ -17,7 +17,7 @@ export interface IText {
   metadataTextGenre: string;
   metadataTextType: string;
   metadataArchive: string;
-  metadataIsReference: boolean;
+  metadataIsReference: string | boolean;
   metadataPrintSourceName: string;
   metadataPrintSourceUrl: string;
   metadataFunder: string;

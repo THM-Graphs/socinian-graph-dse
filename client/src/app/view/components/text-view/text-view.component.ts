@@ -66,7 +66,7 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
   public ngAfterViewInit(): void {
     if (this.selection) {
       const selection: HTMLElement = this.elementRef.nativeElement.querySelector('.selection');
-      selection.scrollIntoView({ block: 'end', behavior: 'smooth' });
+      selection.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
   }
 
@@ -104,10 +104,6 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
   private disposeEvents(): void {
     this.tooltips.forEach((tooltip: Tooltip) => tooltip.dispose());
     this.tooltips = [];
-
-    this.eventListeners.forEach((listener) => {
-      listener.element.removeAllListeners?.();
-    });
   }
 
   private initListeners(): void {
@@ -156,8 +152,8 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
 
   public handleSelection(): void {
     if (!this.mouseSelection) return;
-    this.isSelectionMenuActive = false;
 
+    this.isSelectionMenuActive = false;
     const selection: Selection | null = document.getSelection();
     const selectedText: string | undefined = selection?.toString().trim();
 
@@ -188,7 +184,7 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
     await navigator.clipboard.writeText(currentUrl + params);
   }
 
-  public handleRegisterClick($event: Event): void {
+  public async handleRegisterClick($event: Event): Promise<void> {
     const element: HTMLElement = $event.target as HTMLElement;
     const type: string = element.getAttribute('data-register-type') ?? '';
     const id: string = element.getAttribute('data-register-id') ?? '';
@@ -198,23 +194,23 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
 
     switch (type) {
       case ENTITY_TYPE.LETTER:
-        this.annotationListService.addMetadataAnnotation(id, clickedPhrase);
+        await this.annotationListService.addMetadataAnnotation(id, clickedPhrase);
         break;
       case ENTITY_TYPE.COMMENT:
-        this.annotationListService.addReferenceAnnotation(id, clickedPhrase);
+        await this.annotationListService.addReferenceAnnotation(id, clickedPhrase);
         break;
       default:
-        this.annotationListService.addEntityAnnotation(id, clickedPhrase);
+        await this.annotationListService.addEntityAnnotation(id, clickedPhrase);
     }
   }
 
-  public handleCommentClick($event: Event): void {
+  public async handleCommentClick($event: Event): Promise<void> {
     const element: HTMLElement = $event.target as HTMLElement;
     const commentedId: string = element.getAttribute('data-comment-id') ?? '';
     if (!commentedId) return;
 
     const clickedPhrase: string = this.getFullPhrase(element, `data-comment-id`);
-    this.annotationListService.addCommentedAnnotation(commentedId, clickedPhrase);
+    await this.annotationListService.addCommentedAnnotation(commentedId, clickedPhrase);
   }
 
   private getFullPhrase(element: HTMLElement, idAttribute: string): string {
