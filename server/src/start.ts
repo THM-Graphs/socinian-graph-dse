@@ -13,6 +13,7 @@ const ROOT_PATH: string = path.resolve(__dirname, '..', '..');
 const APPLICATION_PATH: string = path.resolve(ROOT_PATH, 'client', 'dist', 'pub-env');
 const APPLICATION_PORT: string = process.env.HTTPS_SERVER_PORT ?? '8443';
 const GRAPHIQL_PATH: string = path.resolve(__dirname, '..', 'graphiql', 'index.html');
+const MARKDOWN_PATH: string = path.resolve(__dirname, '..', 'markdown');
 
 Logger.init(process.argv.includes('--debug'));
 console.debug('Debug Mode has been activated.');
@@ -28,6 +29,8 @@ httpsServer.listen(APPLICATION_PORT, () => {
 
 application.use(ExpressUtils.decodeMiddleware);
 application.use('/graphql', createHandler({ schema }));
+
+application.use('/markdown', express.static(MARKDOWN_PATH));
 application.use('/', express.static(APPLICATION_PATH));
 
 application.get('/editor', (_: Request, res: Response) => res.sendFile(GRAPHIQL_PATH));

@@ -4,7 +4,6 @@ import { SectionQueries } from './queries/Section.queries';
 import { MetadataQueries } from './queries/Metadata.queries';
 import { SearchQueries } from './queries/Search.queries';
 import { CommunicationQueries } from './queries/Communication.queries';
-import { ProjectQueries } from './queries/Project.queries.js';
 import { TextQueries } from './queries/Text.queries';
 import { AnnotationQueries } from './queries/Annotation.queries.js';
 
@@ -18,7 +17,6 @@ const Queries: GraphQLObjectType = new GraphQLObjectType({
     ...CommunicationQueries,
     ...TextQueries,
     ...SearchQueries,
-    ...ProjectQueries,
     ...AnnotationQueries,
   },
 });
