@@ -71,10 +71,14 @@ export class CommunicationView implements OnInit, OnDestroy {
     this.selectedLetter = letter;
 
     const reference: IText | undefined = letter.variants.find((v: IText) => !!v.metadataIsReference);
+
     this.referenceText = reference ?? letter.variants[0];
     this.variants = letter.variants.filter((v: IText) => !v.metadataIsReference);
 
-    this.changeSelectedVariant(this.referenceText);
+    const quotedId: string = this.activatedRoute.snapshot.queryParamMap.get('guid') ?? '';
+    const quotedText: Nullable<IText> = letter.variants.find((v: IText): boolean => v.guid === quotedId);
+
+    this.changeSelectedVariant(quotedText ?? this.referenceText);
     this.populateMetaData();
   }
 
