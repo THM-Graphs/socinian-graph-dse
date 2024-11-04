@@ -27,7 +27,7 @@
       <div class="col-12 col-md-6 col-lg-4 mt-3 mb-3" *ngFor="let item of metadata">
         <h5 class="display-label">{{ lang.get(item.label) }}:</h5>
         <a *ngIf="item.href" [routerLink]="item.href" target="_blank">{{ item.value }}</a>
-        <span *ngIf="!item.href">{{ lang.get(item.value) }}</span>
+        <span *ngIf="!item.href">{{ lang.get(item.value!) }}</span>
       </div>
     </div>
   </section>

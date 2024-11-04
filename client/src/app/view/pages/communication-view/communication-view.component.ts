@@ -10,12 +10,12 @@ import { CommunicationViewUtils } from './communication-view.utils';
 import { IParticipant } from 'src/app/models/IParticipant';
 import { AnnotationListService } from 'src/app/services/annotation-list.service';
 import { TextService } from 'src/app/services/text.service';
-import { Nullable } from '../../../../global.js';
+import { Nullable } from '../../../../global';
 
 interface MetaData {
   label: string;
-  href?: string;
-  value: string;
+  href?: Nullable<string>;
+  value: Nullable<string>;
 }
 @Component({
   selector: 'app-view',
