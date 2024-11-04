@@ -179,7 +179,7 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
     const startIndex: number = this.selection?.startIndex ?? 0;
     const endIndex: number = this.selection?.endIndex ?? 0;
 
-    const currentUrl: string = 'http://localhost:4200';
+    const currentUrl: string = 'https://www.sozinianer.de/'; // ToDo: Replace with ang-envs.
     const currentPath: string = window.location.pathname.replace('view', 'id');
     const params: string = `?guid=${this.guid}&s=${startIndex}&e=${endIndex}`;
     await navigator.clipboard.writeText(currentUrl + currentPath + params);
