@@ -48,7 +48,7 @@ der Ansatz mit separaten Dateien als handhabbarer und effizienter
 eingeschätzt.)
 
 ![Schematische, beispielhafte Darstellung der Bestandteile eines Briefes
-in den Sozinianischen Briefwechseln](Erweiterter-Brief.png "Abbildung 1")
+in den Sozinianischen Briefwechseln](images/Erweiterter-Brief.png "Abbildung 1")
 Abb. 1: Schematische, beispielhafte Darstellung der Bestandteile eines Briefes
 in den Sozinianischen Briefwechseln (nach dem erweiterten Briefbegriff):
 Ein Brief kann mit Beilagen versendet worden sein (hier zwei Beilagen)

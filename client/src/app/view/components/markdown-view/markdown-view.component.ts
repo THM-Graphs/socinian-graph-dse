@@ -15,7 +15,7 @@ export class MarkdownViewComponent implements OnChanges {
       image(token: Tokens.Image): string {
         return `
             </p><p class="d-block-inline text-center markdown-paragraph">
-                <img src="/assets/images/socinian/${token.href}" class="mt-4 img-fluid" alt="${token.text}" title="${token.title}" \>
+                <img src="/markdown/${token.href}" class="mt-4 img-fluid" alt="${token.text}" title="${token.title}" \>
             </p><p class="markdown-paragraph">`;
       },
 

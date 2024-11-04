@@ -54,6 +54,11 @@ export class ProjectComponent {
       id: 'text-collations',
       icon: 'fa-underline',
     },
+    {
+      label: 'PROJECT_CATEGORY_CITATIONS',
+      id: 'digital-citations',
+      icon: 'fa-link',
+    },
   ];
 
   constructor(

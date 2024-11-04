@@ -112,7 +112,7 @@ Jakob Wettstein (1693–1754) ebenso wie zu dem Frühaufklärer Pierre Bayle
 Croze (1661–1739), mit denen er theologische, philosophische und
 philologische Themen erörterte.
 
-![Geographische Verteilung der Absendeorte und der bisher im Projekt der sozinianischen Briefwechsel erfassten Empfangsorte. Die Punktgröße repräsentiert die Anzahl der Briefe.](Netzwerk-Karte-Palladio.png "Abbildung 1")
+![Geographische Verteilung der Absendeorte und der bisher im Projekt der sozinianischen Briefwechsel erfassten Empfangsorte. Die Punktgröße repräsentiert die Anzahl der Briefe.](images/Netzwerk-Karte-Palladio.png "Abbildung 1")
 Abb. 1: Geographische Verteilung der Absendeorte und der bisher im Projekt der *sozinianischen Briefwechsel* erfassten Empfangsorte. Die Punktgröße repräsentiert die Anzahl der Briefe.
 
 Die transnational-transkonfessionelle Vernetzung der Sozinianer und ihre
@@ -393,7 +393,7 @@ Brief (gelbe Knoten) von Lubieniecki (brauner Knoten) an Hevelius vom
     Lubieniecki vom 6. April 1666 und von Lubieniecki an Placentinus vom 30.
     April 1666.
 
-![Verschiedene Freiheitsbegriffe in Briefwechseln (Quelle: Kuczera)](Freiheitsbegriffe.png "Abbildung 2")
+![Verschiedene Freiheitsbegriffe in Briefwechseln (Quelle: Kuczera)](images/Freiheitsbegriffe.png "Abbildung 2")
 Abb. 2: Verschiedene Freiheitsbegriffe in Briefwechseln (Quelle: Kuczera).
 
 Damit wird das Projekt über die üblichen Erschließungsansätze mit
