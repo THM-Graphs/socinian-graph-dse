@@ -1,4 +1,4 @@
-text: # Kooperationspartner
+# Kooperationspartner
 
 [Dr. Pablo Toribio Pérez](https://ilc.csic.es/es/personal/pablo-toribio-perez) <br/>
 Instituto de Lenguas y Culturas del Mediterráneo y Oriente Próximo, Consejo Superior de Investigaciones Científicas, Madrid

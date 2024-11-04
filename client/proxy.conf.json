@@ -1,5 +1,5 @@
 {
-  "/api": {
+  "/markdown": {
     "target": {
       "host": "localhost",
       "protocol": "http:",

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IProject } from 'src/app/models/IProject.js';
 import { ProjectService } from 'src/app/services/project.service';
 import { LangManager, Languages } from 'src/utils/LangManager';
-import { Nullable } from '../../../../global.js';
+import { Observable } from 'rxjs';
 
 const PUBLISHED_SECTION: string = 'ed_f13a5020-2370-4d65-917c-325ca9e77f31';
 
@@ -17,7 +16,7 @@ export class HomeComponent implements OnInit {
   public language: typeof Languages = Languages;
 
   public publishedItem: string = PUBLISHED_SECTION;
-  public introductionMarkdown: string = '';
+  public introduction$!: Observable<string>;
 
   constructor(
     private router: Router,
@@ -25,15 +24,10 @@ export class HomeComponent implements OnInit {
   ) {}
 
   public async ngOnInit(): Promise<void> {
-    this.getIntoductionText();
+    this.introduction$ = this.projectService.getText('landing-page');
   }
 
   public async onSearchEventHandler($event: string): Promise<void> {
     await this.router.navigate(['search', $event]);
-  }
-
-  private async getIntoductionText(): Promise<void> {
-    const introduction: Nullable<IProject> = await this.projectService.getProjectText('landing-page');
-    if (introduction) this.introductionMarkdown = introduction.text;
   }
 }

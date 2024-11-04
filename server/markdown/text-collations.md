@@ -1,4 +1,4 @@
-text: # Textvergleiche
+# Textvergleiche
 
 Das Projekt befolgt den Grundsatz, als Editionsgrundlage, soweit möglich, die handschriftliche Originalfassung der Briefe zu benutzen und ihr, bei vorhandener Drucküberlieferung, die Rolle der Referenzbasis zuzuweisen. So können die weitreichenden Eingriffe sichtbar gemacht werden, die im Zuge der Publikation der Korrespondenzen vor allem im *Theatrum cometicum* von [Stanisław Lubieniecki](https://sozinianer.de/entry/Lubieniecki_Stanislaw), aber auch in *[Epistolarum centuria I](https://www.zotero.org/groups/2065617/sbw/items/LXBIVB8V)* von [Martin Ruarus](https://sozinianer.de/entry/zrl_x1x_12b) vorgenommen wurden: Insbesondere die unverdeckten religiösen Ansichten der Akteure und politische Nachrichten, aber auch ursprüngliche wissenschaftliche Hypothesen, die sich nicht bewährt hatten, fielen bei der Drucklegung den redaktionellen Kürzungen zum Opfer.
 

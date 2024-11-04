@@ -1,10 +1,16 @@
 import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { IProject } from 'src/app/models/IProject.js';
 import { ProjectService } from 'src/app/services/project.service';
 import { LangManager } from 'src/utils/LangManager';
-import { Nullable } from '../../../../global.js';
+import { Observable } from 'rxjs';
+
+interface IProjectEntry {
+  id: string;
+  label: string;
+  text?: string;
+  icon?: string;
+}
 
 @Component({
   selector: 'app-project',
@@ -12,39 +18,40 @@ import { Nullable } from '../../../../global.js';
   styleUrls: ['./project.component.scss'],
 })
 export class ProjectComponent {
-  public isTextLoading: boolean = false;
-  public selectedText: IProject = { guid: '', label: '', text: '' };
+  public selectedCategory: string = 'introduction';
+  public selectedText$!: Observable<string>;
+
   public lang = LangManager;
 
-  public categories: { label: string; guid: string; icon: string }[] = [
+  public categories: IProjectEntry[] = [
     {
       label: 'PROJECT_CATEGORY_INTRODUCTION',
-      guid: 'introduction',
+      id: 'introduction',
       icon: 'fa-book',
     },
     {
       label: 'PROJECT_CATEGORY_COWORKERS',
-      guid: 'staff',
+      id: 'staff',
       icon: 'fa-user',
     },
     {
       label: 'PROJECT_CATEGORY_PARTNERS',
-      guid: 'collaborators',
+      id: 'collaborators',
       icon: 'fa-handshake',
     },
     {
       label: 'PROJECT_CATEGORY_GUIDELINES',
-      guid: 'guidelines',
+      id: 'guidelines',
       icon: 'fa-info-circle',
     },
     {
       label: 'PROJECT_CATEGORY_METHODOLOGIES',
-      guid: 'digital-methods',
+      id: 'digital-methods',
       icon: 'fa-project-diagram',
     },
     {
       label: 'PROJECT_CATEGORY_TEXT_COMPARE',
-      guid: 'text-collations',
+      id: 'text-collations',
       icon: 'fa-underline',
     },
   ];
@@ -60,13 +67,11 @@ export class ProjectComponent {
     });
   }
 
-  public async onSelectProjectCategory(guid: string): Promise<void> {
-    this.isTextLoading = true;
-    const projectText: Nullable<IProject> = await this.projectService.getProjectText(guid);
-    if (projectText) this.selectedText = projectText;
-    this.location.go(`/project/${this.selectedText.guid}`);
+  public async onSelectProjectCategory(identifier: string): Promise<void> {
+    this.selectedCategory = identifier;
+    this.selectedText$ = this.projectService.getText(identifier);
+    this.location.go(`/project/${identifier}`);
     this.scrollTop();
-    this.isTextLoading = false;
   }
 
   private scrollTop(): void {

@@ -1,4 +1,4 @@
-text: # Digitale Methodik und Umsetzung der Edition
+# Digitale Methodik und Umsetzung der Edition
 
 ## Graphbasierte Digitale Edition
 

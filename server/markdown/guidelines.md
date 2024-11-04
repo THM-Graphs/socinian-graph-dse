@@ -1,4 +1,4 @@
-text: # Editionsrichtlinien
+# Editionsrichtlinien
 
 ## Allgemeines
 

@@ -1,4 +1,4 @@
-text: # Datenschutzerklärung
+# Datenschutzerklärung
 
 Verantwortlich für die Datenverarbeitung des Webangebots ist die Akademie der Wissenschaften und der Literatur Mainz, Geschwister-Scholl-Straße 2, D-55131 Mainz, vertreten durch ihren Präsidenten, Prof. Dr.-Ing. Reiner Anderl.
 

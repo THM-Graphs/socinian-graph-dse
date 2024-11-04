@@ -1,4 +1,4 @@
-text: # Sozinianer und ihre Briefwechsel. Eine Bestandsaufnahme
+# Sozinianer und ihre Briefwechsel. Eine Bestandsaufnahme
 
 Der Sozinianismus stellt eine aus dem protestantischen Christentum
 hervorgegangene theologische Erscheinung dar, für die das Festhalten an

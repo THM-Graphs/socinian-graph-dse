@@ -1,12 +1,13 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { marked, RendererObject, Tokens } from 'marked';
+import { Nullable } from '../../../../global.js';
 
 @Component({
   selector: 'app-markdown-text',
   templateUrl: './markdown-view.component.html',
 })
 export class MarkdownViewComponent implements OnChanges {
-  @Input() rawMarkdown: string = '';
+  @Input() rawMarkdown: Nullable<string> = '';
   public parsedHTML: string = '';
 
   constructor() {
@@ -41,7 +42,7 @@ export class MarkdownViewComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes['rawMarkdown']) {
-      this.parsedHTML = marked.parse(this.rawMarkdown) as string;
+      this.parsedHTML = marked.parse(this.rawMarkdown ?? '') as string;
     }
   }
 }

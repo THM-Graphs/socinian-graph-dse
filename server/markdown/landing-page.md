@@ -1,4 +1,4 @@
-text: # Über die sozinianischen Briefwechsel
+# Über die sozinianischen Briefwechsel
 
 Mit der graphbasierten digitalen Edition der sozinianischen Briefwechsel
 wird die Quellenbasis bereitgestellt, die der Erschließung des
