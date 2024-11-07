@@ -34,7 +34,7 @@ export default class AnnotationDAO {
     const annotations: Nullable<IAnnotation[]> = result?.records[0]?.get('annotations');
     if (!annotations) return [];
 
-    return annotations.map(Utils.stringifyNode);
+    return annotations.map<IAnnotation>(Utils.stringifyNode);
   }
 
   public static async getComment(annotationId: string): Promise<Nullable<IText>> {
