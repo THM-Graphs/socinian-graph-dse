@@ -48,7 +48,7 @@ export default class CommunicationDAO {
     const communications: Nullable<ICommunication[]> = result?.records[0]?.get('communications');
     if (!communications) return [];
 
-    return communications.map(Utils.stringifyNode);
+    return communications.map<ICommunication>(Utils.stringifyNode);
   }
 
   public static async getDetailedCommunications(): Promise<ICommunication[]> {
@@ -77,7 +77,7 @@ export default class CommunicationDAO {
   public static async getCommunication(communicationId: string): Promise<Nullable<ICommunication>> {
     const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(COMMUNICATION_QUERY, { guid: communicationId });
     const communication: Nullable<ICommunication> = result?.records[0]?.get('communication');
-    if (!communication || !result?.records[0]) return null;
+    if (!communication || !result || !result.records[0]) return null;
 
     const letter: Nullable<IMetadata> = result.records[0].get('letter');
     const attachments: Nullable<IMetadata[]> = result.records[0].get('attachments');
@@ -102,7 +102,7 @@ export default class CommunicationDAO {
     const attachments: Nullable<IMetadata[]> = result?.records[0]?.get('attachments');
     if (!attachments) return [];
 
-    return attachments.map(Utils.stringifyNode);
+    return attachments.map<IMetadata>(Utils.stringifyNode);
   }
 
   public static async getSections(communicationId: string): Promise<ISection[]> {
@@ -110,6 +110,6 @@ export default class CommunicationDAO {
     const sections: Nullable<ISection[]> = result?.records[0]?.get('sections');
     if (!sections) return [];
 
-    return sections.map(Utils.stringifyNode);
+    return sections.map<ISection>(Utils.stringifyNode);
   }
 }

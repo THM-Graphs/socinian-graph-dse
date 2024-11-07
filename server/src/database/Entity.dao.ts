@@ -55,7 +55,7 @@ export default class EntityDAO {
     const entities: Nullable<IEntity[]> = result?.records[0]?.get('entities');
     if (!entities) return [];
 
-    return entities.map(Utils.stringifyNode);
+    return entities.map<IEntity>(Utils.stringifyNode);
   }
 
   public static async getDetailedEntities(type: string = ''): Promise<IEntity[]> {
@@ -66,7 +66,7 @@ export default class EntityDAO {
     for (const record of result.records) {
       const entity: Nullable<IEntity> = record.get('entities');
       const metadata: Nullable<IMetadata[]> = record.get('metadata');
-      const occurrences: IMetadata[] = metadata?.map(Utils.stringifyNode) ?? [];
+      const occurrences: IMetadata[] = metadata?.map<IMetadata>(Utils.stringifyNode) ?? [];
 
       if (!entity) continue;
       Utils.stringifyNode(entity);
@@ -90,7 +90,7 @@ export default class EntityDAO {
     const occurrences: Nullable<IMetadata[]> = result?.records[0]?.get('occurrences');
     if (!occurrences) return [];
 
-    return occurrences.map(Utils.stringifyNode);
+    return occurrences.map<IMetadata>(Utils.stringifyNode);
   }
 
   public static async getAnnotations(entityId: string): Promise<IAnnotation[]> {
@@ -98,7 +98,7 @@ export default class EntityDAO {
     const annotations: Nullable<IAnnotation[]> = result?.records[0]?.get('annotations');
     if (!annotations) return [];
 
-    return annotations.map(Utils.stringifyNode);
+    return annotations.map<IAnnotation>(Utils.stringifyNode);
   }
 
   public static async getNormdata(entityId: string): Promise<INormdata[]> {
@@ -124,7 +124,7 @@ export default class EntityDAO {
     const labels: Nullable<IAdditionalLabel[]> = result?.records[0]?.get('labels');
     if (!labels) return [];
 
-    return labels.map(Utils.stringifyNode);
+    return labels.map<IAdditionalLabel>(Utils.stringifyNode);
   }
 
   public static async getAdditionalInformation(entityId: string): Promise<string[]> {

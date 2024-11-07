@@ -69,7 +69,7 @@ export default class MetadataDAO {
     const variants: Nullable<IText[]> = result?.records[0]?.get('variants');
     if (!variants) return [];
 
-    return variants.map(Utils.stringifyNode);
+    return variants.map<IText>(Utils.stringifyNode);
   }
 
   public static async getAttachedBy(metadataId: string): Promise<ICommunication[]> {
@@ -77,6 +77,6 @@ export default class MetadataDAO {
     const communications: Nullable<ICommunication[]> = result?.records[0]?.get('communications');
     if (!communications) return [];
 
-    return communications.map(Utils.stringifyNode);
+    return communications.map<ICommunication>(Utils.stringifyNode);
   }
 }

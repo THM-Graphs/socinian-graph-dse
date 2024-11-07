@@ -32,7 +32,7 @@ export default class SectionDAO {
     const sections: Nullable<ISection[]> = result?.records[0]?.get('sections');
     if (!sections) return [];
 
-    return sections.map(Utils.stringifyNode);
+    return sections.map<ISection>(Utils.stringifyNode);
   }
 
   public static async getSection(sectionId: string): Promise<Nullable<ISection>> {
@@ -48,7 +48,7 @@ export default class SectionDAO {
     const sections: Nullable<ISection[]> = result?.records[0]?.get('sections');
     if (!sections) return [];
 
-    return sections.map(Utils.stringifyNode);
+    return sections.map<ISection>(Utils.stringifyNode);
   }
 
   public static async getCommunication(sectionId: string): Promise<ICommunication[]> {
@@ -56,7 +56,7 @@ export default class SectionDAO {
     const communications: Nullable<ICommunication[]> = result?.records[0]?.get('communications');
     if (!communications) return [];
 
-    return communications.map(Utils.stringifyNode);
+    return communications.map<ICommunication>(Utils.stringifyNode);
   }
 
   public static async getAnnotations(sectionId: string): Promise<IAnnotation[]> {
