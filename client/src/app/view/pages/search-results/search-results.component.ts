@@ -1,11 +1,11 @@
-import { Component, OnInit } from "@angular/core";
-import { SearchService } from "../../../services/search.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { ISearchLetterEntry, ISearchEntity, ISearch } from "../../../models/ISearch";
-import { LangManager } from "../../../../utils/LangManager";
-import { Utils } from "../../../../utils/Utils";
-import { LocalStorage } from "../../../../utils/LocalStorage";
-import { getIconByType } from "src/app/const/ICON_MAP";
+import { Component, OnInit } from '@angular/core';
+import { SearchService } from '../../../services/search.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ISearch, ISearchEntity, ISearchLetterEntry } from '../../../models/ISearch';
+import { LangManager } from '../../../../utils/LangManager';
+import { Utils } from '../../../../utils/Utils';
+import { LocalStorage } from '../../../../utils/LocalStorage';
+import { getIconByCategory } from '../../../constants/ICON_MAP';
 
 interface SearchDetailsTab<T> {
   key: number;
@@ -31,28 +31,28 @@ enum Tabs {
 }
 
 @Component({
-  selector: "app-search-results",
-  templateUrl: "./search-results.component.html",
-  styleUrls: ["./search-results.component.scss"],
+  selector: 'app-search-results',
+  templateUrl: './search-results.component.html',
+  styleUrls: ['./search-results.component.scss'],
 })
 export class SearchResultsComponent implements OnInit {
   public lang = LangManager;
   public isSearching: boolean = false;
 
-  public letterStorage: LocalStorage = new LocalStorage("letter");
+  public letterStorage: LocalStorage = new LocalStorage('letter');
   public storedLetters: ISearchLetterEntry[] = [];
 
   public tabMenu: SearchDetailsTabMenu = {
     letters: {
       key: Tabs.letters,
-      singularTitle: "SEARCH_DETAILS_RESULT_LETTERS_SINGULAR_TITLE",
-      pluralTitle: "SEARCH_DETAILS_RESULT_LETTERS_PLURAL_TITLE",
+      singularTitle: 'SEARCH_DETAILS_RESULT_LETTERS_SINGULAR_TITLE',
+      pluralTitle: 'SEARCH_DETAILS_RESULT_LETTERS_PLURAL_TITLE',
       values: [],
     },
     register: {
       key: Tabs.register,
-      singularTitle: "SEARCH_DETAILS_RESULT_REGISTER_SINGULAR_TITLE",
-      pluralTitle: "SEARCH_DETAILS_RESULT_REGISTER_PLURAL_TITLE",
+      singularTitle: 'SEARCH_DETAILS_RESULT_REGISTER_SINGULAR_TITLE',
+      pluralTitle: 'SEARCH_DETAILS_RESULT_REGISTER_PLURAL_TITLE',
       values: [],
     },
   };
@@ -60,7 +60,7 @@ export class SearchResultsComponent implements OnInit {
   public tabs: typeof Tabs = Tabs;
 
   public searchResultAmount: number = 0;
-  public searchPhrase: string = "";
+  public searchPhrase: string = '';
 
   private searchTimer: any;
   private simpleSearchResults: ISearch;
@@ -68,18 +68,18 @@ export class SearchResultsComponent implements OnInit {
   constructor(
     private simpleSearchService: SearchService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   public async ngOnInit(): Promise<void> {
-    this.searchPhrase = this.activatedRoute.snapshot.paramMap.get("searchPhrase") ?? "";
+    this.searchPhrase = this.activatedRoute.snapshot.paramMap.get('searchPhrase') ?? '';
 
     if (this.letterStorage.getItems()?.length > 0) {
       this.storedLetters = this.letterStorage.getItems();
     }
 
     if (!this.searchPhrase || this.searchPhrase.length < 3) {
-      await this.router.navigate(["/"]);
+      await this.router.navigate(['/']);
     }
 
     await this.simpleSearch();
@@ -87,11 +87,11 @@ export class SearchResultsComponent implements OnInit {
 
   public async onInputEventHandler($event: string): Promise<void> {
     this.searchPhrase = $event;
-    await this.router.navigate(["/search/" + this.searchPhrase]);
+    await this.router.navigate(['/search/' + this.searchPhrase]);
     clearTimeout(this.searchTimer);
 
     this.searchTimer = setTimeout(async () => {
-      if (this.searchPhrase === "") {
+      if (this.searchPhrase === '') {
         this.isSearching = false;
         return;
       }
@@ -118,7 +118,7 @@ export class SearchResultsComponent implements OnInit {
 
   private async simpleSearch(): Promise<void> {
     this.isSearching = true;
-    this.simpleSearchResults = await this.simpleSearchService.getSimpleSearchResults(this.searchPhrase);
+    this.simpleSearchResults = (await this.simpleSearchService.getSimpleSearchResults(this.searchPhrase))!;
 
     this.tabMenu.letters.values = [
       ...this.simpleSearchResults.letters.map((letter: ISearchLetterEntry) => {
@@ -129,9 +129,9 @@ export class SearchResultsComponent implements OnInit {
             const index = o.toLocaleLowerCase().indexOf(searchString.toLocaleLowerCase());
             o =
               o.slice(0, index) +
-              "<b>" +
+              '<b>' +
               o.slice(index, index + searchString.length) +
-              "</b>" +
+              '</b>' +
               o.slice(index + searchString.length);
           }
           return `&raquo; ...${o}... &laquo;`;
@@ -145,8 +145,8 @@ export class SearchResultsComponent implements OnInit {
       ...this.simpleSearchResults.entities.map((register: ISearchEntity) => {
         return {
           label: register.label,
-          href: `/register/${register.type}/${register.guid}`,
-          icon: getIconByType(register.type),
+          href: `/entry/${register.guid}`,
+          icon: getIconByCategory(register.type),
         };
       }),
     ];

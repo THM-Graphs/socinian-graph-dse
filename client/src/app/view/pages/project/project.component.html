@@ -1,13 +1,13 @@
 <main>
-  <section class="project-contents container py-5">
+  <section class="project-contents container py-5 min-vh-100">
     <div class="row gx-3">
       <section class="col-2 col-lg-3">
         <ul class="list-group pointer sticky-top rounded-0">
           <ng-container *ngFor="let category of categories">
             <li
               class="list-group-item list-group-item-action"
-              [class.active]="category.guid === selectedText.guid"
-              (click)="onSelectProjectCategory(category.guid)"
+              [class.active]="category.id === selectedCategory"
+              (click)="onSelectProjectCategory(category.id)"
             >
               <h6 class="m-0 py-3 px-2 d-none d-md-block text-md-center text-lg-start">
                 <i class="fas {{ category.icon }} category-icon"></i>
@@ -24,10 +24,7 @@
       <section class="col-10 col-md-9">
         <div class="card rounded-0">
           <div class="card-body">
-            <app-loading-spinner [isLoading]="isTextLoading"></app-loading-spinner>
-            <ng-container *ngIf="!isTextLoading">
-              <app-markdown-text [rawMarkdown]="selectedText.text" class="fade-in-fast"></app-markdown-text>
-            </ng-container>
+            <app-markdown-text [rawMarkdown]="selectedText$ | async" class="fade-in-fast"></app-markdown-text>
           </div>
         </div>
       </section>

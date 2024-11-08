@@ -18,7 +18,8 @@ export const Participant: GraphQLObjectType = new GraphQLObjectType({
     },
     dateCertainty: {
       type: GraphQLString,
-      description: "Contains the certainty for the dates the participant has acted within.",
+      description:
+        "Contains the certainty for the dates the participant has acted within.",
     },
     dateType: {
       type: GraphQLString,
@@ -26,11 +27,13 @@ export const Participant: GraphQLObjectType = new GraphQLObjectType({
     },
     person: {
       type: Entity,
-      description: "Contains the person entity related to this participant entry.",
+      description:
+        "Contains the person entity related to this participant entry.",
     },
     place: {
       type: Entity,
-      description: "Contains the place entity related to this participant entry.",
+      description:
+        "Contains the place entity related to this participant entry.",
     },
   }),
 });

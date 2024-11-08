@@ -23,7 +23,7 @@
         <div class="col-12 col-md-7">
           <div class="row">
             <div class="col-12 card">
-              <app-markdown-text [rawMarkdown]="introductionMarkdown"></app-markdown-text>
+              <app-markdown-text [rawMarkdown]="introduction$ | async"></app-markdown-text>
             </div>
           </div>
         </div>

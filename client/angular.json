@@ -79,10 +79,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "pub-env:build:production"
+              "buildTarget": "pub-env:build:production"
             },
             "development": {
-              "browserTarget": "pub-env:build:development"
+              "buildTarget": "pub-env:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -90,7 +90,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "pub-env:build"
+            "buildTarget": "pub-env:build"
           }
         }
       }

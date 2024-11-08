@@ -8,5 +8,5 @@ export interface ISection {
   standoffProperties: IStandoffProperty[];
   communications: ICommunication[];
   children: ISection[];
-  data: string;
+  data?: string;
 }

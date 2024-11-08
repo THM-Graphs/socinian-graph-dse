@@ -1,45 +1,54 @@
-import { IStandoffProperty } from "src/app/models/IStandoffProperty";
-import AnnotationHandler from "./AnnotationHandler";
-import AnnotationUtils from "./AnnotationUtils";
+import { IStandoffProperty } from 'src/app/models/IStandoffProperty';
+import AnnotationHandler from './AnnotationHandler';
+import AnnotationUtils from './AnnotationUtils';
+import { Nullable } from '../../global';
 
 export interface Annotation {
+  guid?: Nullable<string>;
+  containment?: Nullable<number>;
+
   element: string;
   attributes: string[];
   identifier: string;
-  guid?: string;
+  innerHTML?: Nullable<string>;
 }
 
 export class AnnotationParser {
-  protected rawText: string = "";
-  protected annotatedText: string = "";
+  protected rawText: string = '';
+  protected annotatedText: string = '';
 
   protected standOffProperties: IStandoffProperty[] = [];
-  protected annotationStack: Annotation[] = [];
+  protected annotations: Annotation[] = [];
 
-  constructor(rawText: string, standOffProperties: IStandoffProperty[]) {
-    this.rawText = rawText;
+  constructor(rawText: Nullable<string>, standOffProperties: IStandoffProperty[]) {
+    this.rawText = rawText ?? '';
     this.standOffProperties = [...standOffProperties];
-    this.orderStandOffByStartIndex();
+    this.standOffProperties.sort(AnnotationUtils.sortStartProperties);
   }
 
   public parseText(): string {
-    this.annotatedText = "";
+    this.annotatedText = '';
 
     for (let i: number = 0; i < this.rawText.length; i++) {
       const startProperties: IStandoffProperty[] = [];
       const endProperties: IStandoffProperty[] = [];
+      const zeroPointProperties: IStandoffProperty[] = [];
 
       for (const standOffProperty of this.standOffProperties) {
         try {
-          if (i === standOffProperty.startIndex) {
-            startProperties.push(standOffProperty);
+          const isStarting: boolean = i === standOffProperty.startIndex;
+          const isEnding: boolean = i === standOffProperty.endIndex;
+          const isZeroPoint: boolean = standOffProperty.isZeroPoint;
+
+          if (isStarting && isEnding && isZeroPoint) {
+            zeroPointProperties.push(standOffProperty);
+            continue;
           }
 
-          if (i === standOffProperty.endIndex) {
-            endProperties.push(standOffProperty);
-          }
+          if (isStarting) startProperties.push(standOffProperty);
+          if (isEnding) endProperties.push(standOffProperty);
         } catch (error: unknown) {
-          console.error("Could not parse start of teiType", standOffProperty.teiType, error);
+          console.error('Could not parse start of teiType', standOffProperty.teiType, error);
         }
       }
 
@@ -50,14 +59,16 @@ export class AnnotationParser {
       // Parsing them into HTML context.
       const HTMLStartAnnotations: string[] = startProperties.map((property) => this.parseTeiType(property));
       const HTMLEndAnnotations: string[] = endProperties.map((property) => this.parseTeiType(property, true));
+      const HTMLZeroPointAnnotations: string[] = zeroPointProperties.map((property) => this.parseZeroPoint(property));
 
       // Sorting them by HTML ruleset.
       HTMLStartAnnotations.sort(AnnotationUtils.sortHTMLStartAnnoations);
       HTMLEndAnnotations.sort(AnnotationUtils.sortHTMLEndAnnotations);
 
-      this.annotatedText += HTMLStartAnnotations.filter((a) => a.length > 0).join(" ");
+      this.annotatedText += HTMLStartAnnotations.filter((a) => a.length > 0).join('');
+      this.annotatedText += HTMLZeroPointAnnotations.filter((a) => a.length > 0).join('');
       this.annotatedText += this.rawText[i];
-      this.annotatedText += HTMLEndAnnotations.filter((a) => a.length > 0).join(" ");
+      this.annotatedText += HTMLEndAnnotations.filter((a) => a.length > 0).join('');
     }
 
     return this.annotatedText;
@@ -67,144 +78,250 @@ export class AnnotationParser {
     let annotation: Annotation;
 
     switch (standOffProperty.teiType) {
-      case "l":
-      case "addrLine":
-        return !isClosing ? "" : "<br />";
-      case "lb":
-        return !isClosing ? "<br />" : "";
-      case "div":
-        return !isClosing ? "<div>" : "</div>";
-      case "dateline":
-      case "address":
-      case "lg":
-      case "salute":
-      case "signed":
-        return !isClosing ? `<p class="${standOffProperty.teiType}">` : "</p>";
-      case "opener":
-      case "closer":
-        return !isClosing ? `<div class="${standOffProperty.teiType}">` : "</div>";
-      case "item":
-        return !isClosing ? "<li>" : "</li>";
-      case "list":
-        return !isClosing ? "<ul>" : "</ul>";
-      case "table":
-        return !isClosing ? "<table>" : "</table>";
-      case "row":
-        return !isClosing ? "<tr>" : "</tr>";
-      case "abbr":
+      case 'l':
+      case 'addrLine':
+        return !isClosing ? '' : '<br />';
+      case 'div':
+        return !isClosing ? '<div>' : '</div>';
+      case 'dateline':
+      case 'address':
+      case 'lg':
+      case 'salute':
+      case 'signed':
+        annotation = AnnotationHandler.handleCustomParagraph(standOffProperty);
+        break;
+      case 'opener':
+      case 'closer':
+        return !isClosing ? `<div class="${standOffProperty.teiType}">` : '</div>';
+      case 'item':
+        return !isClosing ? '<li>' : '</li>';
+      case 'list':
+        return !isClosing ? '<ul>' : '</ul>';
+      case 'table':
+        return !isClosing ? '<table>' : '</table>';
+      case 'row':
+        return !isClosing ? '<tr>' : '</tr>';
+      case 'abbr':
         annotation = AnnotationHandler.handleAbbr(standOffProperty);
         break;
-      case "add":
+      case 'add':
         annotation = AnnotationHandler.handleAdd(standOffProperty);
         break;
-      case "bibl":
+      case 'bibl':
         annotation = AnnotationHandler.handleBibl(standOffProperty);
         break;
-      case "cell":
+      case 'cell':
         return AnnotationHandler.handleCell(standOffProperty, isClosing);
-      case "commented":
+      case 'commented':
         annotation = AnnotationHandler.handleCommented(standOffProperty);
         break;
-      case "date":
+      case 'date':
         annotation = AnnotationHandler.handleDate(standOffProperty);
         break;
-      case "del":
+      case 'del':
         annotation = AnnotationHandler.handleDel(standOffProperty);
         break;
-      case "gap":
-        annotation = AnnotationHandler.handleGap(standOffProperty);
+      case 'head':
+        annotation = AnnotationHandler.handleHead();
         break;
-      case "head":
-        return !isClosing ? "<h6 class='spo-headline'>" : "</h6>";
-      case "hi":
+      case 'hi':
         annotation = AnnotationHandler.handleHi(standOffProperty);
         break;
-      case "name":
+      case 'name':
         annotation = AnnotationHandler.handleName(standOffProperty);
         break;
-      case "note":
+      case 'note':
         annotation = AnnotationHandler.handleNote(standOffProperty);
         break;
-      case "p":
+      case 'p':
         annotation = AnnotationHandler.handleParagraph(standOffProperty);
         break;
-      case "pb":
-        return AnnotationHandler.handlePb(standOffProperty, isClosing);
-      case "persName":
+      case 'persName':
         annotation = AnnotationHandler.handlePersName(standOffProperty);
         break;
-      case "placeName":
+      case 'placeName':
         annotation = AnnotationHandler.handlePlace(standOffProperty);
         break;
-      case "postscript":
+      case 'postscript':
         annotation = AnnotationHandler.handlePostscript();
         break;
-      case "reg":
+      case 'reg':
         annotation = AnnotationHandler.handleReg(standOffProperty);
         break;
-      case "rs":
+      case 'rs':
         annotation = AnnotationHandler.handleRegisterEntry(standOffProperty);
         break;
-      case "sic":
+      case 'sic':
         annotation = AnnotationHandler.handleSic(standOffProperty);
         break;
-      case "subst":
+      case 'subst':
         annotation = AnnotationHandler.handleSubst();
         break;
-      case "supplied":
+      case 'supplied':
         annotation = AnnotationHandler.handleSupplied(standOffProperty);
         break;
-      case "unclear":
+      case 'unclear':
         annotation = AnnotationHandler.handleUnclear(standOffProperty);
         break;
-      case "ref":
+      case 'ref':
         annotation = AnnotationHandler.handleRef(standOffProperty);
         break;
-      case "foreign":
-      case "comment":
-        return "";
+      case 'foreign':
+      case 'selection':
+        annotation = AnnotationHandler.handleSelection();
+        break;
       default:
-        console.error("Could not parse TEI type:", standOffProperty.teiType);
-        return "";
+        console.error('Could not parse TEI type:', standOffProperty.teiType);
+        return '';
     }
 
     annotation.guid = standOffProperty.guid;
+    annotation.containment = this.parseContainment(annotation);
+
     this.handleAnnotationStack(annotation, isClosing);
-    return this.getOverlappedHTMLTag(annotation, isClosing);
+    return this.getParsedHTMLContext(annotation, isClosing);
   }
 
-  private getOverlappedHTMLTag(annotation: Annotation, isClosing: boolean): string {
+  protected parseZeroPoint(standOffProperty: IStandoffProperty): string {
+    let annotation: Annotation;
+
+    switch (standOffProperty.teiType) {
+      case 'lb':
+        return '<br />';
+      case 'pb':
+        annotation = AnnotationHandler.handlePb(standOffProperty);
+        break;
+      case 'gap':
+        annotation = AnnotationHandler.handleGap(standOffProperty);
+        break;
+      case 'comment':
+        return '';
+      default:
+        console.error('Could not parse ZeroPoint TEI type:', standOffProperty.teiType);
+        return '';
+    }
+
+    annotation.guid = standOffProperty.guid;
+    annotation.containment = this.parseContainment(annotation);
+    return this.getParsedZeroPointHTML(annotation);
+  }
+
+  protected parseContainment(annotation: Annotation): number {
+    if (annotation.containment) return annotation.containment;
+    switch (annotation.element) {
+      case 'div':
+        return 0;
+      case 'p':
+        return 1;
+      case 'span':
+        return 2;
+      case 'a':
+        return 3;
+      default:
+        return 99;
+    }
+  }
+
+  private getParsedHTMLContext(annotation: Annotation, isClosing: boolean): string {
+    const overlaps: Annotation[] = this.annotations.filter(
+      (a: Annotation): boolean => a.element === annotation.element,
+    );
+    const containment: Annotation[] = this.annotations.filter(
+      (a: Annotation): boolean => annotation.containment! < a.containment!,
+    );
+
+    if (containment.length > 0) return this.getContainmentHTML(annotation, containment, isClosing);
+    if (overlaps.length > 0) return this.getOverlappedHTML(annotation, overlaps, isClosing);
+    if (isClosing) return `</${annotation.element}>`;
+
+    const attributeString: string = annotation.attributes.join(' ');
+    const identifierString: string = annotation.identifier;
+    return `<${annotation.element} class="${identifierString}" ${attributeString}>`;
+  }
+
+  private getOverlappedHTML(annotation: Annotation, overlaps: Annotation[], isClosing: boolean): string {
     const attributes: string[] = isClosing ? [] : [...annotation.attributes];
     const identifier: string[] = isClosing ? [] : [annotation.identifier];
-    let overlappedHTML: string = "";
 
-    const existingAnnotations: Annotation[] = this.annotationStack.filter((a) => a.element === annotation.element);
+    overlaps.forEach((annotation: Annotation): void => {
+      const isCurrentIdentifier: boolean = identifier.includes(annotation.identifier);
+      if (!isCurrentIdentifier) identifier.push(annotation.identifier);
 
-    if (existingAnnotations.length === 0 && isClosing) {
-      return `</${annotation.element}>`;
-    }
-
-    if (existingAnnotations.length > 0) {
-      overlappedHTML = `</${annotation.element}>`;
-      existingAnnotations.forEach((e: Annotation) => {
-        attributes.push(...e.attributes);
-        identifier.push(e.identifier);
+      annotation.attributes.forEach((attr: string): void => {
+        const isCurrentAttribute: boolean = attributes.includes(attr);
+        if (!isCurrentAttribute) attributes.push(attr);
       });
+    });
+
+    const attributeString: string = attributes.join(' ');
+    const identifierString: string = identifier.join(' ');
+    return `</${annotation.element}><${annotation.element} class="${identifierString}" ${attributeString}>`;
+  }
+
+  private getContainmentHTML(annotation: Annotation, containment: Annotation[], isClosing: boolean): string {
+    const reduced: Annotation[] = this.distinctAnnotations(containment);
+
+    if (isClosing) {
+      reduced.sort(AnnotationUtils.sortContainmentDesc);
+      const elements: string[] = reduced.map((a: Annotation): string => `</${a.element}>`);
+      const elementsString: string = elements.join(' ');
+      return `${elementsString}</${annotation.element}>`;
     }
 
-    const attributeString: string = attributes.join(" ");
-    const identifierString: string = identifier.join(" ");
-    return `${overlappedHTML}<${annotation.element} class="${identifierString}" ${attributeString}>`;
+    reduced.sort(AnnotationUtils.sortContainmentAsc);
+    const annotations: string[] = reduced.map((a: Annotation): string => {
+      const identifierString: string = a.identifier;
+      const attributeString: string = a.attributes.join(' ');
+      return `<${a.element} class="${identifierString}" ${attributeString}>`;
+    });
+
+    const annotationsString: string = annotations.join(' ');
+    const identifierString: string = annotation.identifier;
+    const attributeString: string = annotation.attributes.join(' ');
+    return `<${annotation.element} class="${identifierString}" ${attributeString}>${annotationsString}`;
+  }
+
+  private getParsedZeroPointHTML(annotation: Annotation): string {
+    const attributeString: string = annotation.attributes.join(' ');
+    const identifierString: string = annotation.identifier;
+    const innerHTML: string = annotation.innerHTML ?? '';
+    const annotationTag: string = `<${annotation.element} class="zpa ${identifierString}" ${attributeString}>${innerHTML}</${annotation.element}>`;
+
+    if (this.annotations.length === 0) return annotationTag;
+
+    const reduced: Annotation[] = this.distinctAnnotations(this.annotations).filter(
+      (a: Annotation): boolean => a.element === annotation.element,
+    );
+    const elements: string[] = reduced.map((a: Annotation): string => `</${a.element}>`);
+    const elementsString: string = elements.join(' ');
+
+    const annotations: string[] = reduced.map((a: Annotation): string => {
+      const identifierString: string = a.identifier;
+      const attributeString: string = a.attributes.join(' ');
+      return `<${a.element} class="${identifierString}" ${attributeString}>`;
+    });
+
+    const annotationsString: string = annotations.join(' ');
+    return elementsString + annotationTag + annotationsString;
   }
 
   private handleAnnotationStack(annotation: Annotation, isClosing: boolean): void {
     if (isClosing) {
-      const index: number = this.annotationStack.findIndex((a) => a.identifier === annotation.identifier);
-      this.annotationStack.splice(index, 1);
-    } else this.annotationStack.push(annotation);
+      const index: number = this.annotations.findIndex((a) => a.identifier === annotation.identifier);
+      this.annotations.splice(index, 1);
+    } else this.annotations.push(annotation);
   }
 
-  private orderStandOffByStartIndex() {
-    this.standOffProperties.sort((a: IStandoffProperty, b: IStandoffProperty) => a.startIndex - b.startIndex);
+  private distinctAnnotations(annotation: Annotation[]): Annotation[] {
+    return annotation.reduce((acc: Annotation[], curr: Annotation): Annotation[] => {
+      const existingElement: Nullable<Annotation> = acc.find((a: Annotation): boolean => a.element == curr.element);
+
+      if (existingElement) {
+        existingElement.attributes = existingElement.attributes.concat(curr.attributes);
+        existingElement.identifier += ' ' + curr.identifier;
+      } else acc.push({ ...curr });
+
+      return acc;
+    }, []);
   }
 }

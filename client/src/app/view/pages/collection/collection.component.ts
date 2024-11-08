@@ -1,12 +1,12 @@
-import { Component, OnInit } from "@angular/core";
-import { LangManager } from "../../../../utils/LangManager";
-import { ICommunication } from "src/app/models/ICommunication";
-import { CommunicationService } from "src/app/services/communication.service";
+import { Component, OnInit } from '@angular/core';
+import { LangManager } from '../../../../utils/LangManager';
+import { ICommunication } from 'src/app/models/ICommunication';
+import { CommunicationService } from 'src/app/services/communication.service';
 
 @Component({
-  selector: "app-collections",
-  templateUrl: "./collection.component.html",
-  styleUrls: ["./collection.component.scss"],
+  selector: 'app-collections',
+  templateUrl: './collection.component.html',
+  styleUrls: ['./collection.component.scss'],
 })
 export class CollectionComponent implements OnInit {
   public isCollectionsLoading: boolean = false;
@@ -14,7 +14,6 @@ export class CollectionComponent implements OnInit {
   public communications: ICommunication[] = [];
   public filteredCommunications: ICommunication[] = [];
   public maxAmount: number = 25;
-  public currentPage: number = 1;
   public lang = LangManager;
 
   constructor(private communicationService: CommunicationService) {}

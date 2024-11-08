@@ -1,16 +1,15 @@
-import { GraphQLObjectType, GraphQLSchema } from "graphql";
-import { EntityQueries } from "./queries/Entity.queries";
-import { SectionQueries } from "./queries/Section.queries";
-import { MetadataQueries } from "./queries/Metadata.queries";
-import { SearchQueries } from "./queries/Search.queries";
-import { CommunicationQueries } from "./queries/Communication.queries";
-import { ProjectTextQueries } from "./queries/ProjectText.queries";
-import { TextQueries } from "./queries/Text.queries";
-import { StandoffPropertyQueries } from "./queries/StandoffProperty.queries";
+import { GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { EntityQueries } from './queries/Entity.queries';
+import { SectionQueries } from './queries/Section.queries';
+import { MetadataQueries } from './queries/Metadata.queries';
+import { SearchQueries } from './queries/Search.queries';
+import { CommunicationQueries } from './queries/Communication.queries';
+import { TextQueries } from './queries/Text.queries';
+import { AnnotationQueries } from './queries/Annotation.queries.js';
 
 // Merging all queries with spread operator
 const Queries: GraphQLObjectType = new GraphQLObjectType({
-  name: "Query",
+  name: 'Query',
   fields: {
     ...EntityQueries,
     ...SectionQueries,
@@ -18,8 +17,7 @@ const Queries: GraphQLObjectType = new GraphQLObjectType({
     ...CommunicationQueries,
     ...TextQueries,
     ...SearchQueries,
-    ...ProjectTextQueries,
-    ...StandoffPropertyQueries,
+    ...AnnotationQueries,
   },
 });
 

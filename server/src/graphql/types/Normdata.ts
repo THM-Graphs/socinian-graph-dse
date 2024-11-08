@@ -1,10 +1,10 @@
-import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
+import {GraphQLNonNull, GraphQLObjectType, GraphQLString} from "graphql";
 
 export const Normdata: GraphQLObjectType = new GraphQLObjectType({
   name: "Normdata",
   fields: () => ({
     guid: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: "External identifier for this normdata.",
     },
     label: {

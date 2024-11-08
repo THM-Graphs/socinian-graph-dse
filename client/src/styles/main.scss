@@ -66,6 +66,10 @@
     box-shadow: none;
   }
 
+  &:active {
+    background: map_get(map_get($root, accent), 70) !important;
+  }
+
   &.active {
     background: map_get(map_get($root, accent), 60) !important;
   }

@@ -119,10 +119,7 @@
 .pb {
   position: absolute;
   left: -130px;
-
-  a {
-    font-size: 10pt;
-  }
+  font-size: 10pt;
 }
 
 .sic,
@@ -130,4 +127,8 @@
 .substitute,
 .unclear {
   background: $otherHighlight;
+}
+
+.selection {
+  background: $selectionHighlight !important;
 }

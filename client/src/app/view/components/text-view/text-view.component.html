@@ -1,1 +1,15 @@
-<div class="rendered-text-view" [innerHTML]="parsedText | safeHtml"></div>
+<div
+  class="selection-menu btn-group fade-in-fast"
+  *ngIf="mouseSelection"
+  [hidden]="!isSelectionMenuActive"
+  #selectionMenu
+>
+  <button type="button" class="btn btn-primary" (click)="handleCopySelectionURL(); isSelectionMenuActive = false">
+    <i class="fas fa-link"></i> Zitierlink
+  </button>
+  <button type="button" class="btn btn-primary" (click)="isSelectionMenuActive = false">
+    <i class="fa fa-close"></i>
+  </button>
+</div>
+
+<div class="rendered-text-view" [innerHTML]="parsedText | safeHtml" (mouseup)="handleSelection()"></div>
