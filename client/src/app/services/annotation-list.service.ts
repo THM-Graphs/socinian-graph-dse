@@ -1,11 +1,12 @@
-import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
-import { IEntity } from "../models/IEntity";
-import { getIconByCategory } from "../constants/ICON_MAP";
-import { IText } from "../models/IText";
-import { StandoffPropertyService } from "./standoffproperty.service";
-import { IStandoffProperty } from "../models/IStandoffProperty";
-import { ENTITY_CATEGORY } from "../constants/ENTITY_CATEGORY";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { IEntity } from '../models/IEntity';
+import { IText } from '../models/IText';
+import { IStandoffProperty } from '../models/IStandoffProperty';
+import { Nullable } from '../../global';
+import { AnnotationService } from './annotation.service';
+import { ENTITY_CATEGORY } from '../constants/ENTITY_CATEGORY';
+import { getIconByCategory } from '../constants/ICON_MAP';
 
 export interface Annotation {
   type: ANNOTATION_TYPE;
@@ -24,13 +25,13 @@ export enum ANNOTATION_TYPE {
 }
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class AnnotationListService {
   public annotationList: Annotation[] = [];
   public annotationListChange: Subject<Annotation> = new Subject<Annotation>();
 
-  constructor(private standoffPropertyService: StandoffPropertyService) {
+  constructor(private standoffPropertyService: AnnotationService) {
     this.annotationListChange.subscribe((annotation: Annotation) => this.annotationList.unshift(annotation));
   }
 
@@ -51,7 +52,7 @@ export class AnnotationListService {
     } as Annotation;
     this.annotationListChange.next(annotation);
 
-    const entity: IEntity | null = await this.standoffPropertyService.getEntity(standoffPropertyId);
+    const entity: Nullable<IEntity> = await this.standoffPropertyService.getEntity(standoffPropertyId);
     if (!entity) return this.closeAnnotation(standoffPropertyId);
 
     const href: string = `/entry/${entity.guid}`;
@@ -69,7 +70,7 @@ export class AnnotationListService {
     } as Annotation;
     this.annotationListChange.next(annotation);
 
-    const text: IText | null = await this.standoffPropertyService.getVariant(standoffPropertyId);
+    const text: Nullable<IText> = await this.standoffPropertyService.getVariant(standoffPropertyId);
     if (!text || !text.letter) return this.closeAnnotation(standoffPropertyId);
 
     const href: string = `/view/${text.letter.guid}`;
@@ -87,7 +88,7 @@ export class AnnotationListService {
     } as Annotation;
     this.annotationListChange.next(annotation);
 
-    const comment: IText | null = await this.standoffPropertyService.getReference(standOffId);
+    const comment: Nullable<IText> = await this.standoffPropertyService.getReference(standOffId);
     if (!comment) return this.closeAnnotation(standOffId);
 
     const href: string = `/view/${comment.letter.guid}`;
@@ -108,7 +109,7 @@ export class AnnotationListService {
     } as Annotation;
     this.annotationListChange.next(annotation);
 
-    const comment: IText | null = await this.standoffPropertyService.getComment(standOffId);
+    const comment: Nullable<IText> = await this.standoffPropertyService.getComment(standOffId);
     if (!comment) return this.closeAnnotation(standOffId);
 
     annotation.title = `<span class="d-block">» ${label} «</span>`;
@@ -120,7 +121,7 @@ export class AnnotationListService {
 
   private getPhrasedTitle(phrase: string, icon: string, href: string, label: string): string {
     return `<span class="d-block">» ${phrase} «</span>
-            <i class="small fas ${icon} d-inline-block me-1"></i> 
+            <i class="small fas ${icon} d-inline-block me-1"></i>
             <a href="${href}" class="small" target="_blank">${label}</a>`;
   }
 }

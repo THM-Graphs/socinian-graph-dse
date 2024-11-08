@@ -1,85 +1,92 @@
-import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString, GraphQLBoolean } from "graphql";
-import StandoffPropertyDAO from "../../database/StandoffProperty.dao";
-import TextDAO from "../../database/Text.dao";
-import { IText } from "../../models/IText";
-import { Metadata } from "./Metadata";
-import { StandoffProperty } from "./StandoffProperty";
+import { GraphQLBoolean, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import AnnotationDAO from '../../database/Annotation.dao.js';
+import TextDAO from '../../database/Text.dao';
+import { IText } from '../../interfaces/IText';
+import { Metadata } from './Metadata';
+import { Annotation } from './Annotation.js';
+import { Nullable } from '../../types.js';
+import { IAnnotation } from '../../interfaces/IAnnotation.js';
+import { IMetadata } from '../../interfaces/IMetadata.js';
 
 export const Text: GraphQLObjectType = new GraphQLObjectType({
-  name: "Text",
+  name: 'Text',
   fields: () => ({
     guid: {
-      type: GraphQLNonNull(GraphQLString),
-      description: "Identifies the text node.",
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'Identifier (usually UUID).',
     },
     label: {
       type: GraphQLString,
-      description: "Label for this text.",
+      description: 'Text node label.',
     },
     metadataLanguage: {
       type: GraphQLString,
-      description: "Language of this text.",
+      description: 'Text node language.',
     },
     metadataLicence: {
       type: GraphQLString,
-      description: "License for this text.",
+      description: 'Text node licence.',
     },
     metadataShelfmark: {
       type: GraphQLString,
-      description: "Shelfmark for this text.",
+      description: 'Text node shelfmark.',
     },
     text: {
       type: GraphQLString,
-      description: "Containing the text of this text.",
+      description: 'Plain text.',
     },
     metadataTextGenre: {
       type: GraphQLString,
-      description: "Containing the current genre for this text.",
+      description: 'Text node genre.',
     },
     metadataTextType: {
       type: GraphQLString,
-      description: "Type of the current text text.",
+      description: 'Text node type.',
     },
     metadataArchive: {
       type: GraphQLString,
-      description: "Contains the archive of this text.",
+      description: 'Text node archive.',
     },
     metadataIsReference: {
       type: GraphQLBoolean,
-      description: "Defines if the current text is a reference.",
+      description: 'Is text node a reference?',
     },
     metadataPrintSourceName: {
       type: GraphQLString,
-      description: "Contains the print source name for this text.",
+      description: 'Text node print source.',
     },
     metadataPrintSourceUrl: {
       type: GraphQLString,
-      description: "Contains the print source url for this text.",
+      description: 'Text node source url.',
+    },
+    metadataFunder: {
+      type: GraphQLString,
+      description: 'Text node funder.',
     },
     metadataRemark: {
       type: Text,
-      description: "Remark of the editor.",
-      resolve: async (context: IText) => {
+      description: 'Text node editor remarks.',
+      resolve: async (context: IText): Promise<Nullable<IText>> => {
         return await TextDAO.getRemark(context.guid);
       },
     },
     data: {
       type: GraphQLString,
-      description: "Contains a stringified copy of the neo4j object.",
+      description: 'Text node as string.',
     },
     standoffProperties: {
-      type: GraphQLList(StandoffProperty),
-      description: "Containing the standoff properties associated with this text.",
-      resolve: async (context: IText) => {
-        return await StandoffPropertyDAO.getProperties(context.guid);
+      type: new GraphQLList(Annotation),
+      description: 'Text node annotations.',
+      resolve: async (context: IText): Promise<IAnnotation[]> => {
+        return await AnnotationDAO.getAnnotations(context.guid);
       },
     },
     letter: {
       type: Metadata,
-      description: "Contains the letter this text has been linked to.",
-      resolve: async (context: IText) => {
+      description: 'Linked letter to this text node.',
+      resolve: async (context: IText): Promise<Nullable<IMetadata>> => {
         if (context.letter) return context.letter;
-        return await TextDAO.getLetter(context.guid);
+        return await TextDAO.getMetadata(context.guid);
       },
     },
   }),

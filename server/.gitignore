@@ -1,5 +1,5 @@
-### Env File ###
-.prod.env
+### Project ###
+.env
 
 ### Webstorm ###
 .idea/

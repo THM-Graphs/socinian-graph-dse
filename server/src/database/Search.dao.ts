@@ -1,35 +1,38 @@
-import { ISearchLetterEntry, ISearchEntity } from "../models/ISearch";
-import Neo4jDriver from "./Neo4jDriver";
-import { QueryResult } from "neo4j-driver";
-import { Utils } from "../utils/Utils";
-import removeAccents from "remove-accents";
+import { ISearchEntity, ISearchLetterEntry } from '../interfaces/ISearch';
+import Neo4jDriver from '../utils/Neo4jDriver.js';
+import { QueryResult } from 'neo4j-driver';
+import { Utils } from '../utils/Utils';
+import removeAccents from 'remove-accents';
+import { Nullable } from '../types.js';
 
-const OCCURRENCE_LENGTH = 50;
+const OCCURRENCE_LENGTH: number = 50;
 
 export default class SearchDAO {
   public static async getLetters(phrase: string): Promise<ISearchLetterEntry[]> {
     const searchArray: string[] = Utils.matchWordsAndQuotes(phrase);
     const searchStatement: string[] = searchArray.map((_, index: number) => {
-      return `toLower(t.text) CONTAINS toLower($${index.toString()}) 
+      return `toLower(t.text) CONTAINS toLower($${index.toString()})
               OR toLower(t.normalizedText) CONTAINS toLower($${index.toString()})
               OR toLower(lm.label) CONTAINS toLower($${index.toString()})
               OR toLower(lm.normalizedLabel) CONTAINS toLower($${index.toString()})`;
     });
 
     const query: string = `
-    MATCH (t:Text)<-[]-(lm:Metadata) 
-    WHERE ${searchStatement.join(" AND ")} 
+    MATCH (t:Text)<-[]-(lm:Metadata)
+    WHERE ${searchStatement.join(' AND ')}
     RETURN DISTINCT collect({guid: lm.guid, label: lm.label, text: t.text}) as letters`;
 
     if (searchArray.length === 0) return [];
     searchArray.push(...searchArray.map((searchString: string) => removeAccents(searchString)));
 
-    const result: QueryResult = await Neo4jDriver.runQuery(query, Utils.arrayToObject(searchArray));
-    const letters: ISearchLetterEntry[] = result.records[0]?.get("letters") ?? [];
+    const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(query, Utils.arrayToObject(searchArray));
+    const letters: Nullable<ISearchLetterEntry[]> = result?.records[0]?.get('letters');
+    if (!letters) return [];
 
-    letters.forEach((letter: ISearchLetterEntry) => {
+    for (const letter of letters) {
       letter.occurrences = [];
-      const text = (letter as any).text ?? "";
+      const text: string = letter.text ?? '';
+
       let index: number = -1;
       let endIndex: number = 0;
 
@@ -45,7 +48,7 @@ export default class SearchDAO {
       if (letter.occurrences.length === 0) {
         letter.occurrences.push(text.substring(0, OCCURRENCE_LENGTH * 2));
       }
-    });
+    }
 
     return letters;
   }
@@ -54,14 +57,18 @@ export default class SearchDAO {
     const searchArray: string[] = Utils.matchWordsAndQuotes(phrase);
     if (searchArray.length === 0) return [];
 
-    const searchStatement: string[] = searchArray.map((_, index: number) => {
+    const searchStatement: string[] = searchArray.map((_, index: number): string => {
       return `toLower(e.label) CONTAINS toLower($${index.toString()})`;
     });
+
     const query: string = `
-    MATCH (e:Entity) WHERE ${searchStatement.join(" AND ")}
+    MATCH (e:Entity) WHERE ${searchStatement.join(' AND ')}
     RETURN DISTINCT collect({guid: e.guid, label: e.label, type: e.type}) as entities`;
 
-    const result: QueryResult = await Neo4jDriver.runQuery(query, Utils.arrayToObject(searchArray));
-    return result.records[0]?.get("entities") ?? [];
+    const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(query, Utils.arrayToObject(searchArray));
+    const entities: Nullable<ISearchEntity[]> = result?.records[0]?.get('entities');
+    if (!entities) return [];
+
+    return entities;
   }
 }

@@ -33,21 +33,12 @@
       <div class="col-12 col-md-4 col-lg-3 offset-md-0 offset-lg-1 mt-4 mt-md-0">
         <div class="text-container">
           <h6 class="mb-3 mb-md-4">{{ lang.get("FOOTER_PROJECT_OVERVIEW_TITLE") }}</h6>
-          <div
-            class="row mb-2"
-            *ngFor="let project of projectList">
+          <div class="row mb-2" *ngFor="let project of projectList">
             <div class="col-4 d-flex align-items-center">
-              <img
-                class="img-thumbnail"
-                [src]="project.imageSrc"
-                [alt]="project.name" />
+              <img class="img-thumbnail" [src]="project.imageSrc" [alt]="project.name" />
             </div>
             <div class="col-6 col-md">
-              <a
-                target="_blank"
-                [href]="project.href"
-                >{{ project.name }}</a
-              >
+              <a target="_blank" [href]="project.href">{{ project.name }}</a>
             </div>
           </div>
         </div>
@@ -58,23 +49,17 @@
       <div class="col-12">
         <ul class="nav justify-content-center justify-content-md-end">
           <li class="nav-item">
-            <a
-              [routerLink]="'/project/legal-notice'"
-              class="nav-link">
+            <a [routerLink]="'/project/legal-notice'">
               {{ lang.get("NAV_ITEM_LEGAL_NOTICE") }}
             </a>
           </li>
           <li class="nav-item">
-            <a
-              [routerLink]="'/project/policy'"
-              class="nav-link">
+            <a [routerLink]="'/project/policy'" >
               {{ lang.get("NAV_ITEM_POLICY") }}
             </a>
           </li>
           <li class="nav-item">
-            <a
-              href="mailto:sbw@adwmainz.de"
-              class="nav-link">
+            <a href="mailto:sbw@adwmainz.de">
               {{ lang.get("NAV_ITEM_CONTACT") }}
             </a>
           </li>

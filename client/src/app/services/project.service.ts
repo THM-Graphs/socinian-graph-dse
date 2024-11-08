@@ -1,38 +1,14 @@
-import { Injectable } from "@angular/core";
-import { Apollo, gql, TypedDocumentNode } from "apollo-angular";
-import { ApolloQueryResult } from "@apollo/client/core";
-import { IProjectText } from "../models/IProjectText";
-
-const GET_PROJECT_TEXT_BY_ID: TypedDocumentNode = gql`
-  query GetProjectTextById($textId: String!) {
-    projectText(id: $textId) {
-      label
-      text
-      guid
-    }
-  }
-`;
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class ProjectService {
-  constructor(private apollo: Apollo) {}
+  constructor(private http: HttpClient) {}
 
-  public async getProjectText(textId: string): Promise<IProjectText | null> {
-    try {
-      const queryResult: ApolloQueryResult<{ projectText: IProjectText }> = (await this.apollo
-        .watchQuery({
-          query: GET_PROJECT_TEXT_BY_ID,
-          variables: { textId },
-          fetchPolicy: "cache-and-network",
-        })
-        .result()) as ApolloQueryResult<{ projectText: IProjectText }>;
-
-      return queryResult.data.projectText;
-    } catch (error: unknown) {
-      console.error("Failed to query project text with id", textId, error);
-      return null;
-    }
+  public getText(textId: string): Observable<string> {
+    return this.http.get(`/markdown/${textId}.md`, { responseType: 'text' });
   }
 }

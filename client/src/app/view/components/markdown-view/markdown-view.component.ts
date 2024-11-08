@@ -1,39 +1,39 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from "@angular/core";
-import { marked, Slugger } from "marked";
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { marked, RendererObject, Tokens } from 'marked';
+import { Nullable } from '../../../../global.js';
 
 @Component({
-  selector: "app-markdown-text",
-  templateUrl: "./markdown-view.component.html",
+  selector: 'app-markdown-text',
+  templateUrl: './markdown-view.component.html',
 })
 export class MarkdownViewComponent implements OnChanges {
-  /**
-   * rawMarkdown: defines the raw markdown text that can be inserted into this component.
-   */
-  @Input() rawMarkdown: string = "";
-
-  public htmlText: string = "";
+  @Input() rawMarkdown: Nullable<string> = '';
+  public parsedHTML: string = '';
 
   constructor() {
-    const renderer: marked.MarkedExtension["renderer"] = {
-      image(href: string | null, title: string | null, text: string): string {
-        return `</p><p class="d-block-inline text-center markdown-paragraph">
-            <img src="/assets/images/socinian/${href}" class="mt-4 img-fluid" alt="${text}" title="${title}" \>
-          </span>
-        </p><p class="markdown-paragraph">`;
+    const renderer: RendererObject = {
+      image(token: Tokens.Image): string {
+        return `
+            </p><p class="d-block-inline text-center markdown-paragraph">
+                <img src="/markdown/${token.href}" class="mt-4 img-fluid" alt="${token.text}" title="${token.title}" \>
+            </p><p class="markdown-paragraph">`;
       },
-      link(href: string | null, title: string | null, text: string): string {
-        return `<a href="${href}" target="blank">${text}</a>`;
+
+      link(token: Tokens.Link): string {
+        return `<a href="${token.href}" target="blank">${token.text}</a>`;
       },
-      heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
-        const escapedText = text.toLowerCase().replace(/[^\w]+/g, "-");
+
+      heading(token: Tokens.Heading): string {
+        const escapedText: string = token.text.toLowerCase().replace(/[^\w]+/g, '-');
 
         return `
-            <h${level} id="${escapedText}}" class="markdown-heading">
-              ${text}
-            </h${level}>`;
+            <h${token.depth} id="${escapedText}}" class="markdown-heading">
+              ${token.text}
+            </h${token.depth}>`;
       },
-      paragraph(text: string) {
-        return `<p class="markdown-paragraph">${text}</p>`;
+
+      paragraph(token: Tokens.Paragraph): string {
+        return `<p class="markdown-paragraph">${this.parser.parseInline(token.tokens)}</p>`;
       },
     };
 
@@ -41,8 +41,8 @@ export class MarkdownViewComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes["rawMarkdown"]) {
-      this.htmlText = marked.parse(this.rawMarkdown);
+    if (changes['rawMarkdown']) {
+      this.parsedHTML = marked.parse(this.rawMarkdown ?? '') as string;
     }
   }
 }
