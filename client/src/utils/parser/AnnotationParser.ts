@@ -122,7 +122,7 @@ export class AnnotationParser {
         annotation = AnnotationHandler.handleDel(standOffProperty);
         break;
       case 'head':
-        annotation = AnnotationHandler.handleHead(standOffProperty);
+        annotation = AnnotationHandler.handleHead();
         break;
       case 'hi':
         annotation = AnnotationHandler.handleHi(standOffProperty);
@@ -168,7 +168,7 @@ export class AnnotationParser {
         break;
       case 'foreign':
       case 'selection':
-        annotation = AnnotationHandler.handleSelection(standOffProperty);
+        annotation = AnnotationHandler.handleSelection();
         break;
       default:
         console.error('Could not parse TEI type:', standOffProperty.teiType);

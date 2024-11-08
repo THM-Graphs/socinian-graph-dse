@@ -13,11 +13,6 @@ enum ENTITY_TYPE {
   COMMENT = 'comment',
 }
 
-interface IEventListener {
-  element: Element;
-  event: string;
-  handler: Function;
-}
 @Component({
   selector: 'app-text-view',
   styleUrls: ['./text-view.component.scss'],

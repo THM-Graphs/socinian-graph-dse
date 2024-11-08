@@ -72,7 +72,7 @@ export default class AnnotationHandler {
     };
   }
 
-  public static handleHead(standOffProperty: IStandoffProperty): Annotation {
+  public static handleHead(): Annotation {
     return {
       element: 'h6',
       attributes: [],
@@ -187,7 +187,7 @@ export default class AnnotationHandler {
     };
   }
 
-  public static handleSelection(standOffProperty: IStandoffProperty): Annotation {
+  public static handleSelection(): Annotation {
     return {
       element: 'span',
       attributes: [],
