@@ -1,4 +1,4 @@
-import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import CommunicationDAO from '../../database/Communication.dao';
 import { ICommunication } from '../../interfaces/ICommunication';
 import { Metadata } from './Metadata';
@@ -14,9 +14,17 @@ export const Communication: GraphQLObjectType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLString),
       description: 'Identifier (usually UUID).',
     },
-    data: {
+    dateStart: {
       type: GraphQLString,
-      description: 'Communication node as string.',
+      description: 'Sent date for this communication.',
+    },
+    attachments: {
+      type: GraphQLInt,
+      description: 'Amount of communication attachments.',
+    },
+    variants: {
+      type: GraphQLInt,
+      description: 'Amount of communication letter variants.',
     },
     letter: {
       type: Metadata,
@@ -26,11 +34,11 @@ export const Communication: GraphQLObjectType = new GraphQLObjectType({
         return await CommunicationDAO.getLetter(context.guid);
       },
     },
-    attachments: {
+    attached: {
       type: new GraphQLList(Metadata),
       description: 'Communication attachments.',
       resolve: async (context: ICommunication): Promise<IMetadata[]> => {
-        if (context.attachments) return context.attachments;
+        if (context.attachments) return context.attached;
         return await CommunicationDAO.getAttachments(context.guid);
       },
     },
@@ -41,6 +49,10 @@ export const Communication: GraphQLObjectType = new GraphQLObjectType({
         if (context.sections) return context.sections;
         return await CommunicationDAO.getSections(context.guid);
       },
+    },
+    data: {
+      type: GraphQLString,
+      description: 'Communication node as string.',
     },
   }),
 });

@@ -8,23 +8,14 @@ const GET_ALL_COMMUNICATIONS: TypedDocumentNode = gql(`
   query GetAllCommunications {
     communications {
       guid
+      dateStart
+      attachments
+      variants
       letter {
         doctype
         editor
         label
         status
-        variants {
-          guid
-          label
-        }
-        participants {
-          type
-          dateStart
-        }
-      }
-      attachments {
-        guid
-        label
       }
     }
   }
@@ -112,7 +103,7 @@ const GET_COMMUNICATION: TypedDocumentNode = gql(`
           }
         }
       }
-      attachments {
+      attached {
         guid
         label
         variants {

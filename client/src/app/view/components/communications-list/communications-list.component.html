@@ -36,15 +36,15 @@
           <td>
             <div class="row m-0 justify-content-center">
               <div class="col-3">
-                <ng-container *ngIf="communication.letter.variants.length > 1">
+                <ng-container *ngIf="communication.variants > 0">
                   <i class="fas fa-copy" [title]="lang.get('COLLECTION_TABLE_VARIANT_ALT')"></i>
-                  {{ communication.letter.variants.length - 1 }}
+                  {{ communication.variants }}
                 </ng-container>
               </div>
               <div class="col-3">
-                <ng-container *ngIf="communication.attachments.length > 0">
+                <ng-container *ngIf="communication.attachments > 0">
                   <i class="fas fa-link" [title]="lang.get('COLLECTION_TABLE_ATTACHMENT_ALT')"></i>
-                  {{ communication.attachments.length }}
+                  {{ communication.attachments }}
                 </ng-container>
               </div>
             </div>

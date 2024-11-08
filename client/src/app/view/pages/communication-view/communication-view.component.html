@@ -69,7 +69,7 @@
       </li>
       <li
         class="list-group-item list-group-item-action rounded-0 w-15"
-        *ngIf="communication && communication.attachments.length > 0"
+        *ngIf="communication && communication.attached.length > 0"
         (click)="scrollToAttachments()"
       >
         <i class="fas fa-link"></i>
@@ -113,7 +113,7 @@
     </div>
   </section>
 
-  <section class="attachments card card-body rounded-0" *ngIf="communication && communication.attachments.length > 0">
+  <section class="attachments card card-body rounded-0" *ngIf="communication && communication.attached.length > 0">
     <div class="card-label">
       {{ lang.get("TEXT_VIEW_PAGE_ATTACHMENT_TITLE") }}
     </div>
@@ -124,7 +124,7 @@
     </div>
 
     <ul class="list-group" *ngIf="isAttachmentsOpen">
-      <ng-container *ngFor="let attachment of communication.attachments">
+      <ng-container *ngFor="let attachment of communication.attached">
         <li class="list-group-item list-group-item-action rounded-0 py-2 pointer">
           <i class="fas fa-link"></i>
           <a class="d-block-inline ms-3" [href]="'/id/' + attachment.guid" target="_blank">{{ attachment.label }}</a>
