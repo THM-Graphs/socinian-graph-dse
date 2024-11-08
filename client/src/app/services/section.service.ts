@@ -8,24 +8,13 @@ import { Nullable } from '../../global';
 const COMMUNICATIONS_FRAGMENT: string = `
   communications {
     guid
+    attachments
+    variants
+    dateStart
     letter {
       label
       guid
       status
-      variants {
-        guid
-      }
-      participants {
-        type
-        dateStart
-        dateEnd
-        dateCertainty
-        dateType
-      }
-    }
-    attachments {
-      label
-      guid
     }
   }
 `;
