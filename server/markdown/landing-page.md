@@ -8,7 +8,7 @@ umfasst die Zeitspanne von ca. 1580 bis ca. 1740, womit sie für die
 Prozesse von dem konfessionellen Zeitalter bis in die Aufklärungsepoche
 hinein informativ ist.
 
-In den bislang katalogisierten [2174 Briefen](/collection), welche die Sozinianer
+In den bislang katalogisierten [2180 Briefen](/collection), welche die Sozinianer
 untereinander und mit den Gelehrten der anderen Konfessionen
 austauschten, spiegeln sich die komplexen Interdependenzen zwischen dem
 historisierend-rationalisierenden Zugriff auf religiöse Inhalte, den
