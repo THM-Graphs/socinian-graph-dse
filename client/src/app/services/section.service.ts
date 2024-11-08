@@ -28,6 +28,7 @@ const GET_SECTION_LIST: TypedDocumentNode = gql(`
         startIndex
         endIndex
         text
+        isZeroPoint
         teiType
         type
         data
@@ -39,6 +40,7 @@ const GET_SECTION_LIST: TypedDocumentNode = gql(`
         standoffProperties {
           startIndex
           endIndex
+          isZeroPoint
           text
           teiType
           type
@@ -69,6 +71,7 @@ const GET_SECTION: TypedDocumentNode = gql(`
       standoffProperties {
         startIndex
         endIndex
+        isZeroPoint
         text
         teiType
         type

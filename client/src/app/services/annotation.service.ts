@@ -18,6 +18,7 @@ const GET_COMMENT: TypedDocumentNode = gql(`
         text
         teiType
         type
+        isZeroPoint
         data
       }
     }
@@ -55,6 +56,7 @@ const GET_REFERENCE: TypedDocumentNode = gql(`
       }
       standoffProperties {
         startIndex
+        isZeroPoint
         guid
         endIndex
         text

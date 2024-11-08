@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLBoolean, GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import AnnotationDAO from '../../database/Annotation.dao.js';
 import { IAnnotation } from '../../interfaces/IAnnotation.js';
 import { Text } from './Text';
@@ -19,6 +19,10 @@ export const Annotation: GraphQLObjectType = new GraphQLObjectType({
     endIndex: {
       type: GraphQLInt,
       description: 'Annotation ending index.',
+    },
+    isZeroPoint: {
+      type: GraphQLBoolean,
+      description: 'Is annotation zero point?',
     },
     text: {
       type: GraphQLString,

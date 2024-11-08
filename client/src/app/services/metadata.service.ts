@@ -25,6 +25,7 @@ metadataRemark {
     guid
     endIndex
     text
+    isZeroPoint
     teiType
     type
     data
@@ -34,6 +35,7 @@ standoffProperties {
   startIndex
   guid
   endIndex
+  isZeroPoint
   text
   teiType
   type

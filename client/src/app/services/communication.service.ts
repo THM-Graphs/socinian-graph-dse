@@ -34,6 +34,7 @@ const GET_COMMUNICATION: TypedDocumentNode = gql(`
           text
           standoffProperties {
             guid
+            isZeroPoint
             startIndex
             endIndex
             text
@@ -75,6 +76,7 @@ const GET_COMMUNICATION: TypedDocumentNode = gql(`
             standoffProperties {
               startIndex
               guid
+              isZeroPoint
               endIndex
               text
               teiType
@@ -94,6 +96,7 @@ const GET_COMMUNICATION: TypedDocumentNode = gql(`
           metadataFunder
           standoffProperties {
             guid
+            isZeroPoint
             startIndex
             endIndex
             text

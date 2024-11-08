@@ -27,6 +27,7 @@ const GET_TEXT: TypedDocumentNode = gql(`
         standoffProperties {
           startIndex
           guid
+          isZeroPoint
           endIndex
           text
           teiType
@@ -38,6 +39,7 @@ const GET_TEXT: TypedDocumentNode = gql(`
         startIndex
         guid
         endIndex
+        isZeroPoint
         text
         teiType
         type
