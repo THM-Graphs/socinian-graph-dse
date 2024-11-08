@@ -37,7 +37,6 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
   private annotations: IStandoffProperty[] = [];
   private selection: IStandoffProperty | undefined;
   private tooltips: Tooltip[] = [];
-  private eventListeners: IEventListener[] = [];
 
   constructor(
     private elementRef: ElementRef,
@@ -115,12 +114,10 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
 
     comments.forEach((element: Element) => {
       element.addEventListener('click', this.handleCommentClick.bind(this));
-      this.eventListeners.push({ element, event: 'click', handler: this.handleCommentClick.bind(this) });
     });
 
     registerEntries.forEach((element: Element) => {
       element.addEventListener('click', this.handleRegisterClick.bind(this));
-      this.eventListeners.push({ element, event: 'click', handler: this.handleRegisterClick.bind(this) });
     });
 
     abbreviations.forEach((element: Element) => {
@@ -155,17 +152,17 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
 
     this.isSelectionMenuActive = false;
     const selection: Selection | null = document.getSelection();
-    const selectedText: string | undefined = selection?.toString().trim();
+    const selectedText: string | undefined = selection?.toString();
 
     if (!selection || !selection.anchorNode || !selection.focusNode) return;
-    if (!selectedText || selectedText === '') return;
+    if (!selectedText || selectedText.length <= 1) return;
 
     const isBackwards: boolean = TextViewSelectionUtils.isSelectionBackwards(selection);
     const startingNode: Node = isBackwards ? selection.focusNode : selection.anchorNode;
     const offset: number = isBackwards ? selection.focusOffset : selection.anchorOffset;
 
     const startIndex: number = TextViewSelectionUtils.getSelectionStartIndex(startingNode, offset);
-    const endIndex: number = startIndex + selectedText.length - 1;
+    const endIndex: number = TextViewSelectionUtils.getSelectionEndIndex(startingNode, startIndex, selectedText.length);
     selection.empty();
 
     this.setSelection(startIndex, endIndex);
@@ -179,7 +176,7 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
     const startIndex: number = this.selection?.startIndex ?? 0;
     const endIndex: number = this.selection?.endIndex ?? 0;
 
-    const currentUrl: string = 'https://www.sozinianer.de/'; // ToDo: Replace with ang-envs.
+    const currentUrl: string = 'https://www.sozinianer.de'; // ToDo: Replace with ang-envs.
     const currentPath: string = window.location.pathname.replace('view', 'id');
     const params: string = `?guid=${this.guid}&s=${startIndex}&e=${endIndex}`;
     await navigator.clipboard.writeText(currentUrl + currentPath + params);

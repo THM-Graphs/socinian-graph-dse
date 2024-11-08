@@ -4,11 +4,13 @@ import AnnotationUtils from './AnnotationUtils';
 import { Nullable } from '../../global';
 
 export interface Annotation {
+  guid?: Nullable<string>;
   containment?: Nullable<number>;
+
   element: string;
   attributes: string[];
   identifier: string;
-  guid?: Nullable<string>;
+  innerHTML?: Nullable<string>;
 }
 
 export class AnnotationParser {
@@ -30,9 +32,15 @@ export class AnnotationParser {
     for (let i: number = 0; i < this.rawText.length; i++) {
       const startProperties: IStandoffProperty[] = [];
       const endProperties: IStandoffProperty[] = [];
+      const zeroPointProperties: IStandoffProperty[] = [];
 
       for (const standOffProperty of this.standOffProperties) {
         try {
+          if (i === standOffProperty.startIndex && i === standOffProperty.endIndex) {
+            zeroPointProperties.push(standOffProperty);
+            continue;
+          }
+
           if (i === standOffProperty.startIndex) {
             startProperties.push(standOffProperty);
           }
@@ -52,12 +60,14 @@ export class AnnotationParser {
       // Parsing them into HTML context.
       const HTMLStartAnnotations: string[] = startProperties.map((property) => this.parseTeiType(property));
       const HTMLEndAnnotations: string[] = endProperties.map((property) => this.parseTeiType(property, true));
+      const HTMLZeroPointAnnotations: string[] = zeroPointProperties.map((property) => this.parseZeroPoint(property));
 
       // Sorting them by HTML ruleset.
       HTMLStartAnnotations.sort(AnnotationUtils.sortHTMLStartAnnoations);
       HTMLEndAnnotations.sort(AnnotationUtils.sortHTMLEndAnnotations);
 
       this.annotatedText += HTMLStartAnnotations.filter((a) => a.length > 0).join('');
+      this.annotatedText += HTMLZeroPointAnnotations.filter((a) => a.length > 0).join('');
       this.annotatedText += this.rawText[i];
       this.annotatedText += HTMLEndAnnotations.filter((a) => a.length > 0).join('');
     }
@@ -72,8 +82,6 @@ export class AnnotationParser {
       case 'l':
       case 'addrLine':
         return !isClosing ? '' : '<br />';
-      case 'lb':
-        return !isClosing ? '<br />' : '';
       case 'div':
         return !isClosing ? '<div>' : '</div>';
       case 'dateline':
@@ -131,8 +139,6 @@ export class AnnotationParser {
       case 'p':
         annotation = AnnotationHandler.handleParagraph(standOffProperty);
         break;
-      case 'pb':
-        return AnnotationHandler.handlePb(standOffProperty, isClosing);
       case 'persName':
         annotation = AnnotationHandler.handlePersName(standOffProperty);
         break;
@@ -181,6 +187,25 @@ export class AnnotationParser {
     return this.getParsedHTMLContext(annotation, isClosing);
   }
 
+  protected parseZeroPoint(standOffProperty: IStandoffProperty): string {
+    let annotation: Annotation;
+
+    switch (standOffProperty.teiType) {
+      case 'lb':
+        return '<br />';
+      case 'pb':
+        annotation = AnnotationHandler.handlePb(standOffProperty);
+        break;
+      default:
+        console.error('Could not parse ZeroPoint TEI type:', standOffProperty.teiType);
+        return '';
+    }
+
+    annotation.guid = standOffProperty.guid;
+    annotation.containment = this.parseContainment(annotation);
+    return this.getParsedZeroPointHTML(annotation);
+  }
+
   protected parseContainment(annotation: Annotation): number {
     if (annotation.containment) return annotation.containment;
     switch (annotation.element) {
@@ -216,7 +241,7 @@ export class AnnotationParser {
 
   private getOverlappedHTML(annotation: Annotation, overlaps: Annotation[], isClosing: boolean): string {
     const attributes: string[] = isClosing ? [] : [...annotation.attributes];
-    const identifier: string[] = isClosing ? [] : [...annotation.identifier];
+    const identifier: string[] = isClosing ? [] : [annotation.identifier];
 
     overlaps.forEach((annotation: Annotation): void => {
       const isCurrentIdentifier: boolean = identifier.includes(annotation.identifier);
@@ -234,16 +259,7 @@ export class AnnotationParser {
   }
 
   private getContainmentHTML(annotation: Annotation, containment: Annotation[], isClosing: boolean): string {
-    const reduced: Annotation[] = containment.reduce((acc: Annotation[], curr: Annotation): Annotation[] => {
-      const existingElement: Nullable<Annotation> = acc.find((a: Annotation): boolean => a.element == curr.element);
-
-      if (existingElement) {
-        existingElement.attributes = existingElement.attributes.concat(curr.attributes);
-        existingElement.identifier += ' ' + curr.identifier;
-      } else acc.push({ ...curr });
-
-      return acc;
-    }, []);
+    const reduced: Annotation[] = this.distinctAnnotations(containment);
 
     if (isClosing) {
       reduced.sort(AnnotationUtils.sortContainmentDesc);
@@ -265,10 +281,47 @@ export class AnnotationParser {
     return `<${annotation.element} class="${identifierString}" ${attributeString}>${annotationsString}`;
   }
 
+  private getParsedZeroPointHTML(annotation: Annotation): string {
+    const attributeString: string = annotation.attributes.join(' ');
+    const identifierString: string = annotation.identifier;
+    const innerHTML: string = annotation.innerHTML ?? '';
+    const annotationTag: string = `<${annotation.element} class="zpa ${identifierString}" ${attributeString}>${innerHTML}</${annotation.element}>`;
+
+    if (this.annotations.length === 0) return annotationTag;
+
+    const reduced: Annotation[] = this.distinctAnnotations(this.annotations).filter(
+      (a: Annotation): boolean => a.element === annotation.element,
+    );
+    const elements: string[] = reduced.map((a: Annotation): string => `</${a.element}>`);
+    const elementsString: string = elements.join(' ');
+
+    const annotations: string[] = reduced.map((a: Annotation): string => {
+      const identifierString: string = a.identifier;
+      const attributeString: string = a.attributes.join(' ');
+      return `<${a.element} class="${identifierString}" ${attributeString}>`;
+    });
+
+    const annotationsString: string = annotations.join(' ');
+    return elementsString + annotationTag + annotationsString;
+  }
+
   private handleAnnotationStack(annotation: Annotation, isClosing: boolean): void {
     if (isClosing) {
       const index: number = this.annotations.findIndex((a) => a.identifier === annotation.identifier);
       this.annotations.splice(index, 1);
     } else this.annotations.push(annotation);
+  }
+
+  private distinctAnnotations(annotation: Annotation[]): Annotation[] {
+    return annotation.reduce((acc: Annotation[], curr: Annotation): Annotation[] => {
+      const existingElement: Nullable<Annotation> = acc.find((a: Annotation): boolean => a.element == curr.element);
+
+      if (existingElement) {
+        existingElement.attributes = existingElement.attributes.concat(curr.attributes);
+        existingElement.identifier += ' ' + curr.identifier;
+      } else acc.push({ ...curr });
+
+      return acc;
+    }, []);
   }
 }

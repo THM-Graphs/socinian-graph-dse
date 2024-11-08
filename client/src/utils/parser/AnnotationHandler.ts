@@ -143,11 +143,16 @@ export default class AnnotationHandler {
     };
   }
 
-  public static handlePb(standOffProperty: IStandoffProperty, isClosing: boolean): string {
-    if (isClosing) return '';
+  public static handlePb(standOffProperty: IStandoffProperty): Annotation {
     const data: { facs: string; n: string } = JSON.parse(standOffProperty.data);
     const href: string = data.facs ? `href="${data.facs}" target="_blank"` : '';
-    return `<span class="pb d-block user-select-none">[ <a ${href}>${data.n}</a> ]</span>`;
+
+    return {
+      element: 'span',
+      attributes: [],
+      identifier: 'pb d-block user-select-none',
+      innerHTML: `[ <a ${href}>${data.n}</a> ]`,
+    };
   }
 
   public static handlePersName(standOffProperty: IStandoffProperty): Annotation {

@@ -26,7 +26,7 @@ export class TextViewSelectionUtils {
     for (const node of nodeList) {
       if (node.nodeName === 'SPAN') {
         const htmlNode: HTMLElement = node as HTMLElement;
-        if (htmlNode.classList.contains('pb')) continue;
+        if (htmlNode.classList.contains('zpa')) continue;
       }
 
       const nodeText: string = node.textContent ?? '';
@@ -35,6 +35,33 @@ export class TextViewSelectionUtils {
 
     const parentStartIndex: number = Number(parentElement.dataset.start);
     return textLength + parentStartIndex;
+  }
+
+  public static getSelectionEndIndex(node: Node, start: number, length: number): number {
+    const startingNode: Node = this.getStartingNode(node);
+    const nodeList: Node[] = [];
+
+    let currentNode: Node | null = startingNode.nextSibling;
+    let textLength: number = length - 1;
+    let selectionLength: number = length - 1;
+
+    while (textLength > 0 && currentNode) {
+      nodeList.push(currentNode);
+
+      const nodeLength: number = currentNode?.textContent?.length ?? 0;
+      textLength = textLength - nodeLength;
+      currentNode = currentNode.nextSibling;
+    }
+
+    for (const node of nodeList) {
+      if (node.nodeName === 'SPAN') {
+        const htmlNode: HTMLElement = node as HTMLElement;
+        if (!htmlNode.classList.contains('zpa')) continue;
+        selectionLength -= htmlNode.textContent?.length ?? 0;
+      }
+    }
+
+    return start + selectionLength;
   }
 
   private static getParentElement(node: Node): HTMLElement {
