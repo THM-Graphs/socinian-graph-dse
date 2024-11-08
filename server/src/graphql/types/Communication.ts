@@ -17,6 +17,10 @@ export const Communication: GraphQLObjectType = new GraphQLObjectType({
     dateStart: {
       type: GraphQLString,
       description: 'Sent date for this communication.',
+      resolve: async (context: ICommunication): Promise<Nullable<string>> => {
+        if (context.dateStart) return context.dateStart;
+        return await CommunicationDAO.getDateStart(context.guid);
+      },
     },
     attachments: {
       type: GraphQLInt,

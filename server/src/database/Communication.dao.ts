@@ -20,6 +20,10 @@ RETURN properties(c) as communication,
   collect(DISTINCT properties(a)) as attachments,
   properties(l) as letter`;
 
+const DATE_START_QUERY: string = `
+MATCH (c:Communication {guid: $guid})-[:HAS_LETTER]->(l:Metadata)-[:HAS_ANNOTATION]->(s:Sent {type: "sentPerson"})
+RETURN s.dateStart as dateStart`;
+
 const LETTER_QUERY: string = `
 MATCH (l:Metadata)<-[:HAS_LETTER]-(c:Communication {guid: $guid})
 RETURN properties(l) as letter`;
@@ -78,5 +82,10 @@ export default class CommunicationDAO {
     if (!sections) return [];
 
     return sections.map<ISection>(Utils.stringifyNode);
+  }
+
+  public static async getDateStart(communicationId: string): Promise<Nullable<string>> {
+    const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(DATE_START_QUERY, { guid: communicationId });
+    return result?.records[0]?.get('dateStart');
   }
 }

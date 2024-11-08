@@ -5,6 +5,7 @@ export interface IAnnotation extends INode {
   guid: string;
   startIndex: number;
   endIndex: number;
+  isZeroPoint: boolean;
   text: string;
   teiType: string;
   type: string;

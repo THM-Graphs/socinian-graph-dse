@@ -36,18 +36,17 @@ export class AnnotationParser {
 
       for (const standOffProperty of this.standOffProperties) {
         try {
-          if (i === standOffProperty.startIndex && i === standOffProperty.endIndex) {
+          const isStarting: boolean = i === standOffProperty.startIndex;
+          const isEnding: boolean = i === standOffProperty.endIndex;
+          const isZeroPoint: boolean = standOffProperty.isZeroPoint;
+
+          if (isStarting && isEnding && isZeroPoint) {
             zeroPointProperties.push(standOffProperty);
             continue;
           }
 
-          if (i === standOffProperty.startIndex) {
-            startProperties.push(standOffProperty);
-          }
-
-          if (i === standOffProperty.endIndex) {
-            endProperties.push(standOffProperty);
-          }
+          if (isStarting) startProperties.push(standOffProperty);
+          if (isEnding) endProperties.push(standOffProperty);
         } catch (error: unknown) {
           console.error('Could not parse start of teiType', standOffProperty.teiType, error);
         }
@@ -122,11 +121,9 @@ export class AnnotationParser {
       case 'del':
         annotation = AnnotationHandler.handleDel(standOffProperty);
         break;
-      case 'gap':
-        annotation = AnnotationHandler.handleGap(standOffProperty);
-        break;
       case 'head':
-        return !isClosing ? "<h6 class='spo-headline'>" : '</h6>';
+        annotation = AnnotationHandler.handleHead(standOffProperty);
+        break;
       case 'hi':
         annotation = AnnotationHandler.handleHi(standOffProperty);
         break;
@@ -170,8 +167,6 @@ export class AnnotationParser {
         annotation = AnnotationHandler.handleRef(standOffProperty);
         break;
       case 'foreign':
-      case 'comment':
-        return '';
       case 'selection':
         annotation = AnnotationHandler.handleSelection(standOffProperty);
         break;
@@ -196,6 +191,11 @@ export class AnnotationParser {
       case 'pb':
         annotation = AnnotationHandler.handlePb(standOffProperty);
         break;
+      case 'gap':
+        annotation = AnnotationHandler.handleGap(standOffProperty);
+        break;
+      case 'comment':
+        return '';
       default:
         console.error('Could not parse ZeroPoint TEI type:', standOffProperty.teiType);
         return '';

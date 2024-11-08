@@ -72,6 +72,14 @@ export default class AnnotationHandler {
     };
   }
 
+  public static handleHead(standOffProperty: IStandoffProperty): Annotation {
+    return {
+      element: 'h6',
+      attributes: [],
+      identifier: 'spo-headline',
+    };
+  }
+
   public static handleGap(standOffProperty: IStandoffProperty): Annotation {
     const data: { quantity: string; reason: string; unit: string } = JSON.parse(standOffProperty.data);
     return {
