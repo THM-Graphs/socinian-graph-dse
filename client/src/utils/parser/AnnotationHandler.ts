@@ -195,6 +195,14 @@ export default class AnnotationHandler {
     };
   }
 
+  public static handleForeign(): Annotation {
+    return {
+      element: 'span',
+      attributes: ['lang="$xml:lang"'],
+      identifier: 'foreign'
+    }
+  }
+
   public static handleReg(standOffProperty: IStandoffProperty): Annotation {
     const data: { regularisation: string } = JSON.parse(standOffProperty.data);
     return {
