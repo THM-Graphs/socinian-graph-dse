@@ -167,6 +167,8 @@ export class AnnotationParser {
         annotation = AnnotationHandler.handleRef(standOffProperty);
         break;
       case 'foreign':
+        annotation = AnnotationHandler.handleForeign();
+        break;
       case 'selection':
         annotation = AnnotationHandler.handleSelection();
         break;
