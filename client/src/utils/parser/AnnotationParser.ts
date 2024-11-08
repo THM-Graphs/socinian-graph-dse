@@ -213,10 +213,12 @@ export class AnnotationParser {
         return 0;
       case 'p':
         return 1;
-      case 'span':
+      case 'h6':
         return 2;
-      case 'a':
+      case 'span':
         return 3;
+      case 'a':
+        return 4;
       default:
         return 99;
     }
