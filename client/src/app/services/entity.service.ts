@@ -7,14 +7,11 @@ import { Nullable } from '../../global';
 import { ENTITY_CATEGORY } from '../constants/ENTITY_CATEGORY';
 
 const GET_ALL_ENTITIES: TypedDocumentNode = gql(`
-  query GetAllEntities($type: String) {
-    entities(type: $type) {
+  query GetAllEntities($type: String, $isDetailed: Boolean) {
+    entities(type: $type, isDetailed: $isDetailed) {
       guid
       label
       type
-      occurrences {
-        guid
-      }
     }
   }
 `);
@@ -60,7 +57,7 @@ interface QueryResponse {
 })
 export class EntityService extends ApolloService {
   public async getEntities(type?: ENTITY_CATEGORY | string): Promise<IEntity[]> {
-    const variables: Record<string, Nullable<string>> = { type: type };
+    const variables: Record<string, Nullable<string | boolean>> = { type: type, isDetailed: false };
     const result: Nullable<QueryResponse> = await this.query<QueryResponse>(GET_ALL_ENTITIES, variables);
     return result?.entities ?? [];
   }

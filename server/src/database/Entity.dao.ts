@@ -13,8 +13,9 @@ WITH e,
   [(e)<-[:SENT_FROM]-(:Sent)<-[:HAS_ANNOTATION]-(m:Metadata) | m] as from,
   [(e)<-[:SENT_TO]-(:Received)<-[:HAS_ANNOTATION]-(m:Metadata) | m] as sentTo,
   [(e)<-[:REFERS_TO]-(:Spo)<-[:HAS_ANNOTATION]-(:Text)<-[:HAS_TEXT]-(m:Metadata) | m] as refers,
-  [(e)<-[:RECEIVED_BY]-(:Received)<-[:HAS_ANNOTATION]-(m:Metadata) | m] as received
-WITH *, sent + from + sentTo + received + refers as metadata, e`;
+  [(e)<-[:RECEIVED_BY]-(:Received)<-[:HAS_ANNOTATION]-(m:Metadata) | m] as received,
+  [(e)<-[:REFERS_TO]-(:Spo)<-[:HAS_ANNOTATION]-(:Text)<-[:REFERS_TO]-(:Spo)<-[:HAS_ANNOTATION]-(:Text)<-[:HAS_TEXT]-(m:Metadata) | m] as remarked
+WITH *, sent + from + sentTo + received + refers + remarked as metadata, e`;
 
 const ENTITIES_QUERY: string = `
 MATCH (e:Entity {type: $type})

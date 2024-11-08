@@ -10,7 +10,7 @@ export const EntityQueries: GraphQLFieldConfigMap<string, string> = {
     type: new GraphQLList(Entity),
     args: { type: { type: GraphQLString }, isDetailed: { type: GraphQLBoolean } },
     resolve: async (_, args: { type: EntityType; isDetailed: boolean }): Promise<IEntity[]> => {
-      const type: EntityType = filterXSS(args?.type) as EntityType;
+      const type: EntityType = filterXSS(args?.type ?? '') as EntityType;
       if (args?.isDetailed) return EntityDAO.getDetailedEntities(type);
       return EntityDAO.getEntities(type);
     },
@@ -20,7 +20,7 @@ export const EntityQueries: GraphQLFieldConfigMap<string, string> = {
     type: Entity,
     args: { id: { type: new GraphQLNonNull(GraphQLString) } },
     resolve: async (_, args: { id: string }): Promise<Nullable<IEntity>> => {
-      const entityId: string = filterXSS(args?.id);
+      const entityId: string = filterXSS(args?.id ?? '');
       return await EntityDAO.getEntity(entityId);
     },
   },
