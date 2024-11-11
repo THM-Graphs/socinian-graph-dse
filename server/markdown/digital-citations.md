@@ -10,8 +10,8 @@ Mit dieser Methode lassen sich Textstellen eindeutig und wiederholbar referenzie
 
 ## Zitierprozess: Schritt-für-Schritt-Anleitung
 
-![Screenshot der Funktion “Zitierlink” in der digitalen Edition “Der sozinianische Briefwechsel”, der das Erstellen von dauerhaften Verweisen auf spezifische Textstellen zeigt.](images/Annotations.png "Abbildung 1")
-Abbildung 1: Screenshot der Funktion “Zitierlink” in der digitalen Edition “Der sozinianische Briefwechsel”, der das Erstellen von dauerhaften Verweisen auf spezifische Textstellen zeigt.
+![Screenshot der Funktion “Zitierlink” in der digitalen Edition “Die sozinianischen Briefwechsel”, der das Erstellen von dauerhaften Verweisen auf spezifische Textstellen zeigt.](images/Annotations.png "Abbildung 1")
+Abbildung 1: Screenshot der Funktion “Zitierlink” in der digitalen Edition “Die sozinianischen Briefwechsel”, der das Erstellen von dauerhaften Verweisen auf spezifische Textstellen zeigt.
 
 1. **Text markieren:** Zunächst den zu zitierenden Textabschnitt auswählen, der referenziert werden soll.
 2. **Zitierfunktion verwenden:** Die Zitierfunktion (meist „Zitieren“ oder „Zitierlink“ genannt) verwenden, die speziell für diese Art zur Verfügung steht und in Abbildung 1 dargestellt ist.
