@@ -8,6 +8,8 @@ Eine mögliche Technik für digitales Zitieren entspricht dem Arbeiten mit Start
 Textstellen markieren. Diese Methode eignet sich besonders für digitale Editionen, die in ihrer Struktur festgelegt sind und nicht mehr verändert werden. 
 Mit dieser Methode lassen sich Textstellen eindeutig und wiederholbar referenzieren und somit wissenschaftlich genau zitieren.
 
+Die Zitierfunktion befindet sich in der Beta-Phase.
+
 ## Zitierprozess: Schritt-für-Schritt-Anleitung
 
 ![Screenshot der Funktion “Zitierlink” in der digitalen Edition “Die sozinianischen Briefwechsel”, der das Erstellen von dauerhaften Verweisen auf spezifische Textstellen zeigt.](images/Annotations.png "Abbildung 1")
