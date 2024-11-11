@@ -22,17 +22,7 @@
 
 [Sebastian Enns](https://www.linkedin.com/in/sebastian-enns/)
 
-## Ehemalige MitarbeiterInnen
-
-[Dr. Dagmar Bronner](https://www.jalb.de/Dr._Dagmar_Bronner-23778-0-0-84.html)
-
-Maike Sach
-
-Tariq Yousef
-
-Patrick Toschka
-
-### Ehemalige TranskriptorInnen
+## TranskriptorInnen
 
 Ewa Emery 
 
@@ -45,3 +35,13 @@ Marie-Claire Perroudon
 Guendalina Rovelli
 
 Manfred Wegner
+
+## Ehemalige
+
+[Dr. Dagmar Bronner](https://www.jalb.de/Dr._Dagmar_Bronner-23778-0-0-84.html)
+
+Maike Sach
+
+Tariq Yousef
+
+Patrick Toschka
