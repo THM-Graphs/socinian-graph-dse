@@ -1,4 +1,4 @@
-import { GraphQLBoolean, GraphQLFieldConfigMap, GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLFieldConfigMap, GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
 import { filterXSS } from 'xss';
 import EntityDAO from '../../database/Entity.dao';
 import { Entity } from '../types/Entity';
@@ -8,10 +8,9 @@ import { Nullable } from '../../types.js';
 export const EntityQueries: GraphQLFieldConfigMap<string, string> = {
   entities: {
     type: new GraphQLList(Entity),
-    args: { type: { type: GraphQLString }, isDetailed: { type: GraphQLBoolean } },
-    resolve: async (_, args: { type: EntityType; isDetailed: boolean }): Promise<IEntity[]> => {
+    args: { type: { type: GraphQLString } },
+    resolve: async (_, args: { type: EntityType }): Promise<IEntity[]> => {
       const type: EntityType = filterXSS(args?.type ?? '') as EntityType;
-      if (args?.isDetailed) return EntityDAO.getDetailedEntities(type);
       return EntityDAO.getEntities(type);
     },
   },

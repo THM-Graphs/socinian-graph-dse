@@ -1,4 +1,4 @@
-import { GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 import EntityDAO from '../../database/Entity.dao';
 import { IAdditionalLabel, IEntity } from '../../interfaces/IEntity';
 import { Metadata } from './Metadata';
@@ -40,6 +40,10 @@ export const Entity: GraphQLObjectType = new GraphQLObjectType({
     type: {
       type: GraphQLString,
       description: 'Entity type.',
+    },
+    mentions: {
+      type: GraphQLInt,
+      description: 'Amount of mentions of this entity in distinct letters.',
     },
     annotations: {
       type: new GraphQLList(Annotation),

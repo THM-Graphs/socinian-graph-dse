@@ -21,11 +21,6 @@ const ENTITIES_QUERY: string = `
 MATCH (e:Entity {type: $type})
 RETURN collect(properties(e)) as entities`;
 
-const DETAILED_ENTITIES_QUERY: string = `
-MATCH (e:Entity {type: $type}) ${OCCURRENCES_QUERY_FRAGMENT}
-RETURN properties(e) AS entities,
-  apoc.coll.toSet( [x in metadata | properties(x)] ) as metadata`;
-
 const ENTITY_QUERY: string = `
 MATCH (e:Entity {guid: $guid})
 RETURN properties(e) as entity`;
@@ -57,25 +52,6 @@ export default class EntityDAO {
     if (!entities) return [];
 
     return entities.map<IEntity>(Utils.stringifyNode);
-  }
-
-  public static async getDetailedEntities(type: string = ''): Promise<IEntity[]> {
-    const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(DETAILED_ENTITIES_QUERY, { type });
-    if (!result) return [];
-
-    const entities: IEntity[] = [];
-    for (const record of result.records) {
-      const entity: Nullable<IEntity> = record.get('entities');
-      const metadata: Nullable<IMetadata[]> = record.get('metadata');
-      const occurrences: IMetadata[] = metadata?.map<IMetadata>(Utils.stringifyNode) ?? [];
-
-      if (!entity) continue;
-      Utils.stringifyNode(entity);
-      entity.occurrences = occurrences;
-      entities.push(entity);
-    }
-
-    return entities;
   }
 
   public static async getEntity(entityId: string): Promise<Nullable<IEntity>> {

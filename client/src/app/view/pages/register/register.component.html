@@ -101,9 +101,7 @@
             <ul class="list-of-entries fade-in-fast">
               <li *ngFor="let entry of filteredEntries" [attr.data-id]="entry.guid">
                 <a class="register-entry" [href]="'/entry/' + entry.guid" target="_blank">{{ entry.label }}</a>
-                <span class="small" *ngIf="entry.occurrences && entry.occurrences.length > 0">
-                  ({{ entry.occurrences.length }})
-                </span>
+                <span class="small" *ngIf="entry.mentions"> ({{ entry.mentions }}) </span>
               </li>
             </ul>
           </section>
