@@ -3,17 +3,12 @@ import { LangManager } from '../../../../utils/LangManager';
 import { ENTITY_CATEGORY } from '../../../constants/ENTITY_CATEGORY';
 import { EntityService } from '../../../services/entity.service';
 import * as removeAccents from 'remove-accents';
-import { ActivatedRoute, Router } from '@angular/router';
 import { IEntity } from 'src/app/models/IEntity';
 
 interface RegisterCategory {
   name: string;
   type: ENTITY_CATEGORY | string;
   icon: string;
-}
-
-interface SelectedRegister {
-  type: ENTITY_CATEGORY | string;
 }
 
 @Component({
@@ -57,11 +52,7 @@ export class RegisterComponent implements OnInit {
     },
   ];
 
-  constructor(
-    private registerService: EntityService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-  ) {}
+  constructor(private registerService: EntityService) {}
 
   public async ngOnInit(): Promise<void> {
     let register: RegisterCategory = this.categories[0];
