@@ -1,11 +1,10 @@
-import { Component, OnInit } from "@angular/core";
-import { LangManager } from "../../../../utils/LangManager";
-import { ENTITY_CATEGORY } from "../../../constants/ENTITY_CATEGORY";
-import { EntityService } from "../../../services/entity.service";
-import * as removeAccents from "remove-accents";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Location } from "@angular/common";
-import { IEntity } from "src/app/models/IEntity";
+import { Component, OnInit } from '@angular/core';
+import { LangManager } from '../../../../utils/LangManager';
+import { ENTITY_CATEGORY } from '../../../constants/ENTITY_CATEGORY';
+import { EntityService } from '../../../services/entity.service';
+import * as removeAccents from 'remove-accents';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IEntity } from 'src/app/models/IEntity';
 
 interface RegisterCategory {
   name: string;
@@ -18,13 +17,12 @@ interface SelectedRegister {
 }
 
 @Component({
-  selector: "app-register",
-  templateUrl: "./register.component.html",
-  styleUrls: ["./register.component.scss"],
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   public activeRegister: string;
-  public activeRegisterEntry: SelectedRegister;
 
   public registerEntries: IEntity[] = [];
   public filteredEntries: IEntity[] = [];
@@ -32,34 +30,38 @@ export class RegisterComponent implements OnInit {
   public activeLetter: string;
   public availableLetters: string[] = [];
 
-  public searchPhrase: string = "";
+  public searchPhrase: string = '';
   public isRegisterLoading: boolean = false;
 
   public lang = LangManager;
   public categories: RegisterCategory[] = [
     {
-      name: "REGISTER_HUMAN_INDEX",
+      name: 'REGISTER_HUMAN_INDEX',
       type: ENTITY_CATEGORY.PERSON,
-      icon: "fa-person",
+      icon: 'fa-person',
     },
     {
-      name: "REGISTER_PLACE_INDEX",
+      name: 'REGISTER_PLACE_INDEX',
       type: ENTITY_CATEGORY.PLACE,
-      icon: "fa-map",
+      icon: 'fa-map',
     },
     {
-      name: "REGISTER_WORD_INDEX",
+      name: 'REGISTER_WORD_INDEX',
       type: ENTITY_CATEGORY.WORD,
-      icon: "fa-quote-left",
+      icon: 'fa-quote-left',
     },
     {
-      name: "REGISTER_BIBLE_VERSE_INDEX",
+      name: 'REGISTER_BIBLE_VERSE_INDEX',
       type: ENTITY_CATEGORY.BIBLE_VERSE,
-      icon: "fa-align-center",
+      icon: 'fa-align-center',
     },
   ];
 
-  constructor(private registerService: EntityService, private activatedRoute: ActivatedRoute, private router: Router) {}
+  constructor(
+    private registerService: EntityService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+  ) {}
 
   public async ngOnInit(): Promise<void> {
     let register: RegisterCategory = this.categories[0];
@@ -71,7 +73,7 @@ export class RegisterComponent implements OnInit {
     this.isRegisterLoading = true;
 
     if (!register) {
-      this.activeRegister = "REGISTER_ALL_REGISTER";
+      this.activeRegister = 'REGISTER_ALL_REGISTER';
       await this.loadAllRegisterEntries();
     } else {
       this.activeRegister = register.name;
@@ -80,20 +82,20 @@ export class RegisterComponent implements OnInit {
 
     this.generateLetters();
     this.onFilterEntriesByLetter(this.activeLetter);
-    if (this.searchPhrase !== "") this.onFilterEntriesBySearch();
+    if (this.searchPhrase !== '') this.onFilterEntriesBySearch();
     this.isRegisterLoading = false;
   }
 
   public onSearchInputEvent($event: Event): void {
     this.scrollTop();
     const targetElement: HTMLInputElement = ($event as InputEvent).target as HTMLInputElement;
-    this.searchPhrase = removeAccents(targetElement.value)?.toLocaleLowerCase();
+    this.searchPhrase = removeAccents(targetElement.value)?.toLocaleLowerCase() ?? '';
     this.onFilterEntriesBySearch();
   }
 
   public onFilterEntriesBySearch(): void {
     this.filteredEntries = this.registerEntries.filter((entry: IEntity) =>
-      removeAccents(entry.label).toLocaleLowerCase().includes(this.searchPhrase)
+      removeAccents(entry.label).toLocaleLowerCase().includes(this.searchPhrase),
     );
     this.filteredEntries.sort((a, b) => a.label.localeCompare(b.label));
   }
@@ -129,14 +131,14 @@ export class RegisterComponent implements OnInit {
     });
 
     this.availableLetters.sort((a, b) => a.localeCompare(b));
-    this.activeLetter = this.availableLetters[0] ?? "";
+    this.activeLetter = this.availableLetters[0] ?? '';
   }
 
   private scrollTop(): void {
     window.scroll({
       top: 0,
       left: 0,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   }
 }

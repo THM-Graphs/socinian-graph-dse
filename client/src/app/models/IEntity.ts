@@ -1,6 +1,7 @@
-import { ENTITY_CATEGORY } from "../constants/ENTITY_CATEGORY";
-import { IMetadata } from "./IMetadata";
-import { INormdata } from "./INormdata";
+import { ENTITY_CATEGORY } from '../constants/ENTITY_CATEGORY';
+import { IMetadata } from './IMetadata';
+import { INormdata } from './INormdata';
+
 export interface IEntity {
   guid: string;
   type: ENTITY_CATEGORY;
@@ -8,6 +9,9 @@ export interface IEntity {
   normdata: INormdata[];
   additionalLabels: IAdditionalLabel[];
   additionalInformation: string[];
+
+  mentions: number;
+
   occurrences: IMetadata[];
   data?: string;
 }
