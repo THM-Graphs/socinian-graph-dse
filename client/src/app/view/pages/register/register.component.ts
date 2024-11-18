@@ -88,7 +88,9 @@ export class RegisterComponent implements OnInit {
     this.filteredEntries = this.registerEntries.filter((entry: IEntity) =>
       removeAccents(entry.label).toLocaleLowerCase().includes(this.searchPhrase),
     );
-    this.filteredEntries.sort((a, b) => a.label.localeCompare(b.label));
+    this.filteredEntries.sort((a, b) =>
+      a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
+    );
   }
 
   public onFilterEntriesByLetter(letter: string): void {
@@ -96,7 +98,9 @@ export class RegisterComponent implements OnInit {
     this.filteredEntries = this.registerEntries.filter((entry: IEntity) => {
       return removeAccents(entry.label).toLocaleLowerCase().startsWith(letter.toLowerCase());
     });
-    this.filteredEntries.sort((a, b) => a.label.localeCompare(b.label));
+    this.filteredEntries.sort((a, b) =>
+      a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
+    );
   }
 
   private async loadAllRegisterEntries(): Promise<void> {
