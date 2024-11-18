@@ -11,6 +11,7 @@ export interface IEntity {
   additionalInformation: string[];
 
   mentions: number;
+  remarks: number;
 
   occurrences: IMetadata[];
   data?: string;
