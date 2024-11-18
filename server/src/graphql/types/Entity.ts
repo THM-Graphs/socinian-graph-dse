@@ -45,6 +45,10 @@ export const Entity: GraphQLObjectType = new GraphQLObjectType({
       type: GraphQLInt,
       description: 'Amount of mentions of this entity in distinct letters.',
     },
+    remarks: {
+      type: GraphQLInt,
+      description: 'Amount of remarks of this entity in distinct letters.',
+    },
     annotations: {
       type: new GraphQLList(Annotation),
       description: 'Annotations related to this entity.',

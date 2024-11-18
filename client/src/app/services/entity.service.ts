@@ -13,6 +13,7 @@ const GET_ALL_ENTITIES: TypedDocumentNode = gql(`
       label
       type
       mentions
+      remarks
     }
   }
 `);
