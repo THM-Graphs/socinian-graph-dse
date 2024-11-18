@@ -20,6 +20,7 @@ WITH *, sent + from + sentTo + received + refers + remarked + commented as metad
 
 const ENTITIES_QUERY: string = `
 MATCH (e:Entity {type: $type})
+WHERE e.mentions > 0 OR e.remarks > 0
 RETURN collect(properties(e)) as entities`;
 
 const ENTITY_QUERY: string = `
