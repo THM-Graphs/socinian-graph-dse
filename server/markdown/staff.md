@@ -24,7 +24,7 @@
 
 ## TranskriptorInnen
 
-Ewa Emery 
+Ewa Emery
 
 Karolis Lyvens
 
@@ -43,5 +43,7 @@ Manfred Wegner
 Maike Sach
 
 Tariq Yousef
+
+Hilke Wagner
 
 Patrick Toschka
