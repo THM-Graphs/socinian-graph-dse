@@ -24,6 +24,8 @@ const GET_ENTITY: TypedDocumentNode = gql(`
       label
       type
       data
+      mentions
+      remarks
       normdata {
         guid
         label
@@ -37,7 +39,15 @@ const GET_ENTITY: TypedDocumentNode = gql(`
         label
       }
       additionalInformation
-      occurrences {
+      mentionedBy {
+        guid
+        doctype
+        editor
+        label
+        status
+        data
+      }
+      remarkedBy {
         guid
         doctype
         editor

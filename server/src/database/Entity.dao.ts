@@ -7,16 +7,20 @@ import { Nullable } from '../types.js';
 import { Utils } from '../utils/Utils.js';
 import { IAnnotation } from '../interfaces/IAnnotation.js';
 
-const OCCURRENCES_QUERY_FRAGMENT: string = `
+const MENTIONS_QUERY_FRAGMENT: string = `
 WITH e,
   [(e)<-[:SENT_BY]-(:Sent)<-[:HAS_ANNOTATION]-(m:Metadata) | m] as sent,
   [(e)<-[:SENT_FROM]-(:Sent)<-[:HAS_ANNOTATION]-(m:Metadata) | m] as from,
   [(e)<-[:SENT_TO]-(:Received)<-[:HAS_ANNOTATION]-(m:Metadata) | m] as sentTo,
   [(e)<-[:RECEIVED_BY]-(:Received)<-[:HAS_ANNOTATION]-(m:Metadata) | m] as received,
-  [(e)<-[:REFERS_TO]-(:Spo)<-[:HAS_ANNOTATION]-(:Text)<-[:HAS_TEXT]-(m:Metadata) | m] as refers,
+  [(e)<-[:REFERS_TO]-(:Spo)<-[:HAS_ANNOTATION]-(:Text)<-[:HAS_TEXT]-(m:Metadata) | m] as refers
+WITH *, sent + from + sentTo + received + refers as metadata, e`;
+
+const REMARKS_QUERY_FRAGMENT: string = `
+WITH e,
   [(e)<-[:REFERS_TO]-(:Spo)<-[:HAS_ANNOTATION]-(:Text)<-[:REFERS_TO]-(:Spo)<-[:HAS_ANNOTATION]-(:Text)<-[:HAS_TEXT]-(m:Metadata) | m] as remarked,
   [(e)<-[:REFERS_TO]-(:Spo)<-[:HAS_ANNOTATION]-(:Text)-[:COMMENT_ON]->(:Spo)<-[:HAS_ANNOTATION]-(:Text)<-[:HAS_TEXT]-(m:Metadata) | m] as commented
-WITH *, sent + from + sentTo + received + refers + remarked + commented as metadata, e`;
+WITH *, remarked + commented as metadata, e`;
 
 const ENTITIES_QUERY: string = `
 MATCH (e:Entity {type: $type})
@@ -27,9 +31,13 @@ const ENTITY_QUERY: string = `
 MATCH (e:Entity {guid: $guid})
 RETURN properties(e) as entity`;
 
-const OCCURRENCES_QUERY: string = `
-MATCH (e:Entity {guid: $guid}) ${OCCURRENCES_QUERY_FRAGMENT}
-RETURN apoc.coll.toSet( [x in metadata | properties(x)] ) as occurrences`;
+const MENTIONS_QUERY: string = `
+MATCH (e:Entity {guid: $guid}) ${MENTIONS_QUERY_FRAGMENT}
+RETURN [x in metadata | properties(x)] as mentionedBy`;
+
+const REMARKS_QUERY: string = `
+MATCH (e:Entity {guid: $guid}) ${REMARKS_QUERY_FRAGMENT}
+RETURN [x in metadata | properties(x)] as remarkedBy`;
 
 const ANNOTATIONS_QUERY: string = `
 MATCH (:Entity {guid: $guid})<-[:REFERS_TO]-(a:Spo)
@@ -64,12 +72,20 @@ export default class EntityDAO {
     return Utils.stringifyNode(entity);
   }
 
-  public static async getOccurrences(entityId: string): Promise<IMetadata[]> {
-    const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(OCCURRENCES_QUERY, { guid: entityId });
-    const occurrences: Nullable<IMetadata[]> = result?.records[0]?.get('occurrences');
-    if (!occurrences) return [];
+  public static async getMentionedBy(entityId: string): Promise<IMetadata[]> {
+    const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(MENTIONS_QUERY, { guid: entityId });
+    const mentionedBy: Nullable<IMetadata[]> = result?.records[0]?.get('mentionedBy');
+    if (!mentionedBy) return [];
 
-    return occurrences.map<IMetadata>(Utils.stringifyNode);
+    return mentionedBy.map<IMetadata>(Utils.stringifyNode);
+  }
+
+  public static async getRemarkedBy(entityId: string): Promise<IMetadata[]> {
+    const result: Nullable<QueryResult> = await Neo4jDriver.runQuery(REMARKS_QUERY, { guid: entityId });
+    const remarkedBy: Nullable<IMetadata[]> = result?.records[0]?.get('remarkedBy');
+    if (!remarkedBy) return [];
+
+    return remarkedBy.map<IMetadata>(Utils.stringifyNode);
   }
 
   public static async getAnnotations(entityId: string): Promise<IAnnotation[]> {

@@ -11,8 +11,12 @@ export interface IEntity extends INode {
   additionalLabels: IAdditionalLabel[];
   additionalInformation: string[];
   annotations: IAnnotation[];
+
   mentions: number;
-  occurrences: IMetadata[];
+  remarks: number;
+
+  mentionedBy: IMetadata[];
+  remarkedBy: IMetadata[];
 }
 
 export interface IAdditionalLabel extends INode {

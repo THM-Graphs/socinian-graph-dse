@@ -114,10 +114,20 @@
   "COLLECTION_UNORDERED": "Keine bestimmte Sammlung",
   "ANNOTATION_LIST_REGISTER_LINK": "Registereintrag öffnen...",
   "ANNOTATION_LIST_CLEAR": "Liste mit Annotationen schließen",
-  "ENTITY_PAGE_MENTIONS": "Erwähnungen:",
+  "ENTITY_PAGE_MENTION": "Erwähnungen in einem Brief",
+  "ENTITY_PAGE_MENTIONS": "Erwähnungen in %s Briefen",
+  "ENTITY_PAGE_REMARK": "Sachanmerkungen in einem Brief",
+  "ENTITY_PAGE_REMARKS": "Sachanmerkungen in %s Briefen",
+  "ENTITY_PAGE_ID_COPIED_TO_CLIPBOARD": "%s in die Zwischenablage kopiert.",
+  "ENTITY_PAGE_COPY_ENTITY_LINK": "Link zur Entität kopieren.",
   "ENTITY_PAGE_NORMDATA": "Normdaten",
   "ENTITY_PAGE_ADDITIONAL_LABELS": "Weitere Bezeichnungen",
   "ENTITY_PAGE_COMMENTS": "Kommentare",
   "ENTITY_PAGE_FIELDS_BIRTH": "Geboren",
-  "ENTITY_PAGE_FIELDS_DEATH": "Gestorben"
+  "ENTITY_PAGE_FIELDS_DEATH": "Gestorben",
+  "ENTITY_CATEGORY_BIBLE_VERSE": "Bibelstelle",
+  "ENTITY_CATEGORY_PERSON": "Person",
+  "ENTITY_CATEGORY_PLACE": "Ort",
+  "ENTITY_CATEGORY_TEXT": "Text",
+  "ENTITY_CATEGORY_WORD": "Wort"
 }

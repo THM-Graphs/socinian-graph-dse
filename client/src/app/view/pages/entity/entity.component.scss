@@ -1,12 +1,5 @@
 @import "../../../../styles/theme";
 
-h2,
-h4,
-h5 {
-  font-weight: 350;
-  margin-bottom: 15px;
-}
-
 .sticky-top {
   top: 25px;
 }
@@ -25,4 +18,38 @@ a {
 
 .list-group-item {
   padding: 10px 20px;
+}
+
+.card-header {
+  background: map_get(map_get($root, accent), 50) !important;
+  color: map_get(map_get($root, tints), 100) !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  padding: 20px 20px;
+
+  h3 {
+    font-weight: 100;
+    margin: 0;
+  }
+
+  h4 {
+    font-weight: 200;
+    margin-bottom: 0;
+
+    i {
+      font-size: 14pt;
+    }
+  }
+}
+
+.card {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.card-body {
+  h4 {
+    font-weight: 200;
+    margin: 20px 0 10px 0;
+  }
 }

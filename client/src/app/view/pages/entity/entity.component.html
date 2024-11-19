@@ -1,93 +1,180 @@
 <main class="container-fluid container-md py-5">
   <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
-  <div class="row" *ngIf="!isLoading">
-    <section class="col-12 col-md-5">
-      <div class="card sticky-top">
-        <div class="card-body">
-          <h2>{{ entity.label }}</h2>
 
-          <section class="additional-fields my-4" *ngIf="additionalFields.length > 0">
-            <ul class="list-group">
-              <ng-container *ngFor="let field of additionalFields">
-                <li class="list-group-item d-flex flex-row">
-                  <span class="w-50">{{ lang.get(field.label) }}:</span>
-                  <span>{{ field.value }}</span>
-                </li>
-              </ng-container>
-            </ul>
-          </section>
-
-          <section class="additional-labels my-4" *ngIf="entity.additionalLabels && entity.additionalLabels.length > 0">
-            <h5>{{ lang.get("ENTITY_PAGE_ADDITIONAL_LABELS") }}</h5>
-
-            <ul class="list-group">
-              <ng-container *ngFor="let label of entity.additionalLabels">
-                <li class="list-group-item list-group-item-action">
-                  <span *ngIf="label.forename" class="d-inline-block px-1">{{ label.forename }}</span>
-                  <span *ngIf="label.surname" class="d-inline-block px-1">{{ label.surname }}</span>
-                  <span *ngIf="label.label" class="d-inline-block px-1">{{ label.label }}</span>
-                </li>
-              </ng-container>
-            </ul>
-          </section>
-
-          <section class="normdata my-4" *ngIf="entity.normdata && entity.normdata.length > 0">
-            <h5>{{ lang.get("ENTITY_PAGE_NORMDATA") }}</h5>
-
-            <ul class="list-group pointer">
-              <ng-container *ngFor="let normdata of entity.normdata">
-                <li class="list-group-item list-group-item-action" (click)="onOpenNormdata(normdata)">
+  @if (!isLoading) {
+    <div class="row">
+      <section class="col-12 col-md-5">
+        <div class="card sticky-top">
+          <div class="card-header position-relative">
+            <h3>{{ currentEntity.label }}</h3>
+            <sub><i class="fa {{ currentIcon }} d-inline me-2"></i> {{ currentType }}</sub>
+          </div>
+          <div class="card-body">
+            <section class="additional-fields my-2">
+              <ul class="list-group">
+                @for (field of additionalFields; track field.label) {
+                  <li class="list-group-item d-flex flex-row">
+                    <span class="w-50">{{ lang.get(field.label) }}:</span>
+                    <span>{{ field.value }}</span>
+                  </li>
+                }
+                <li class="list-group-item list-group-item-action pointer" (click)="onCopyEntityLink()">
                   <div class="d-flex w-100 justify-content-between align-items-center">
-                    <a>{{ normdata.label }}</a>
-                    <i class="fas fa-external-link-alt"></i>
+                    <i class="fa fa-angle-double-right"></i>
+                    @if (!isEntityLinkCopied) {
+                      <span>{{ lang.get("ENTITY_PAGE_COPY_ENTITY_LINK") }}</span>
+                    } @else {
+                      <span class="fade-in-medium">
+                        {{ lang.get("ENTITY_PAGE_ID_COPIED_TO_CLIPBOARD", "URL") }}
+                      </span>
+                    }
+                    <i class="fa fa-angle-double-left"></i>
                   </div>
                 </li>
-              </ng-container>
-            </ul>
-          </section>
+              </ul>
+            </section>
 
-          <section
-            class="comments my-4"
-            *ngIf="entity.additionalInformation && entity.additionalInformation.length > 0"
-          >
-            <h5>{{ lang.get("ENTITY_PAGE_COMMENTS") }}</h5>
+            @if (currentEntity.additionalLabels && currentEntity.additionalLabels.length > 0) {
+              <section class="additional-labels my-2">
+                <h4>{{ lang.get("ENTITY_PAGE_ADDITIONAL_LABELS") }}</h4>
 
-            <ul class="list-group pointer">
-              <ng-container *ngFor="let info of entity.additionalInformation">
-                <li class="list-group-item list-group-item-action" (click)="onOpenInfoWebsite(info)">
-                  <div class="d-flex w-100 justify-content-between align-items-center">
-                    <a class="text-wrap me-4">{{ parseInfoWebsite(info).url }}</a>
-                    <i class="fas fa-external-link-alt"></i>
-                  </div>
-                </li>
-              </ng-container>
-            </ul>
-          </section>
-        </div>
-      </div>
-    </section>
-    <section class="col-12 col-md-7 mt-3 mt-md-0">
-      <div class="card">
-        <div class="card-body">
-          <h4>{{ lang.get("ENTITY_PAGE_MENTIONS") }}</h4>
+                <ul class="list-group">
+                  @for (label of currentEntity.additionalLabels; track label) {
+                    <li class="list-group-item list-group-item-action">
+                      <span *ngIf="label.forename" class="d-inline-block px-1">{{ label.forename }}</span>
+                      <span *ngIf="label.surname" class="d-inline-block px-1">{{ label.surname }}</span>
+                      <span *ngIf="label.label" class="d-inline-block px-1">{{ label.label }}</span>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
 
-          <ul class="list-group">
-            <ng-container *ngFor="let occurrence of entity.occurrences">
-              <li
-                class="list-group-item list-group-item-action text-wrap d-flex justify-content-between align-items-center pointer"
-                routerLink="/id/{{ occurrence.guid }}"
-              >
-                <a class="d-inline-block me-3">{{ occurrence.label }}</a>
-                <!-- <span class="badge bg-primary rounded-pill">14</span> -->
-              </li>
-            </ng-container>
-          </ul>
+            @if (currentEntity.normdata && currentEntity.normdata.length > 0) {
+              <section class="normdata my-2">
+                <h4>{{ lang.get("ENTITY_PAGE_NORMDATA") }}</h4>
 
-          <div class="no-entries" *ngIf="entity.occurrences.length === 0">
-            {{ lang.get("COLLECTION_TABLE_NO_ENTRIES") }}
+                <ul class="list-group pointer">
+                  @for (normdata of currentEntity.normdata; track normdata) {
+                    <li class="list-group-item list-group-item-action" (click)="onOpenNormdata(normdata)">
+                      <div class="d-flex w-100 justify-content-between align-items-center">
+                        @if (!isNormdataCopied.includes(normdata.guid)) {
+                          <div class="field-text">
+                            <span>{{ normdata.label }}</span>
+                            <span class="small d-inline ms-1">({{ normdata.guid }})</span>
+                          </div>
+                          <div class="field-icons">
+                            <i class="fas fa-external-link-alt me-4"></i>
+                            <i class="fas fa-copy" (click)="onCopyNormdata(normdata); $event.stopPropagation()"></i>
+                          </div>
+                        } @else {
+                          <span class="fade-in-medium">
+                            {{ lang.get("ENTITY_PAGE_ID_COPIED_TO_CLIPBOARD", normdata.guid) }}
+                          </span>
+                        }
+                      </div>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+
+            @if (currentEntity.additionalInformation && currentEntity.additionalInformation.length > 0) {
+              <section class="comments my-2">
+                <h4>{{ lang.get("ENTITY_PAGE_COMMENTS") }}</h4>
+
+                <ul class="list-group pointer">
+                  @for (info of currentEntity.additionalInformation; track info) {
+                    <li class="list-group-item list-group-item-action" (click)="onOpenAdditionalWebsite(info)">
+                      <div class="d-flex w-100 justify-content-between align-items-center">
+                        <a class="text-wrap me-4">{{ parseAdditionalWebsite(info).url }}</a>
+                        <i class="fas fa-external-link-alt"></i>
+                      </div>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
           </div>
         </div>
-      </div>
-    </section>
-  </div>
+      </section>
+      <section class="col-12 col-md-7 mt-3 mt-md-0">
+        @if (currentEntity.mentions === 0 && currentEntity.remarks === 0) {
+          <div class="card">
+            <div class="card-body">
+              <div class="no-entries" *ngIf="currentEntity.mentionedBy.length === 0">
+                {{ lang.get("COLLECTION_TABLE_NO_ENTRIES") }}
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (currentEntity.mentions > 0) {
+          <div class="card mb-4">
+            <div class="card-header py-3 pointer user-select-none" (click)="isMentionsOpen = !isMentionsOpen">
+              <h4 class="d-inline me-3">
+                <i class="fas" [class.fa-angle-down]="isMentionsOpen" [class.fa-angle-up]="!isMentionsOpen"></i>
+              </h4>
+              @if (currentEntity.mentions > 1) {
+                <h4 class="d-inline">{{ lang.get("ENTITY_PAGE_MENTIONS", currentEntity.mentions) }}</h4>
+              } @else {
+                <h4 class="d-inline">{{ lang.get("ENTITY_PAGE_MENTION", currentEntity.mentions) }}</h4>
+              }
+            </div>
+            <div class="card-body">
+              @if (isMentionsOpen) {
+                <ul class="list-group">
+                  @for (letter of mentionedBy; track letter) {
+                    <li
+                      class="list-group-item list-group-item-action text-wrap d-flex justify-content-between align-items-center pointer"
+                      (click)="onOpenLetter(letter.guid)"
+                    >
+                      <a class="d-inline-block me-3">{{ letter.label }}</a>
+                      <span class="badge bg-primary rounded-pill">
+                        {{ letter.occurrences }}
+                        <i class="fa fa-commenting d-inline ms-1"> </i>
+                      </span>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          </div>
+        }
+
+        @if (currentEntity.remarks > 0) {
+          <div class="card">
+            <div class="card-header py-3 pointer user-select-none" (click)="isRemarksOpen = !isRemarksOpen">
+              <h4 class="d-inline me-3">
+                <i class="fas" [class.fa-angle-down]="isRemarksOpen" [class.fa-angle-up]="!isRemarksOpen"></i>
+              </h4>
+              @if (currentEntity.remarks > 1) {
+                <h4 class="d-inline">{{ lang.get("ENTITY_PAGE_REMARKS", currentEntity.remarks) }}</h4>
+              } @else {
+                <h4 class="d-inline">{{ lang.get("ENTITY_PAGE_REMARK", currentEntity.remarks) }}</h4>
+              }
+            </div>
+            <div class="card-body">
+              @if (isRemarksOpen) {
+                <ul class="list-group">
+                  @for (letter of remarkedBy; track letter) {
+                    <li
+                      class="list-group-item list-group-item-action text-wrap d-flex justify-content-between align-items-center pointer"
+                      (click)="onOpenLetter(letter.guid)"
+                    >
+                      <a class="d-inline-block me-3">{{ letter.label }}</a>
+                      <span class="badge bg-primary rounded-pill">
+                        {{ letter.occurrences }}
+                        <i class="fa fa-commenting d-inline ms-1"> </i>
+                      </span>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          </div>
+        }
+      </section>
+    </div>
+  }
 </main>
