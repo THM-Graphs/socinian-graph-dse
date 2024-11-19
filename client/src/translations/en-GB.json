@@ -114,10 +114,20 @@
   "COLLECTION_UNORDERED": "No specific collection",
   "ANNOTATION_LIST_REGISTER_LINK": "Go to the register entry...",
   "ANNOTATION_LIST_CLEAR": "Clear list with annotations",
-  "ENTITY_PAGE_MENTIONS": "Mentions:",
+  "ENTITY_PAGE_MENTION": "Mentions in one letter.",
+  "ENTITY_PAGE_MENTIONS": "Mentions in %s letters.",
+  "ENTITY_PAGE_REMARK": "Remarks in one letter.",
+  "ENTITY_PAGE_REMARKS": "Remarks in %s letters.",
+  "ENTITY_PAGE_ID_COPIED_TO_CLIPBOARD": "%s has been copied to clipboard.",
+  "ENTITY_PAGE_COPY_ENTITY_LINK": "Copy link to entity",
   "ENTITY_PAGE_NORMDATA": "Normdata",
   "ENTITY_PAGE_ADDITIONAL_LABELS": "Additional Labels",
   "ENTITY_PAGE_COMMENTS": "Comments",
   "ENTITY_PAGE_FIELDS_BIRTH": "Born",
-  "ENTITY_PAGE_FIELDS_DEATH": "Died"
+  "ENTITY_PAGE_FIELDS_DEATH": "Died",
+  "ENTITY_CATEGORY_BIBLE_VERSE": "Bible Verse",
+  "ENTITY_CATEGORY_PERSON": "Person",
+  "ENTITY_CATEGORY_PLACE": "Place",
+  "ENTITY_CATEGORY_TEXT": "Text",
+  "ENTITY_CATEGORY_WORD": "Word"
 }

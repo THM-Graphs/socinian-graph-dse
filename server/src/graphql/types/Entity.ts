@@ -57,12 +57,20 @@ export const Entity: GraphQLObjectType = new GraphQLObjectType({
         return await EntityDAO.getAnnotations(context.annotations);
       },
     },
-    occurrences: {
+    mentionedBy: {
       type: new GraphQLList(Metadata),
-      description: 'Entity occurrences in metadata nodes.',
+      description: 'Entity mentions in metadata nodes.',
       resolve: async (context: IEntity): Promise<IMetadata[]> => {
-        if (context.occurrences) return context.occurrences;
-        return await EntityDAO.getOccurrences(context.guid);
+        if (context.mentionedBy) return context.mentionedBy;
+        return await EntityDAO.getMentionedBy(context.guid);
+      },
+    },
+    remarkedBy: {
+      type: new GraphQLList(Metadata),
+      description: 'Entity remarks in metadata nodes.',
+      resolve: async (context: IEntity): Promise<IMetadata[]> => {
+        if (context.remarkedBy) return context.remarkedBy;
+        return await EntityDAO.getRemarkedBy(context.guid);
       },
     },
     normdata: {
