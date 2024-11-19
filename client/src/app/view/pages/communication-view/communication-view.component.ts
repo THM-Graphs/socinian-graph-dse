@@ -99,7 +99,7 @@ export class CommunicationView implements OnInit, OnDestroy {
   }
 
   public async copyURLtoClipboard(): Promise<void> {
-    await navigator.clipboard.writeText(`https://${location.host}/id/${this.selectedLetter.guid}`);
+    await navigator.clipboard.writeText(`https://www.sozinianer.de/id/${this.selectedLetter.guid}`);
     this.isCopiedToClipboard = true;
 
     setTimeout(() => {

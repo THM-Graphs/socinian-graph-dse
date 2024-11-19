@@ -13,7 +13,9 @@ export interface IEntity {
   mentions: number;
   remarks: number;
 
-  occurrences: IMetadata[];
+  mentionedBy: IMetadata[];
+  remarkedBy: IMetadata[];
+
   data?: string;
 }
 
