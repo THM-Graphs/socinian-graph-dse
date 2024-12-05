@@ -29,7 +29,7 @@ export class CommunicationView implements OnInit, OnDestroy {
   public isMetadataOpen: boolean = true;
   public isAttachmentsOpen: boolean = true;
   public isAttachedByOpen: boolean = true;
-  public isQuotable: boolean = false;
+  public isQuotable: boolean = true;
 
   public communication: ICommunication;
   public selectedLetter: IMetadata;
@@ -118,8 +118,8 @@ export class CommunicationView implements OnInit, OnDestroy {
     if (!letter) letter = await this.metadataService.getMetadata(metadataId);
     if (!letter) return this.loadParentDataView(metadataId);
 
-    this.communication = communication as ICommunication;
     this.isQuotable = true; // letter.status === TRANSCRIPTION_STATUS.CONCLUSION;
+    this.communication = communication as ICommunication;
     this.changeSelectedLetter(letter);
   }
 
