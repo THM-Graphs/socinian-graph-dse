@@ -40,7 +40,7 @@ Manfred Wegner
 
 [Dr. Dagmar Bronner](https://www.jalb.de/Dr._Dagmar_Bronner-23778-0-0-84.html)
 
-Maike Sach
+Dr. Maike Sach
 
 Tariq Yousef
 
