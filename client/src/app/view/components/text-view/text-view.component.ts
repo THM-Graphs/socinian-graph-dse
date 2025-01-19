@@ -41,6 +41,7 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes['text']) {
+      this.isSelectionMenuActive = false;
       this.selection = undefined;
 
       const paramsMap: ParamMap = this.route.snapshot.queryParamMap;

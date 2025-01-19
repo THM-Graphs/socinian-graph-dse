@@ -22,6 +22,10 @@ export const Communication: GraphQLObjectType = new GraphQLObjectType({
         return await CommunicationDAO.getDateStart(context.guid);
       },
     },
+    sentBy: {
+      type: GraphQLString,
+      description: 'Sender entity label for this communication.',
+    },
     attachments: {
       type: GraphQLInt,
       description: 'Amount of communication attachments.',
