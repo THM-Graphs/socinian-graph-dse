@@ -59,6 +59,11 @@ export class ProjectComponent {
       id: 'digital-citations',
       icon: 'fa-link',
     },
+    {
+      label: 'PROJECT_CATEGORY_DOWNLOAD',
+      id: 'xml-download',
+      icon: 'fa-download',
+    }
   ];
 
   constructor(
