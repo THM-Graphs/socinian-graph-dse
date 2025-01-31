@@ -61,7 +61,7 @@ export class ProjectComponent {
     },
     {
       label: 'PROJECT_CATEGORY_DOWNLOAD',
-      id: 'xml-download',
+      id: 'download',
       icon: 'fa-download',
     }
   ];
