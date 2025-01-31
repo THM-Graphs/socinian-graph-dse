@@ -8,6 +8,7 @@ const GET_ALL_COMMUNICATIONS: TypedDocumentNode = gql(`
   query GetAllCommunications {
     communications {
       guid
+      sentBy
       dateStart
       attachments
       variants

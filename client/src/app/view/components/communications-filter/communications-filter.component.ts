@@ -136,8 +136,10 @@ export class CommunicationsFilterComponent implements OnChanges {
 
   private alphabeticalSort(desc: boolean): void {
     this.filteredCommunications.sort((a: ICommunication, b: ICommunication) => {
-      if (!a.letter || !b.letter) return -1;
-      const compareValue: number = a.letter.label.localeCompare(b.letter.label);
+      if (!a.sentBy) return 1;
+      if (!b.sentBy) return -1;
+
+      const compareValue: number = new Intl.Collator().compare(a.sentBy, b.sentBy);
       return desc ? -1 * compareValue : compareValue;
     });
   }

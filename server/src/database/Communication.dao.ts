@@ -8,8 +8,8 @@ import { Utils } from '../utils/Utils.js';
 
 const COMMUNICATIONS_QUERY: string = `
 MATCH (l:Metadata)<-[:HAS_LETTER]-(c:Communication)
-OPTIONAL MATCH (l)-[:HAS_ANNOTATION]->(s:Sent {type: "sentPerson"})
-WITH c{.*, letter: properties(l), dateStart: s.dateStart} as composite
+OPTIONAL MATCH (l)-[:HAS_ANNOTATION]->(s:Sent {type: "sentPerson"})-[:SENT_BY]->(b:Entity)
+WITH c{.*, letter: properties(l), dateStart: s.dateStart, sentBy: b.label} as composite
 RETURN collect(properties(composite)) as communications`;
 
 const COMMUNICATION_QUERY: string = `
