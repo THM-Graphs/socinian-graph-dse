@@ -28,7 +28,7 @@ export class MarkdownViewComponent implements OnChanges {
 
         return `
             <h${token.depth} id="${escapedText}}" class="markdown-heading">
-              ${token.text}
+                ${this.parser.parseInline(token.tokens)}
             </h${token.depth}>`;
       },
 
