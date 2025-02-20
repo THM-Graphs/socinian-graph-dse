@@ -5,6 +5,7 @@ import { AnnotationListService } from '../../../services/annotation-list.service
 import { Tooltip } from 'bootstrap';
 import { TextViewSelectionUtils } from './text-view.selection-utils';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import {LangManager} from '../../../../utils/LangManager';
 
 declare const bootstrap: any;
 
@@ -28,9 +29,11 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
 
   public parsedText: string = '';
   public isSelectionMenuActive: boolean = false;
+  public lang = LangManager;
 
   private annotations: IStandoffProperty[] = [];
   private selection: IStandoffProperty | undefined;
+  private selectedText: string = '';
   private tooltips: Tooltip[] = [];
 
   constructor(
@@ -152,13 +155,14 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
 
     if (!selection || !selection.anchorNode || !selection.focusNode) return;
     if (!selectedText || selectedText.length <= 1) return;
+    this.selectedText = selectedText;
 
     const isBackwards: boolean = TextViewSelectionUtils.isSelectionBackwards(selection);
     const startingNode: Node = isBackwards ? selection.focusNode : selection.anchorNode;
     const offset: number = isBackwards ? selection.focusOffset : selection.anchorOffset;
 
     const startIndex: number = TextViewSelectionUtils.getSelectionStartIndex(startingNode, offset);
-    const endIndex: number = TextViewSelectionUtils.getSelectionEndIndex(startingNode, startIndex, selectedText.length);
+    const endIndex: number = TextViewSelectionUtils.getSelectionEndIndex(startingNode, startIndex, this.selectedText.length);
     selection.empty();
 
     this.setSelection(startIndex, endIndex);
@@ -176,6 +180,10 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
     const currentPath: string = window.location.pathname.replace('view', 'id');
     const params: string = `?guid=${this.guid}&s=${startIndex}&e=${endIndex}`;
     await navigator.clipboard.writeText(currentUrl + currentPath + params);
+  }
+
+  public async handleCopySelectedText(): Promise<void> {
+    await navigator.clipboard.writeText(this.selectedText);
   }
 
   public async handleRegisterClick($event: Event): Promise<void> {

@@ -5,7 +5,10 @@
   #selectionMenu
 >
   <button type="button" class="btn btn-primary" (click)="handleCopySelectionURL(); isSelectionMenuActive = false">
-    <i class="fas fa-link"></i> Zitierlink
+    <i class="fas fa-link"></i> {{ lang.get('ENC_QUOTE_BUTTON') }}
+  </button>
+  <button type="button" class="btn btn-primary" (click)="handleCopySelectedText()">
+    <i class="fas fa-copy"></i> {{ lang.get('ENC_COPY_BUTTON') }}
   </button>
   <button type="button" class="btn btn-primary" (click)="isSelectionMenuActive = false">
     <i class="fa fa-close"></i>
