@@ -155,7 +155,7 @@ export class TextViewComponent implements OnChanges, AfterViewInit {
 
     if (!selection || !selection.anchorNode || !selection.focusNode) return;
     if (!selectedText || selectedText.length <= 1) return;
-    this.selectedText = selectedText.replace(/\[\s*\d*\s*]/g, '').replace(/\n+/g, '\n');
+    this.selectedText = selectedText.replace(/\n+/g, '\n');
 
     const isBackwards: boolean = TextViewSelectionUtils.isSelectionBackwards(selection);
     const startingNode: Node = isBackwards ? selection.focusNode : selection.anchorNode;
