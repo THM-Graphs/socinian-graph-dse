@@ -122,7 +122,7 @@ export class AnnotationParser {
         annotation = AnnotationHandler.handleDel(standOffProperty);
         break;
       case 'head':
-        annotation = AnnotationHandler.handleHead();
+        annotation = AnnotationHandler.handleHead(standOffProperty);
         break;
       case 'hi':
         annotation = AnnotationHandler.handleHi(standOffProperty);

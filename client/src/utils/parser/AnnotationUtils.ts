@@ -3,7 +3,7 @@ import { Annotation } from './AnnotationParser';
 
 export default class AnnotationUtils {
   public static sortHTMLStartAnnoations(a: string, b: string): number {
-    const HTMLStartingHierarchy: string[] = ['<h6', '<div', '<p', '<tr', '<td', '<span', '<sub'];
+    const HTMLStartingHierarchy: string[] = ['<div', '<p', '<tr', '<td', '<span', '<sub', '<h6'];
 
     for (const element of HTMLStartingHierarchy) {
       if (a.includes(element) && b.includes(element)) return 0;
