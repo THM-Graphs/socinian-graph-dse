@@ -1,5 +1,5 @@
 export class TextViewSelectionUtils {
-  private static parentNodes: string[] = ['div', 'p'];
+  private static parentNodes: string[] = ['div', 'p', 'h6'];
 
   public static isSelectionBackwards(selection: Selection): boolean {
     if (!selection.anchorNode || !selection.focusNode) return false;

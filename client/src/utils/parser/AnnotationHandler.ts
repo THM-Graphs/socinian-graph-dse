@@ -72,10 +72,10 @@ export default class AnnotationHandler {
     };
   }
 
-  public static handleHead(): Annotation {
+  public static handleHead(standOffProperty: IStandoffProperty): Annotation {
     return {
       element: 'h6',
-      attributes: [],
+      attributes: [`data-start="${standOffProperty.startIndex}"`],
       identifier: 'spo-headline',
     };
   }
