@@ -2,8 +2,6 @@
 
 Im GitLab-Daten-Repositorium des Projekts stehen alle publizierten Briefe [zum Download zur Verfügung](https://gitlab.rlp.net/adwmainz/digicademy/sbw/csv-data-dump/-/tree/main/data/xml/letters). Der gesamte Ordner kann u.a. [als Zip heruntergeladen werden](https://gitlab.rlp.net/adwmainz/digicademy/sbw/csv-data-dump/-/archive/main/csv-data-dump-main.zip?path=data/xml/letters).
 
-Mit Stand Januar 2025 ist die Struktur der TEI-Kodierung der Download-Dateien noch nicht finalisiert und kann sich noch (in begrenztem Maß) verändern.
-
 Die Zusammenstellung der Inhalte pro Datei orientiert sich am Briefbegriff, den das Projekt ansetzt – das heißt, die Zusammenstellung eines Anschreibens und seiner Beilagen.
 
 ## TEI-Struktur der Download-Daten
@@ -16,7 +14,7 @@ Auf oberster struktureller Ebene ist die Zusammenstellung von Anschreiben und (n
 
 Da Beilagen teilweise im eigentlichen Sinn zirkulierten – also mehrfach weiter versendet wurden – können sie im Sozinianer-Korpus in mehreren Kontexten auftreten. Diese Wiederholungen sind im XML-Download umgesetzt. Die angebotenen Dateien entsprechen nicht einzigartigen Texten, sondern einzelnen Brief-Versand-Vorgängen. Pro Datei gibt es exakt einen Anschreibe-Brief (`/teiCorpus/TEI[@n = 'cover_letter']`) – dieser ist tatsächlich ohne Wiederholungen. Die möglichen Beilagen pro Datei (`/teiCorpus/TEI[@n = 'attachment']`) können auch in anderen Dateien vorkommen. Nicht alle Briefe haben Beilagen, entsprechend sind sie im XML optional. Ebenfalls kann es vorkommen, dass ein Anschreiben i.d.R. vom Empfänger wiederum als Beilage weitergeleitet wurde. Auch in diesen Fällen erscheint in den Download-Dateien dieser Brieftext dann in mehr als einer Datei.
 
-Das Wurzel-Element `<teiCorpus>` enthält unter dem Pfad `/teiCorpus/teiHeader/fileDesc/sourceDesc/(listPerson|listPlace|list)` alle Registereinträge, die für diese Datei relevant sind. Auf die `@xml:id` der Einträge beziehen sich `<rs>`-Elemente im Text mit dem `@corresp`-Attribut. Die Listen-Elemente sind optional und liegen nicht in allen Dateien vor.
+Das Wurzel-Element `<teiCorpus>` enthält unter dem Pfad `/teiCorpus/standOff/(listPerson|listPlace|list)` alle Registereinträge, die für diese Datei relevant sind. Auf die `@xml:id` der Einträge beziehen sich `<rs>`-Elemente im Text mit dem `@corresp`-Attribut. Die Listen-Elemente sind optional und liegen nicht in allen Dateien vor.
 
 ### `/teiCorpus/TEI/TEI` – Varianten/Textzeugen
 
